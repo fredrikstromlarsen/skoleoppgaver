@@ -58,7 +58,7 @@ ALTER TABLE 'elev' ADD FOREIGN KEY ('datamaskin') REFERENCES 'datamaskin'('Datam
 SELECT * FROM 'elev' ORDER BY 'Fornavn' ASC;
 ```
 
-## Oppgave 7
+## Oppgave 7 (Denne funker ikke, enda)
 
 ```sql
 SELECT COUNT(*) AS 'Antall' FROM 'elev' WHERE 'Antall' => 2 GROUP BY 'Klasse'; 
