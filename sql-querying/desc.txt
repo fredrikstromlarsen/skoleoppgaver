@@ -1,0 +1,1 @@
+10+ SQL tasks aimed at learning how to query data in a database of students and computers.
