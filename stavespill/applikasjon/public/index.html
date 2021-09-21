@@ -1,12 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stavespill</title>
-</head>
-<body>
-    
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Stavespill</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<!-- Foreløpig ikke nødvendig da det kun trengs en session. -->
+		<!-- <section> -->
+			<!-- Skriv inn kode for å logge inn, koden lagres i url/cookie -->
+			<!-- <div class="col-center"></div> -->
+		<!-- </section> -->
+
+		<section id="loginUsername">
+			<!-- Skriv inn navn for å starte spillet -->
+			<div class="col-center">
+				<div class="input-container">
+					<input type="text" required placeholder="Skriv ditt navn her" pattern="[a-zA-Z]">
+				</div>
+			</div>
+		</section>
+		<section id="leaderboard">
+			<!-- Leaderboard side -->
+			<div class="col-center">
+				<table class="leaderboard" border="1">
+					<tr>
+						<th>Spiller</th>
+						<th>Score</th>
+					</tr>
+					<tr>
+						<td></td>
+						<td>58</td>
+					</tr>
+					<tr>
+						<td>Mira</td>
+						<td>29</td>
+					</tr>
+				</table>
+			</div>
+		</section>
+		<section id="game">
+			<!-- Spill -->
+            <!-- Hør og se ord, se også definisjon på ord -->
+			<div id="answer">
+				<div class="col-center"></div>
+			</div>
+
+            <!-- Hør og Prøv å stave ord -->
+			<div id="question">
+				<div class="col-center"></div>
+			</div>
+		</section>
+	</body>
 </html>
