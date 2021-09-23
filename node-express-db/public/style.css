@@ -1,3 +1,39 @@
-h1 {
-    font-size: 5rem;
+body {
+    background-color: #0a0a0a;
+
+    margin: 0;
+    padding: 0;
+    color: #eee;
+}
+
+section {
+    background-color: #111;
+
+    max-width: calc(100vw - 4rem);
+    width: 100rem;
+    min-height: calc(100vh - 4rem);
+    margin: auto;
+    padding: 2rem;
+}
+.title {
+    font-size: 5rem !important;
+}
+
+.text {
+    font-size: 1.1rem;
+    line-height: 2rem;
+}
+
+table * {
+    border: 1px solid #333;
+}
+
+table {
+    margin: 0;
+    padding: 0;
+}
+
+table td, table th {
+    padding: 0.3rem 0.5rem;
+    width: clamp(8rem, 8vw, 12rem);
 }
