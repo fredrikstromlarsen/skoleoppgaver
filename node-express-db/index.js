@@ -1,28 +1,19 @@
-const http = require('http');
-const url = require('url');
-const fs = require('fs');
+/* const bodyParser = require('body-parser'); */
 const express = require('express');
 const app = express();
 const port = 8080;
-const mysql = require('mysql');
-var con = mysql.createConnection({
-	host: 'localhost',
-	user: 'root',
-	password: '',
-	database: 'Dromtorp',
-});
-var query = 'SELECT * FROM elev';
 
-con.connect(function (err) {
-	if (err) throw err;
-	console.log('Connected to MySQL DB');
-	con.query(query, function (err, result) {
-		if (err) throw err;
-		console.log('MySQL query ran');
-	});
-});
-app.use(express.static(`public`));
-app.set('views', './views');
-app.set('view engine', 'ejs');
+/* parse json requests. */
+app.use(express.json());
+/* parse x-www-form-urlencoded requests. */
+app.use(express.urlencoded({ extended: true }));
 
-app.listen(port, () => console.info(`App listening on port ${port}`))
+/* set port, listen for requests */
+app.listen(port, () => {
+	console.log(`Server is running on port ${port}`);
+});
+
+/* simple route */
+app.get('/', (req, res) => {
+	res.json({ message: "Hello World, This Works" });
+});

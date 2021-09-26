@@ -7,8 +7,6 @@ body {
 }
 
 section {
-    background-color: #111;
-
     max-width: calc(100vw - 4rem);
     width: 100rem;
     min-height: calc(100vh - 4rem);
@@ -33,7 +31,8 @@ table {
     padding: 0;
 }
 
-table td, table th {
+table tr>* {
     padding: 0.3rem 0.5rem;
     width: clamp(8rem, 8vw, 12rem);
+    background-color: #111;
 }
