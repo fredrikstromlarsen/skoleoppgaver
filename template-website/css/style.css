@@ -1,11 +1,17 @@
 :root {
     --border-radius: 0.2rem;
     --border: 0.1rem solid #222;
-    --border-error: 0.1rem solid #622;
 
     --background-primary: #0a0a0a;
     --background-secondary: #111;
-    --background-error: #311;
+    --background-error: #ff000028;
+
+    --text-focus: #fff;
+    --text-placeholder: #333;
+    --text-primary: #eee;
+    --text-secondary: #eee;
+    --text-error: #f66;
+    --text-link: #22aaff;
 
 }
 
@@ -54,7 +60,7 @@ h2 {
     font-size: xx-large;
     margin: 0 0 1rem 0;
     padding: 0;
-    color: #eee;
+    color: var(--text-primary);
 }
 
 /* ul {} */
@@ -62,7 +68,24 @@ h2 {
 li {
     line-height: 2rem;
     font-size: large;
-    color: #aaa;
+    color: var(--text-secondary);
+}
+
+a {
+    margin: 0;
+    border-radius: var(--border-radius);
+    -webkit-border-radius: var(--border-radius);
+    -moz-border-radius: var(--border-radius);
+    -ms-border-radius: var(--border-radius);
+    -o-border-radius: var(--border-radius);
+
+    font-size: inherit;
+    text-decoration: none;
+    color: var(--text-link);
+}
+
+a:hover {
+    text-decoration: underline;
 }
 
 code {
@@ -71,7 +94,6 @@ code {
     border-radius: var(--border-radius);
     border: var(--border);
 
-    color: #eee;
     -webkit-border-radius: var(--border-radius);
     -moz-border-radius: var(--border-radius);
     -ms-border-radius: var(--border-radius);
@@ -79,7 +101,8 @@ code {
 }
 
 b {
-
+    color: var(--text-primary);
+    font-weight: 900;
 }
 
 .editor {
@@ -88,9 +111,10 @@ b {
     gap: 1rem;
 }
 
-input {
-    font-size: large;
-    color: #eee;
+input, .input {
+    font-family: monospace;
+    font-size: x-large;
+    color: var(--text-primary);
     
     width: calc(100% - 2rem);
     padding: 0.75rem 1rem;
@@ -112,10 +136,9 @@ input {
     line-height: 1.5rem;
     font-size: 0.9rem;
     white-space: nowrap;
-    color: #fddd;
+    color: var(--text-error);
     background: var(--background-error);
     border-radius: var(--border-radius);
-    border: var(--border-error);
     transition: all 0.2s ease-out;
     -webkit-border-radius: var(--border-radius);
     -moz-border-radius: var(--border-radius);
@@ -127,10 +150,17 @@ input {
     -o-transition: all 0.2s ease-out;
 }
 
-.col-right {
-    display: flex;
+#htmlOutput {
     justify-content: center;
+}
+
+#cssOutput {
+    flex-direction: column;
+}
+
+.col-right {
     align-items: center;
+    display: flex;
 
     background-color: var(--background-primary);
     border: var(--border);
@@ -147,7 +177,7 @@ input {
 }
 
 .col-right span {
-    color: #333;
+    color: var(--text-placeholder);
     font-size: x-large;
 }
 
@@ -157,5 +187,14 @@ input {
     width: 100%;
     height: 100%;
     /* height: 100%; */
+}
 
+.col-right h1, .col-right h2, .col-right h3, .col-right h4, .col-right h5 {
+    margin: 0 0 1rem 0;
+    padding: 0;
+    color: var(--text-primary);
+}
+
+.col-right h2 {
+    font-size: x-large;
 }

@@ -29,36 +29,94 @@
 								>F.eks.
 								<code
 									><b
-										>&lt;img src="https://example.com/img/test.jpg"&gt;</b
+										>&lt;img
+										src="https://example.com/img/test.jpg"&gt;</b
 									></code
 								></li
 							>
 						</ul>
 					</div>
 					<div class="editor">
-                        <span id="errorMessage">Invalid kode. Sjekk eksempelet ovenfor.</span>
+						<span id="errorMessage"
+							>Invalid kode. Sjekk eksempelet ovenfor.</span
+						>
 						<input
-							type="text" 
+							type="text"
 							id="htmlImg"
 							oninput="checkLang(this)"
-                            data-language="html"
-                            data-element-type="img"
-                            placeholder="Skriv HTML-kode her"
+							data-language="html"
+							data-element-type="img"
+							placeholder="Skriv HTML-kode her"
 						/>
 					</div>
 				</div>
 				<div class="col-right" id="htmlOutput">
-                    <span>Bildet vises her hvis koden er gyldig.</span>
-                </div>
+					<span>Bildet vises her hvis koden er gyldig.</span>
+				</div>
 			</div>
 			<!-- Skriv gyldig CSS for font størrelse til overskrifter. -->
 			<div class="row-item">
-
-            </div>
+				<div class="col-left">
+					<div class="explanation">
+						<h2>Endre font og størrelse på overskrifter med CSS</h2>
+						<ul>
+							<li
+								>Når vi lager overskrifter i HTML brukes
+								<code><b>&lt;h1&gt;</b></code
+								>, <code><b>&lt;h2&gt;</b></code
+								>, <code><b>&lt;h3&gt;</b></code
+								>, <code><b>&lt;h4&gt;</b></code
+								>, <code><b>&lt;h5&gt;</b></code> og
+								<code><b>&lt;h6&gt;</b></code
+								>.</li
+							>
+							<li
+								><code><b>&lt;h1&gt;</b></code> er for
+								hovedoverskrifter, resten er
+								underoverskrifter.</li
+							>
+							<li
+								>Alle HTML-elementer har en default verdi, for å
+								gi de et annet utseende bruker vi CSS.</li
+							>
+							<li
+								>For å endre skiftstørrelse må vi gi endre
+								<code><b>font-size</b></code> sin verdi til noe annet.</li
+							>
+                            <li>Vi begynner med å definere en <a href="https://css-tricks.com/css-ruleset-terminology/">selector</a>, i dette tilfellet er det <code><b>&lt;h2&gt;</b></code>.</li>
+                            <li>Deretter skriver vi inn hvilken egenskap vi vil endre verdien til. Her blir det <code><b>font-size</b></code>, og til slutt gir vi egenskapen en verdi.</li>
+							<li
+								>F.eks:
+								<code><b>h2 { font-size: 24px; }</b></code></li
+							>
+						</ul>
+					</div>
+					<div class="editor">
+						<span id="errorMessage"
+							>Invalid kode. Sjekk eksempelet ovenfor.</span
+						>
+						<span
+							class="input"
+							id="cssFontsize"
+							contenteditable="true"
+							oninput="checkLang(this)"
+							data-language="css"
+							data-element-type="font-size"
+							>h2 { font-size: 48px; }</span
+						>
+					</div>
+				</div>
+				<div class="col-right" id="cssOutput">
+					<h1>Dette er en h1 overskrift</h1>
+					<h2>Dette er en h2 overskrift</h2>
+					<h3>Dette er en h3 overskrift</h3>
+					<h4>Dette er en h4 overskrift</h4>
+					<h5>Dette er en h5 overskrift</h5>
+					<h6>Dette er en h6 overskrift</h6>
+				</div>
+			</div>
 			<!-- Skriv gyldig CSS for å endre bakgrunnsfarge på body. -->
-			<div class="row-item">
-
-            </div>
+			<div class="row-item"> </div>
 		</div>
 	</body>
 </html>
