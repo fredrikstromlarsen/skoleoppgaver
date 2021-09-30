@@ -1,0 +1,90 @@
+:root {
+    --border-radius: 0.2rem;
+    --border: 0.1rem solid #222;
+
+    --background-primary: #0a0a0a;
+    --background-secondary: #111;
+}
+
+body {
+    background-color: var(--background-primary);
+    padding: 2rem;
+    margin: 0;
+    color: #eee;
+}
+
+.row-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    max-width: calc(100vw - 4rem);
+    width: 100rem;
+
+    margin: auto;
+}
+
+.row-item {
+    background-color: var(--background-secondary);
+    padding: 1rem 2rem 2rem 2rem;
+    border: var(--border);
+    border-radius: var(--border-radius);
+    -webkit-border-radius: var(--border-radius);
+    -moz-border-radius: var(--border-radius);
+    -ms-border-radius: var(--border-radius);
+    -o-border-radius: var(--border-radius);
+}
+
+.col-left {
+    width: ;
+}
+
+.explanation {
+
+}
+
+h2 {
+
+}
+
+ul {
+
+}
+
+li {
+
+}
+
+code {
+
+}
+
+b {
+
+}
+
+.editor {
+
+}
+
+input {
+
+}
+
+.errorMessage {
+
+}
+
+.col-right {
+
+}
+
+.output-container {
+
+}
+
+.outputContainer * {
+    max-width: 50px !important;
+    max-height: 50px !important;
+
+}

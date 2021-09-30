@@ -1,12 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Template Website</title>
-</head>
-<body>
-    
-</body>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>GUI Website Learner Tool</title>
+		<link rel="stylesheet" href="./css/style.css" />
+		<script src="./js/main.js" defer></script>
+	</head>
+	<body>
+		<div class="row-container">
+			<div class="row-item">
+				<div class="col-left">
+					<div class="explanation">
+						<h2>Sett inn bilde med HTML</h2>
+						<ul>
+							<li
+								>Vi bruker <code><b>&lt;img&gt;</b></code
+								>-tag for å sette inn bilder.</li
+							>
+							<li
+								>I <code><b>&lt;img&gt;</b></code
+								>-taggen trenger vi
+								<code><b>src="lenke til bilde"</b></code> for å
+								si hvilket bilde vi vil vise på nettsiden.
+							</li>
+							<li
+								>F.eks.
+								<code
+									><b
+										>&lt;img src="./img/test.jpg"&gt;</b
+									></code
+								></li
+							>
+						</ul>
+					</div>
+					<div class="editor">
+						<input
+							type="text" 
+							id="htmlImg"
+							oninput="checkLang(this)"
+                            data-language="html"
+                            data-element-type="img"
+						/>
+                        <span id="errorMessage"></span>
+					</div>
+				</div>
+				<div class="col-right">
+					<div class="output-container" id="htmlOutput"> </div>
+				</div>
+			</div>
+			<!-- Skriv gyldig CSS for font størrelse til overskrifter. -->
+			<div class="row-item">
+                
+            </div>
+			<!-- Skriv gyldig CSS for å endre bakgrunnsfarge på body. -->
+			<div class="row-item">
+                
+            </div>
+		</div>
+	</body>
 </html>
