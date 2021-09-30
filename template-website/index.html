@@ -29,13 +29,14 @@
 								>F.eks.
 								<code
 									><b
-										>&lt;img src="./img/test.jpg"&gt;</b
+										>&lt;img src="https://example.com/img/test.jpg"&gt;</b
 									></code
 								></li
 							>
 						</ul>
 					</div>
 					<div class="editor">
+                        <span id="errorMessage">Invalid kode. Sjekk eksempelet ovenfor.</span>
 						<input
 							type="text" 
 							id="htmlImg"
@@ -43,20 +44,19 @@
                             data-language="html"
                             data-element-type="img"
 						/>
-                        <span id="errorMessage"></span>
 					</div>
 				</div>
-				<div class="col-right">
-					<div class="output-container" id="htmlOutput"> </div>
-				</div>
+				<div class="col-right" id="htmlOutput">
+                    <span>Bildet vises her hvis koden er gyldig.</span>
+                </div>
 			</div>
 			<!-- Skriv gyldig CSS for font størrelse til overskrifter. -->
 			<div class="row-item">
-                
+
             </div>
 			<!-- Skriv gyldig CSS for å endre bakgrunnsfarge på body. -->
 			<div class="row-item">
-                
+
             </div>
 		</div>
 	</body>

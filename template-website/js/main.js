@@ -5,13 +5,14 @@ for (i = 0; i < inputArray.length; i++) {
 
 function tryHTML(element) {
 	var outputElement = document.getElementById('htmlOutput');
-	var errorMessage = document.getElementById('errorMessage');
+	var errorElement = document.getElementById('errorMessage');
 	var code = element.value.trim();
 	var elementType = element.getAttribute('data-element-type');
 
 	if (elementType == 'img') {
 		if (
-			// Sjekk at koden matcher <img src="hvilken som helt url">
+			// Sjekk at koden matcher:
+			// <img src="hvilken som helt url">
 			code.match(/^([<]img src=".{1,}"[>])$/i)
 		) {
 			// Legger til en alt="" attribute på slutten av
@@ -20,14 +21,18 @@ function tryHTML(element) {
 			output =
 				code.substring(0, code.length - 1) +
 				' alt="Dette funket ikke, sjekk at URLen lenker direkte til et bilde.">';
-			error = '';
+                errorElement.style.opacity = '0%';
+                errorElement.style.maxHeight = '0rem';
+		} else if (code == '') {
+            output = '<span>Bildet vises her hvis koden er gyldig.</span>';
+			errorElement.style.opacity = '0%';
+			errorElement.style.maxHeight = '0rem';
 		} else {
-			output = '';
-			error =
-				'Invalid kode. Skriv det slik: <code><b>&lt;img src="https://www.example.com/image.jpg"&gt;</b></code>';
+            output = '<span>Bildet vises her hvis koden er gyldig.</span>';
+			errorElement.style.opacity = '100%';
+			errorElement.style.maxHeight = '1.5rem';
 		}
 		outputElement.innerHTML = output;
-		errorMessage.innerHTML = error;
 	}
 }
 
