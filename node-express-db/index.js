@@ -5,7 +5,7 @@ const port = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-require('./app/routes/elev.routes.js')(app);
+require('./app/routes/elev.routes')(app);
 app.listen(port, () => {
 	console.log(`Server is running on port ${port}`);
 });

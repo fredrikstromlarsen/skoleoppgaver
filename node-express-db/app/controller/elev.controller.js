@@ -1,4 +1,4 @@
-const Elev = require('../models/elev.model.js');
+const Elev = require('../../models/elev.model');
 exports.create = (req, res) => {
 	if (!req.body) {
 		res.status(400).send({

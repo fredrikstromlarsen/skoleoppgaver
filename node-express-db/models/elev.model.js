@@ -1,4 +1,4 @@
-const sql = require("./db.js");
+const sql = require("./db");
 
 /* Constructor */
 const Elev = function (elev) {
@@ -24,7 +24,7 @@ Elev.create = (newElev, result) => {
 
 Elev.findById = (elevId, result) => {
 	sql.query(
-		`SELECT * FROM elev WHERE id = ${elevId}`,
+		`SELECT * FROM elev WHERE ElevID = ${elevId}`,
 		(err, res) => {
 			if (err) {
 				console.log('error: ', err);
@@ -37,7 +37,6 @@ Elev.findById = (elevId, result) => {
 				result(null, res[0]);
 				return;
 			}
-			// not found Elev with the id
 			result({ kind: 'not_found' }, null);
 		}
 	);
@@ -58,7 +57,7 @@ Elev.getAll = (result) => {
 
 Elev.updateById = (id, elev, result) => {
 	sql.query(
-		'UPDATE elev SET Fornavn = ?, Etternavn = ?, Klasse = ?, Hobby = ?, Kjonn = ?, Datamaskin = ? WHERE id = ?',
+		'UPDATE elev SET Fornavn = ?, Etternavn = ?, Klasse = ?, Hobby = ?, Kjonn = ?, Datamaskin = ? WHERE ElevID = ?',
 		[elev.Fornavn, elev.Etternavn, elev.Klasse, elev.Hobby, elev.Kjonn, elev.Datamaskin, id],
 		(err, res) => {
 			if (err) {
@@ -68,7 +67,6 @@ Elev.updateById = (id, elev, result) => {
 			}
 
 			if (res.affectedRows == 0) {
-				// not found Elev with the id
 				result({ kind: 'not_found' }, null);
 				return;
 			}
@@ -80,7 +78,7 @@ Elev.updateById = (id, elev, result) => {
 };
 
 Elev.remove = (id, result) => {
-	sql.query('DELETE FROM elev WHERE id = ?', id, (err, res) => {
+	sql.query('DELETE FROM elev WHERE ElevID = ?', id, (err, res) => {
 		if (err) {
 			console.log('error: ', err);
 			result(null, err);
@@ -88,7 +86,6 @@ Elev.remove = (id, result) => {
 		}
 
 		if (res.affectedRows == 0) {
-			// not found Elev with the id
 			result({ kind: 'not_found' }, null);
 			return;
 		}
