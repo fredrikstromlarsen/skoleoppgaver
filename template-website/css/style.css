@@ -7,6 +7,7 @@
     --background-error: #ff000028;
 
     --text-focus: #fff;
+    --text-unfocus: #666;
     --text-placeholder: #333;
     --text-primary: #eee;
     --text-secondary: #eee;
@@ -156,6 +157,7 @@ input, .input {
 
 #cssOutput {
     flex-direction: column;
+    padding-top: 2rem;
 }
 
 .col-right {
@@ -195,6 +197,26 @@ input, .input {
     color: var(--text-primary);
 }
 
+.col-right h1 {
+    font-size: xx-large;
+}
+
 .col-right h2 {
     font-size: x-large;
+}
+
+.col-right h3 {
+    font-size: larger;
+}
+
+.col-right h4 {
+    font-size: normal;
+}
+
+.col-right h5 {
+    font-size: small;
+}
+
+.col-right h6 {
+    font-size: smaller;
 }

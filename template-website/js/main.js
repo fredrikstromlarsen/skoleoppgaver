@@ -1,10 +1,3 @@
-var inputArray = document.querySelectorAll('input, .input')
-console.log(inputArray);
-
-for (i = 0; i < inputArray.length; i++) {
-	inputArray[i].addEventListener('input', checkLang(this));
-}
-
 function tryHTML(element) {
 	var outputElement = document.getElementById('htmlOutput');
 	var errorElement = document.getElementById('errorMessage');
@@ -20,15 +13,17 @@ function tryHTML(element) {
 			// Legger til en alt="" attribute på slutten av
 			// img - taggen, denne teksten vises når bildet
 			// ikke kan lastes inn.
-			output = code.substring(0, code.length - 1) + ' alt="Dette funket ikke, sjekk at URLen lenker direkte til et bilde.">';
-                errorElement.style.opacity = '0%';
-                errorElement.style.maxHeight = '0rem';
+			output =
+				code.substring(0, code.length - 1) +
+				' alt="Dette funket ikke, sjekk at URLen lenker direkte til et bilde.">';
+			errorElement.style.opacity = '0%';
+			errorElement.style.maxHeight = '0rem';
 		} else if (code == '') {
-            output = '<span>Bildet vises her hvis koden er gyldig.</span>';
+			output = '<span>Bildet vises her hvis koden er gyldig.</span>';
 			errorElement.style.opacity = '0%';
 			errorElement.style.maxHeight = '0rem';
 		} else {
-            output = '<span>Bildet vises her hvis koden er gyldig.</span>';
+			output = '<span>Bildet vises her hvis koden er gyldig.</span>';
 			errorElement.style.opacity = '100%';
 			errorElement.style.maxHeight = '1.5rem';
 		}
@@ -37,16 +32,35 @@ function tryHTML(element) {
 }
 
 function tryCSS(element) {
-    var stylesheet = window.document.styleSheets[0];
-    var code = element.innerHTML;
-    if (code.match(/^(h\d{1,}\s+{\s+font-size:\s+\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);\s+})$/g)) {
-        output = ".col-right " + code;
-        stylesheet.insertRule(output, stylesheet.cssRules.length);
-    }
+	var output;
+	var code = element.innerHTML.replace(/<br>|&nbsp;|\s+/g, '');
+	console.log(code);
+	if (
+		code.match(
+			/h\d{1}{font-size:\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);}/g
+		)
+	) {
+		var selector = code.replace(
+			/{font-size:\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);}/,
+			''
+		);
+		var value = code.replace(/h\d{1}\{font-size:|;\}/g, '');
+		var property = code.replace(
+			/h\d{1}\{|:\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);\}/g,
+			''
+		);
+		console.log(selector, property, value);
+		document.querySelector('.col-right>' + selector).style.fontSize = value;
+	}
 }
 
 function checkLang(element) {
 	var lang = element.getAttribute('data-language');
 	if (lang == 'html') tryHTML(element);
 	else if (lang == 'css') tryCSS(element);
+}
+
+var inputArray = document.querySelectorAll('input, .input');
+for (i = 0; i < inputArray.length; i++) {
+	inputArray[i].addEventListener('input', checkLang(this));
 }
