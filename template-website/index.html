@@ -47,8 +47,10 @@
 							</ul>
 						</div>
 						<div class="editor">
-							<span id="errorMessage"
-								>Invalid kode. Sjekk eksempelet ovenfor.</span
+							<!-- IDen er "random" for å passe på at alle 
+								IDene kan skilles. -->
+							<span id="8qh066" class="error-message"
+								>Invalid kode; sjekk eksempelet ovenfor.</span
 							>
 							<input
 								type="text"
@@ -56,12 +58,13 @@
 								oninput="checkLang(this)"
 								data-language="html"
 								data-element-type="img"
+								data-element-error="8qh066"
 								placeholder="Skriv HTML-kode her"
 							/>
 						</div>
 					</div>
 					<div class="row-2" id="htmlOutput">
-						<span>Bildet vises her hvis koden er gyldig.</span>
+						<span>Bildet vises her hvis koden og URLen er gyldig.</span>
 					</div>
 				</div>
 			</div>
@@ -126,7 +129,7 @@
 							</ul>
 						</div>
 						<div class="editor">
-							<span id="7b4cz7"
+							<span id="7b4cz7" class="error-message"
 								>Invalid kode. Sjekk eksempelet ovenfor.</span
 							>
 							<span
@@ -138,9 +141,9 @@
 								data-element-type="7b4cz7"
 								contenteditable="true"
 								>h1 {
-								<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<br />&nbsp;&nbsp;&nbsp;&nbsp;font-size: 48px;
 								<br />} <br /><br />h2 {
-								<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<br />&nbsp;&nbsp;&nbsp;&nbsp;font-size: ;
 								<br />} <br /><br />h3 {
 								<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<br />} <br /><br />h4 {
@@ -261,6 +264,8 @@
 					</div>
 				</div>
 			</div>
+
+			<!-- p5 js framework -->
 			<div class="row-item">
 				<div class="separator">
 					<hr />

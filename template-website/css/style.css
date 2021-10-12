@@ -107,18 +107,18 @@ li {
     color: var(--text-secondary);
 }
 
-a, code {
+a, code, .error-message {
     border-radius: var(--border-radius);
     -webkit-border-radius: var(--border-radius);
     -moz-border-radius: var(--border-radius);
     -ms-border-radius: var(--border-radius);
     -o-border-radius: var(--border-radius);
 
-    padding: 0.2rem 0.3rem;
+    padding: 0.2em 0.3em;
     margin: 0;
 
+    white-space: nowrap;
     font-size: 0.8em;
-
     font-weight: 400;
     font-family: 'Jetbrains Mono', monospace;
 }
@@ -146,7 +146,7 @@ code {
 
 input, .input {
     font-family: 'Jetbrains Mono', monospace;
-    font-size: x-large;
+    font-size: large;
     color: var(--text-primary);
     
     width: calc(100% - 2rem);
@@ -160,23 +160,16 @@ input, .input {
     -o-border-radius: var(--border-radius);
 }
 
-#errorMessage {
+.error-message {
     width: min-content;
     max-height: 0rem;
-    padding: 0.3rem 0.6rem;
     opacity: 0%;
-    
-    line-height: 1.5rem;
-    font-size: 0.9rem;
-    white-space: nowrap;
+
+    padding: 0.3em 0.4em;
+    font-size: 0.9rem !important;
     color: var(--text-error);
     background: var(--background-error);
-    border-radius: var(--border-radius);
     transition: all 0.2s ease-out;
-    -webkit-border-radius: var(--border-radius);
-    -moz-border-radius: var(--border-radius);
-    -ms-border-radius: var(--border-radius);
-    -o-border-radius: var(--border-radius);
     -webkit-transition: all 0.2s ease-out;
     -moz-transition: all 0.2s ease-out;
     -ms-transition: all 0.2s ease-out;
@@ -210,10 +203,17 @@ input, .input {
     -o-border-radius: var(--border-radius);
 }
 
+.row-2 span, .row-2 img {
+    font-family: 'Jetbrains Mono',monospace;
+    font-size: x-large;
+}
+
+.row-2 img {
+    color: var(--text-primary) !important;
+}
+
 .row-2 span {
     color: var(--text-placeholder);
-    font-family: 'Jetbrains Mono',monospace;
-    font-size: xx-large;
     margin: 2rem;
 }
 

@@ -1,29 +1,46 @@
+function isImage(url) {
+	console.log("isImage(" + url + ")");
+	var rv;
+	new Promise(function (rv) {
+		const img = new Image();
+		img.src = url;
+		img.onload = () => (rv = true);
+		img.onerror = () => (rv = false);
+	});
+	return rv;
+}
+
 function tryHTML(element) {
 	var outputElement = document.getElementById('htmlOutput');
-	var errorElement = document.getElementById(element.getAttribute('data-element-error'));
+	var errorElement = document.getElementById(
+		element.getAttribute('data-element-error')
+	);
 	var code = element.value.trim();
 	var elementType = element.getAttribute('data-element-type');
+	var url = code.replace(/<img src="|">/i, '');
 
 	if (elementType == 'img') {
-		if (
-			// Sjekk at koden matcher:
-			// <img src="hvilken som helt url">
-			code.match(/^([<]img src=".{1,}"[>])$/i)
-		) {
+		// Sjekk at koden matcher:
+		// <img src="url">
+		if (code.match(/^(<img src=".{1,}">)$/i)) { //  && isImage(url)
 			// Legger til en alt="" attribute på slutten av
 			// img - taggen, denne teksten vises når bildet
 			// ikke kan lastes inn.
 			output =
 				code.substring(0, code.length - 1) +
-				' alt="Dette funket ikke, sjekk at URLen lenker direkte til et bilde.">';
+				' alt="Dette funket ikke... sjekk at URLen lenker direkte til et bilde.">';
 			errorElement.style.opacity = '0%';
 			errorElement.style.maxHeight = '0rem';
-		} else if (code == '') {
-			output = '<span>Bildet vises her hvis koden er gyldig.</span>';
+		} else if (
+			code == '' || /^()/.includes(code))
+		{
+			output =
+				'<span>Bildet vises her hvis koden  og URLen er gyldig.</span>';
 			errorElement.style.opacity = '0%';
 			errorElement.style.maxHeight = '0rem';
 		} else {
-			output = '<span>Bildet vises her hvis koden er gyldig.</span>';
+			output =
+				'<span>Bildet vises her hvis koden og URLen er gyldig.</span>';
 			errorElement.style.opacity = '100%';
 			errorElement.style.maxHeight = '1.5rem';
 		}
@@ -51,11 +68,15 @@ function tryCSS(element) {
 			''
 		);
 		if (selector && value && property) {
-			document.querySelector('.col-right>' + selector).style.fontSize = value;
-			console.log(selector + "<br>" + property + "<br>" + value);
+			document.querySelector('.col-right>' + selector).style.fontSize =
+				value;
+			console.log(selector + '<br>' + property + '<br>' + value);
 			return true;
-		} else return false;
-
+		} else {
+			errorElement.style.opacity = '100%';
+			errorElement.style.maxHeight = '1.5rem';
+			return false;
+		};
 	}
 }
 
