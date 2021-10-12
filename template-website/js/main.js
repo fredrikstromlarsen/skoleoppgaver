@@ -1,6 +1,6 @@
 function tryHTML(element) {
 	var outputElement = document.getElementById('htmlOutput');
-	var errorElement = document.getElementById('errorMessage');
+	var errorElement = document.getElementById(element.getAttribute('data-element-error'));
 	var code = element.value.trim();
 	var elementType = element.getAttribute('data-element-type');
 
@@ -32,9 +32,10 @@ function tryHTML(element) {
 }
 
 function tryCSS(element) {
-	var output;
+	var errorElement = document.getElementById(
+		element.getAttribute('data-element-error')
+	);
 	var code = element.innerHTML.replace(/<br>|&nbsp;|\s+/g, '');
-	console.log(code);
 	if (
 		code.match(
 			/h\d{1}{font-size:\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);}/g
@@ -49,8 +50,12 @@ function tryCSS(element) {
 			/h\d{1}\{|:\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);\}/g,
 			''
 		);
-		console.log(selector, property, value);
-		document.querySelector('.col-right>' + selector).style.fontSize = value;
+		if (selector && value && property) {
+			document.querySelector('.col-right>' + selector).style.fontSize = value;
+			console.log(selector + "<br>" + property + "<br>" + value);
+			return true;
+		} else return false;
+
 	}
 }
 

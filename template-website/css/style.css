@@ -1,18 +1,21 @@
 :root {
     --border-radius: 0.2rem;
-    --border: 0.1rem solid #222;
+    --border: 0.1rem solid #1f222a;
 
-    --background-primary: #0a0a0a;
-    --background-secondary: #111;
-    --background-error: #ff000028;
+    --background-primary: #14161b;
+    --background-secondary: #1c1e25;
+    --background-error: #ff260e33;
+    --background-code: #14e47c22;
+    --background-link: #138dff29;
 
     --text-focus: #fff;
-    --text-unfocus: #666;
-    --text-placeholder: #333;
-    --text-primary: #eee;
-    --text-secondary: #eee;
-    --text-error: #f66;
-    --text-link: #22aaff;
+    --text-unfocus: #9cbbb1;
+    --text-placeholder: #2b2e38;
+    --text-primary: #ddd;
+    --text-secondary: #fff;
+    --text-error: #ff260e;
+    --text-code: #14e47c;
+    --text-link: #138dff;
 
 }
 
@@ -22,7 +25,7 @@
 
 body {
     background-color: var(--background-primary);
-    padding: 2rem;
+    padding: 0 2rem;
     margin: 0;
     font-family: sans-serif;
 }
@@ -30,15 +33,42 @@ body {
 .row-container {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
 
-    max-width: calc(100vw - 4rem);
+    max-width: calc(100vw - 5rem);
     width: 60rem;
 
     margin: auto;
+    scroll-snap-type: y mandatory;
+
 }
 
+
 .row-item {
+    min-height: calc(100vh - 5rem);
+    scroll-snap-align: start;
+}
+
+
+.separator {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin: 1.5rem 0;
+}
+
+.separator * {
+    line-height: 2rem;
+    padding: 0;
+    margin: 0;
+}
+
+hr {
+    border: none;
+    border-top: var(--border) !important;
+    width: 100%;;
+}
+
+.task-container {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -53,12 +83,17 @@ body {
     -o-border-radius: var(--border-radius);
 }
 
-/* .col-left {} */
-
 /* .explanation {} */
 
 h2 {
     font-size: xx-large;
+    margin: 0 0 1rem 0;
+    padding: 0;
+    color: var(--text-secondary);
+}
+
+h3 {
+    font-size: x-large;
     margin: 0 0 1rem 0;
     padding: 0;
     color: var(--text-primary);
@@ -72,17 +107,26 @@ li {
     color: var(--text-secondary);
 }
 
-a {
-    margin: 0;
+a, code {
     border-radius: var(--border-radius);
     -webkit-border-radius: var(--border-radius);
     -moz-border-radius: var(--border-radius);
     -ms-border-radius: var(--border-radius);
     -o-border-radius: var(--border-radius);
 
-    font-size: inherit;
+    padding: 0.2rem 0.3rem;
+    margin: 0;
+
+    font-size: 0.8em;
+
+    font-weight: 400;
+    font-family: 'Jetbrains Mono', monospace;
+}
+
+a {
     text-decoration: none;
     color: var(--text-link);
+    background-color: var(--background-link);
 }
 
 a:hover {
@@ -90,20 +134,8 @@ a:hover {
 }
 
 code {
-    padding: 0.3rem 0.5rem;
-    background-color: var(--background-primary);
-    border-radius: var(--border-radius);
-    border: var(--border);
-
-    -webkit-border-radius: var(--border-radius);
-    -moz-border-radius: var(--border-radius);
-    -ms-border-radius: var(--border-radius);
-    -o-border-radius: var(--border-radius);
-}
-
-b {
-    color: var(--text-primary);
-    font-weight: 900;
+    color: var(--text-code);
+    background-color: var(--background-code);
 }
 
 .editor {
@@ -113,7 +145,7 @@ b {
 }
 
 input, .input {
-    font-family: monospace;
+    font-family: 'Jetbrains Mono', monospace;
     font-size: x-large;
     color: var(--text-primary);
     
@@ -160,7 +192,7 @@ input, .input {
     padding-top: 2rem;
 }
 
-.col-right {
+.row-2 {
     align-items: center;
     display: flex;
 
@@ -178,12 +210,14 @@ input, .input {
     -o-border-radius: var(--border-radius);
 }
 
-.col-right span {
+.row-2 span {
     color: var(--text-placeholder);
-    font-size: x-large;
+    font-family: 'Jetbrains Mono',monospace;
+    font-size: xx-large;
+    margin: 2rem;
 }
 
-.col-right img {
+.row-2 img {
     /* min-width: 100%; */
     object-fit: cover;
     width: 100%;
@@ -191,32 +225,32 @@ input, .input {
     /* height: 100%; */
 }
 
-.col-right h1, .col-right h2, .col-right h3, .col-right h4, .col-right h5 {
+.row-2 h1, .row-2 h2, .row-2 h3, .row-2 h4, .row-2 h5, .row-2 h6 {
     margin: 0 0 1rem 0;
     padding: 0;
     color: var(--text-primary);
 }
 
-.col-right h1 {
+.row-2 h1 {
     font-size: xx-large;
 }
 
-.col-right h2 {
+.row-2 h2 {
     font-size: x-large;
 }
 
-.col-right h3 {
+.row-2 h3 {
     font-size: larger;
 }
 
-.col-right h4 {
+.row-2 h4 {
     font-size: normal;
 }
 
-.col-right h5 {
+.row-2 h5 {
     font-size: small;
 }
 
-.col-right h6 {
-    font-size: smaller;
+.row-2 h6 {
+    font-size: x-small;
 }
