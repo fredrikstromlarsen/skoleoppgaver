@@ -206,14 +206,10 @@ input, .input {
 .row-2 span, .row-2 img {
     font-family: 'Jetbrains Mono',monospace;
     font-size: x-large;
-}
-
-.row-2 img {
-    color: var(--text-primary) !important;
+    color: var(--text-placeholder);
 }
 
 .row-2 span {
-    color: var(--text-placeholder);
     margin: 2rem;
 }
 

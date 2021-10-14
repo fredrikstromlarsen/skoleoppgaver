@@ -1,47 +1,45 @@
-function testing() {
-	var code = '<img src="https://">';
-	if (code.match(/^(<img src=".{1,}">)$/)) return true;
-	else return false;
-}
-
-console.log(testing());
-
-function isImage(url) {
-	console.log('isImage(' + url + ')');
-	returnValue = new Promise(function (rv) {
-		const img = new Image();
-		img.onload = () => (rv = true);
-		img.onerror = () => (rv = false);
-		img.src = url;
-		return rv;
-	});
-	console.log(returnValue);
-	return returnValue;
+function testing(code) {
+	if (code == '<img src="">'.substr(0, code.length)) return true;
+	else {
+		console.log('code: ' + code);
+		console.log('match: ' + '<img src="">'.substr(0, code.length));
+		return false;
+	}
 }
 
 function tryHTML(element) {
 	var outputElement = document.getElementById('htmlOutput');
 	var errorElement = document.getElementById(
-		element.getAttribute('data-element-error')
+		element.getAttribute('data-error')
 	);
 	var code = element.value.trim();
 	var elementType = element.getAttribute('data-element-type');
 
 	if (elementType == 'img') {
-		var url = code.replace(/<img src="|">/g, '');
-		var code = code.replace(url, '');
+		var url = code.replace(code.substr(0, Math.min(code.length, 9)), '');
+		if (url.match(/"|">/g)) {
+			url = url.replace(/["]|[>]/g, '');
+		}
+		var expectedInputString = '<img src="' + url + '">';
+		var expectedInput = expectedInputString.substr(0, code.length);
+		var htmlCode = code.replace(url, '');
 
-		console.log('url: ' + url);
-		console.log('code: ' + code);
+		console.log('user input url: ' + url);
+		console.log('user input html: ' + htmlCode);
+		console.log('expected input: ' + expectedInputString);
+		console.log('expected html: ' + expectedInput);
 
-		if (code == '<img src="">') {
+		if (htmlCode == '<img src="">') {
 			// Legger til en alt="" attribute på slutten av
 			// img - taggen, denne teksten vises når bildet
 			// ikke kan lastes inn.
-			output = '<img src="' + url + '" alt="Dette funket ikke... sjekk at URLen lenker direkte til et bilde.">';
+			output =
+				'<img src="' +
+				url +
+				'" alt="Dette funket ikke. Sjekk at URLen lenker direkte til et bilde.">';
 			errorElement.style.opacity = '0%';
 			errorElement.style.maxHeight = '0rem';
-		} else if (code == '' || code.includes()) {
+		} else if (code == '' || code == expectedInput) {
 			output =
 				'<span>Bildet vises her hvis koden  og URLen er gyldig.</span>';
 			errorElement.style.opacity = '0%';
