@@ -1,13 +1,22 @@
+function testing() {
+	var code = '<img src="https://">';
+	if (code.match(/^(<img src=".{1,}">)$/)) return true;
+	else return false;
+}
+
+console.log(testing());
+
 function isImage(url) {
-	console.log("isImage(" + url + ")");
-	var rv;
-	new Promise(function (rv) {
+	console.log('isImage(' + url + ')');
+	returnValue = new Promise(function (rv) {
 		const img = new Image();
-		img.src = url;
 		img.onload = () => (rv = true);
 		img.onerror = () => (rv = false);
+		img.src = url;
+		return rv;
 	});
-	return rv;
+	console.log(returnValue);
+	return returnValue;
 }
 
 function tryHTML(element) {
@@ -17,23 +26,22 @@ function tryHTML(element) {
 	);
 	var code = element.value.trim();
 	var elementType = element.getAttribute('data-element-type');
-	var url = code.replace(/<img src="|">/i, '');
 
 	if (elementType == 'img') {
-		// Sjekk at koden matcher:
-		// <img src="url">
-		if (code.match(/^(<img src=".{1,}">)$/i)) { //  && isImage(url)
+		var url = code.replace(/<img src="|">/g, '');
+		var code = code.replace(url, '');
+
+		console.log('url: ' + url);
+		console.log('code: ' + code);
+
+		if (code == '<img src="">') {
 			// Legger til en alt="" attribute på slutten av
 			// img - taggen, denne teksten vises når bildet
 			// ikke kan lastes inn.
-			output =
-				code.substring(0, code.length - 1) +
-				' alt="Dette funket ikke... sjekk at URLen lenker direkte til et bilde.">';
+			output = '<img src="' + url + '" alt="Dette funket ikke... sjekk at URLen lenker direkte til et bilde.">';
 			errorElement.style.opacity = '0%';
 			errorElement.style.maxHeight = '0rem';
-		} else if (
-			code == '' || /^()/.includes(code))
-		{
+		} else if (code == '' || code.includes()) {
 			output =
 				'<span>Bildet vises her hvis koden  og URLen er gyldig.</span>';
 			errorElement.style.opacity = '0%';
@@ -76,7 +84,7 @@ function tryCSS(element) {
 			errorElement.style.opacity = '100%';
 			errorElement.style.maxHeight = '1.5rem';
 			return false;
-		};
+		}
 	}
 }
 
