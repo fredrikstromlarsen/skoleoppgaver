@@ -89,6 +89,7 @@ function tryCSS(element) {
 				errorElement.style.maxHeight = '1.5rem';
 			}
 			break;
+			
 		case 'font-family':
 			var validRegex = /^(h[1-6]{1}|p){font-family:[A-Za-z'"\- ]{1,};}$/;
 			var anyValid = false;
