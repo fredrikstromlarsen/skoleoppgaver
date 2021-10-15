@@ -13,21 +13,16 @@ function tryHTML(element) {
 		element.getAttribute('data-error')
 	);
 	var code = element.value.trim();
-	var elementType = element.getAttribute('data-element-type');
+	var elementProperty = element.getAttribute('data-property');
 
-	if (elementType == 'img') {
+	if (elementProperty == 'img') {
 		var url = code.replace(code.substr(0, Math.min(code.length, 9)), '');
 		if (url.match(/"|">/g)) {
-			url = url.replace(/["]|[>]/g, '');
+			url = url.replace(/"|>/g, '');
 		}
 		var expectedInputString = '<img src="' + url + '">';
 		var expectedInput = expectedInputString.substr(0, code.length);
 		var htmlCode = code.replace(url, '');
-
-		console.log('user input url: ' + url);
-		console.log('user input html: ' + htmlCode);
-		console.log('expected input: ' + expectedInputString);
-		console.log('expected html: ' + expectedInput);
 
 		if (htmlCode == '<img src="">') {
 			// Legger til en alt="" attribute på slutten av
@@ -41,7 +36,7 @@ function tryHTML(element) {
 			errorElement.style.maxHeight = '0rem';
 		} else if (code == '' || code == expectedInput) {
 			output =
-				'<span>Bildet vises her hvis koden  og URLen er gyldig.</span>';
+				'<span>Bildet vises her hvis koden og URLen er gyldig.</span>';
 			errorElement.style.opacity = '0%';
 			errorElement.style.maxHeight = '0rem';
 		} else {
@@ -56,40 +51,87 @@ function tryHTML(element) {
 
 function tryCSS(element) {
 	var errorElement = document.getElementById(
-		element.getAttribute('data-element-error')
+		element.getAttribute('data-error')
 	);
-	var code = element.innerHTML.replace(/<br>|&nbsp;|\s+/g, '');
-	if (
-		code.match(
-			/h\d{1}{font-size:\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);}/g
-		)
-	) {
-		var selector = code.replace(
-			/{font-size:\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);}/,
-			''
-		);
-		var value = code.replace(/h\d{1}\{font-size:|;\}/g, '');
-		var property = code.replace(
-			/h\d{1}\{|:\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);\}/g,
-			''
-		);
-		if (selector && value && property) {
-			document.querySelector('.col-right>' + selector).style.fontSize =
-				value;
-			console.log(selector + '<br>' + property + '<br>' + value);
-			return true;
-		} else {
-			errorElement.style.opacity = '100%';
-			errorElement.style.maxHeight = '1.5rem';
-			return false;
-		}
+	var elementProperty = element.getAttribute('data-property');
+	var code = element.innerHTML.replace(/\s+|&nbsp;|<br>/gi, '');
+	const rulesetArr = code.split(/}/g);
+
+	switch (elementProperty) {
+		case 'font-size':
+			var validRegex =
+				/^h[1-6]{1}{font-size:\d{1,}(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);}$/;
+			var anyValid = false;
+
+			for (i = 0; i < rulesetArr.length; i++) {
+				rulesetArr[i] = rulesetArr[i] + '}';
+
+				if (rulesetArr[i].match(validRegex)) {
+					var selector = rulesetArr[i].substr(0, 2);
+					var value = rulesetArr[i].replace(
+						/^h[1-6]{1}{font-size:|;}$/g,
+						''
+					);
+					anyValid = true;
+
+					console.log('valid ruleset: ' + rulesetArr[i]);
+					document.getElementById(
+						'css-task-1-' + selector
+					).style.fontSize = value;
+				}
+			}
+
+			if (anyValid) {
+				errorElement.style.opacity = '0%';
+				errorElement.style.maxHeight = '0rem';
+			} else {
+				errorElement.style.opacity = '100%';
+				errorElement.style.maxHeight = '1.5rem';
+			}
+			break;
+		case 'font-family':
+			var validRegex = /^(h[1-6]{1}|p){font-family:[A-Za-z'"\- ]{1,};}$/;
+			var anyValid = false;
+
+			for (i = 0; i < rulesetArr.length; i++) {
+				rulesetArr[i] = rulesetArr[i] + '}';
+
+				if (rulesetArr[i].match(validRegex)) {
+					var selector = rulesetArr[i].substr(0, 2);
+					var value = rulesetArr[i].replace(
+						/^(h[1-6]{1}|p){font-family:|;}$/g,
+						''
+					);
+					anyValid = true;
+
+					console.log('valid ruleset: ' + rulesetArr[i]);
+					document.getElementById(
+						'css-task-2-' + selector
+					).style.fontFamily = value;
+				}
+			}
+
+			if (anyValid) {
+				errorElement.style.opacity = '0%';
+				errorElement.style.maxHeight = '0rem';
+			} else {
+				errorElement.style.opacity = '100%';
+				errorElement.style.maxHeight = '1.5rem';
+			}
+			break;
 	}
+}
+
+function tryJS(element) {
+// p5.js
+
 }
 
 function checkLang(element) {
 	var lang = element.getAttribute('data-language');
 	if (lang == 'html') tryHTML(element);
 	else if (lang == 'css') tryCSS(element);
+	else if (lang == 'js') tryJS(element);
 }
 
 var inputArray = document.querySelectorAll('input, .input');

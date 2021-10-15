@@ -194,8 +194,7 @@ input, .input {
     border-radius: var(--border-radius);
 
     width: 100%;
-    min-height: 20rem;
-    /* max-height: 30rem; */
+    height: minmax(1rem, fit-content);
     overflow: hidden;
     -webkit-border-radius: var(--border-radius);
     -moz-border-radius: var(--border-radius);
@@ -214,11 +213,9 @@ input, .input {
 }
 
 .row-2 img {
-    /* min-width: 100%; */
     object-fit: cover;
     width: 100%;
     height: 100%;
-    /* height: 100%; */
 }
 
 .row-2 h1, .row-2 h2, .row-2 h3, .row-2 h4, .row-2 h5, .row-2 h6 {
@@ -227,26 +224,26 @@ input, .input {
     color: var(--text-primary);
 }
 
-.row-2 h1 {
+#css-task-1-h1 {
     font-size: xx-large;
 }
 
-.row-2 h2 {
+#css-task-1-h2 {
     font-size: x-large;
 }
 
-.row-2 h3 {
+#css-task-1-h3 {
     font-size: larger;
 }
 
-.row-2 h4 {
+#css-task-1-h4 {
     font-size: normal;
 }
 
-.row-2 h5 {
+#css-task-1-h5 {
     font-size: small;
 }
 
-.row-2 h6 {
+#css-task-1-h6 {
     font-size: x-small;
 }
