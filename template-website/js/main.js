@@ -1,8 +1,6 @@
 function testing(code) {
 	if (code == '<img src="">'.substr(0, code.length)) return true;
 	else {
-		console.log('code: ' + code);
-		console.log('match: ' + '<img src="">'.substr(0, code.length));
 		return false;
 	}
 }
@@ -54,79 +52,88 @@ function tryCSS(element) {
 		element.getAttribute('data-error')
 	);
 	var elementProperty = element.getAttribute('data-property');
-	var code = element.innerHTML.replace(/\s+|&nbsp;|<br>/gi, '');
+	var code = element.innerHTML.replace(/&nbsp;|<br>/gi, '');
+	var unsetRegex = /^\s*(h[1-6]{1}|p)\s*{\s*}\s*$/;
+
 	const rulesetArr = code.split(/}/g);
 
 	switch (elementProperty) {
 		case 'font-size':
 			var validRegex =
-				/^h[1-6]{1}{font-size:\d{1,}(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax);}$/;
-			var anyValid = false;
+				/^\s*h[1-6]{1}\s*{\s*font-size:\s*\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax)\s*;\s*}\s*$/;
 
-			for (i = 0; i < rulesetArr.length; i++) {
+			var anyErrors = false;
+
+			for (i = 0; i < rulesetArr.length - 1; i++) {
 				rulesetArr[i] = rulesetArr[i] + '}';
 
 				if (rulesetArr[i].match(validRegex)) {
-					var selector = rulesetArr[i].substr(0, 2);
-					var value = rulesetArr[i].replace(
-						/^h[1-6]{1}{font-size:|;}$/g,
-						''
+					// Get first two characters of string. E.g. h1, h2, h3, etc.
+					var selector = rulesetArr[i].match(/h[1-6]{1}/);
+					var value = rulesetArr[i].match(
+						/\d+(px|rem|em|ch|cm|mm|in|%|pt|pc|ex|vw|vh|vmin|vmax)/g
 					);
-					anyValid = true;
-
-					console.log('valid ruleset: ' + rulesetArr[i]);
 					document.getElementById(
 						'css-task-1-' + selector
 					).style.fontSize = value;
-				}
+				} else if (
+					// If they are default value, don't count them as errors
+					rulesetArr[i].replace(/\s+|\n+/g, '').match(unsetRegex)
+				);
+				else anyErrors = true;
 			}
 
-			if (anyValid) {
-				errorElement.style.opacity = '0%';
-				errorElement.style.maxHeight = '0rem';
-			} else {
+			if (anyErrors) {
 				errorElement.style.opacity = '100%';
 				errorElement.style.maxHeight = '1.5rem';
+			} else {
+				errorElement.style.opacity = '0%';
+				errorElement.style.maxHeight = '0rem';
 			}
 			break;
-			
-		case 'font-family':
-			var validRegex = /^(h[1-6]{1}|p){font-family:[A-Za-z'"\- ]{1,};}$/;
-			var anyValid = false;
 
-			for (i = 0; i < rulesetArr.length; i++) {
+		case 'font-family':
+			// Allow only specific fonts to either <h2> or <p>
+			var validRegex =
+				/^\s*(h2|p)\s*{\s*font-family:\s*('Lora'|'Merriweather'|'Inter'|'Montserrat'|'Noto Sans Mono'|'JetBrains Mono'|'Cousine'|sans-serif|serif|monospace|cursive|fantasy|unset|,|\s+)+\s*;\s*}\s*$/;
+			var anyErrors = false;
+
+			for (i = 0; i < rulesetArr.length - 1; i++) {
 				rulesetArr[i] = rulesetArr[i] + '}';
 
 				if (rulesetArr[i].match(validRegex)) {
-					var selector = rulesetArr[i].substr(0, 2);
-					var value = rulesetArr[i].replace(
-						/^(h[1-6]{1}|p){font-family:|;}$/g,
+					// Removes everything after "{" in the ruleset
+					// var selector = rulesetArr[i].replace(/\s*|\n*/g, '');
+					var selector = rulesetArr[i].trim().match(/^h2|^p/g);
+
+					// Removes everything before the ":". after the ";" and spaces if there are any
+					var value = rulesetArr[i].match(
+						/'Lora'|'Merriweather'|'Inter'|'Montserrat'|'Noto Sans Mono'|'JetBrains Mono'|'Cousine'|sans-serif|serif|monospace|cursive|fantasy|unset/g,
 						''
 					);
-					anyValid = true;
 
-					console.log('valid ruleset: ' + rulesetArr[i]);
 					document.getElementById(
 						'css-task-2-' + selector
 					).style.fontFamily = value;
-				}
+
+					// If any code is invalid: display the error message
+				} else anyErrors = true;
 			}
 
-			if (anyValid) {
-				errorElement.style.opacity = '0%';
-				errorElement.style.maxHeight = '0rem';
-			} else {
+			if (anyErrors) {
 				errorElement.style.opacity = '100%';
 				errorElement.style.maxHeight = '1.5rem';
+			} else {
+				errorElement.style.opacity = '0%';
+				errorElement.style.maxHeight = '0rem';
 			}
 			break;
 	}
 }
 
-function tryJS(element) {
-// p5.js
-
-}
+//function tryJS(element) {
+// 	p5.js
+//}
 
 function checkLang(element) {
 	var lang = element.getAttribute('data-language');

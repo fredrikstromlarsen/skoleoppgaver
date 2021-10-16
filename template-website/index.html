@@ -1,16 +1,24 @@
+<!-- 
+	👋 Halla 10. klasseelev! 
+	💯 Kult å møte deg her, 🤘 rått at du sjekka kildekoden 🤖.
+
+	🤪 Se flere av mine prosjkter på GitHub:
+	🤑 https://github.com/fredrikstromlarsen
+ -->
+
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>GUI Website Learner Tool</title>
+		<title>Learn the basics of HTML, CSS, JS</title>
 		<link rel="stylesheet" href="./css/style.css" />
 		<script src="./js/main.js" defer></script>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Cousine:wght@400;700&family=JetBrains+Mono:wght@100;200;300;400;500;600&family=Lora:wght@400;700&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Cousine:wght@400;700&family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;800&family=Lora:wght@400;700&family=Merriweather:wght@400;900&family=Montserrat:wght@400;800&family=Noto+Sans+Mono:wght@400;800&display=swap"
 			rel="stylesheet"
 		/>
 	</head>
@@ -40,14 +48,12 @@
 								>F.eks.
 								<code
 									>&lt;img
-									src="https://example.com/img/test.jpg"&gt;</code
+									src="https://www.example.com/img/test.jpg"&gt;</code
 								></li
 							>
 						</ul>
 					</div>
 					<div class="editor">
-						<!-- IDen er "random" for å passe på at alle 
-								IDene kan skilles. -->
 						<span id="html-task-1" class="error-message"
 							>Invalid kode; sjekk eksempelet ovenfor.</span
 						>
@@ -99,17 +105,17 @@
 								gi de et annet utseende bruker vi CSS.</li
 							>
 							<li
-								>For å endre skiftstørrelse må vi gi endre
-								<code>font-size</code> sin verdi til noe
-								annet.</li
+								>For å endre skiftstørrelse må vi endre
+								<code>font-size</code> sin verdi til noe annet
+								en det den som default.</li
 							>
 							<li
 								>Vi begynner med å definere en
 								<a
 									href="https://css-tricks.com/css-ruleset-terminology/"
 									>selector</a
-								>, i dette tilfellet er det
-								<code>&lt;h2&gt;</code>.</li
+								>, i dette tilfellet er alle listet
+								nedenfor.</li
 							>
 							<li
 								>Deretter skriver vi inn hvilken egenskap vi vil
@@ -117,12 +123,81 @@
 								<code>font-size</code>, og til slutt gir vi
 								egenskapen en verdi.</li
 							>
+							<li
+								><a
+									href="https://www.w3schools.com/CSSref/css_units.asp"
+									>CSS har mange forskjellige måleenheter</a
+								>
+								man kan bruke, noen passer bedre enn andre. De
+								vi har er:
+								<ul>
+									<li><code>cm</code> (centimeter)</li>
+									<li><code>mm</code> (millimeter)</li>
+									<li><code>in</code> (tommer)</li>
+									<li
+										><code>px</code> (piksler, 1px =
+										1in/96)</li
+									>
+									<li
+										><code>pt</code> (punkter, 1pt =
+										1in/72)</li
+									>
+									<li><code>pc</code> (picas, 1pc = 12pt)</li>
+									<li
+										><code>em</code> (1em = 100% av
+										font-size på samme element)</li
+									>
+									<li
+										><code>ex</code> (Relative til høyde på
+										fonten som brukes (sjelden brukt))</li
+									>
+									<li
+										><code>ch</code> (Relativ til bredden av
+										tallet "0", bredden er forskjellig
+										avhengig av font)</li
+									>
+									<li
+										><code>rem</code> (%/100 av font-size på
+										"root"-elementet)</li
+									>
+									<li
+										><code>vw</code> (1vw = 1% av bredden på
+										nettleservinduet)</li
+									>
+									<li
+										><code>vh</code> (1vh = 1% av høyden på
+										nettleservinduet)</li
+									>
+									<li
+										><code>vmin</code> (1vmin = 1% av den
+										korteste siden på nettleservinduet)</li
+									>
+									<li
+										><code>vmax</code> (1vmax = 1% av den
+										lengste siden på nettleservinduet)</li
+									>
+									<li
+										><code>%</code> (Relativ til elementet
+										"over" også kjent som "parent
+										element")</li
+									>
+								</ul></li
+							>
+							<li
+								>Prøv gjerne å endre skriftstørrelsen på en
+								<code>&lt;h2&gt;</code>,
+								<code>&lt;h3&gt;</code> og
+								<code>&lt;h4&gt;</code>-tittel med flere
+								forskjellige måleenheter. Se nøye på eksempelet
+								under for riktig formatering av koden.</li
+							>
 							<li>F.eks: <code>h2 { font-size: 72px; }</code></li>
 						</ul>
 					</div>
 					<div class="editor">
 						<span id="css-task-1" class="error-message"
-							>Invalid kode. Sjekk eksempelet ovenfor.</span
+							>Koden er invalid. Prøv å sammenligne koden din med
+							eksempelet over.</span
 						>
 						<span
 							class="input"
@@ -182,51 +257,127 @@
 			<div class="task-container">
 				<div class="row-1">
 					<div class="explanation">
-						<h2>Endre skriftstørrelse på overskrifter med CSS</h2>
+						<h2>Endre skrifttype på overskrifter med CSS</h2>
 						<ul>
 							<li
-								>Når vi lager overskrifter i HTML brukes
-								<code>&lt;h1&gt;</code>,
-								<code>&lt;h2&gt;</code>,
-								<code>&lt;h3&gt;</code>,
-								<code>&lt;h4&gt;</code>,
-								<code>&lt;h5&gt;</code> og
-								<code>&lt;h6&gt;</code>.</li
-							>
-							<li
-								><code>&lt;h1&gt;</code> er for
-								hovedoverskrifter, resten er
-								underoverskrifter.</li
-							>
-							<li
-								>Alle HTML-elementer har en default verdi, for å
-								gi de et annet utseende bruker vi CSS.</li
-							>
-							<li
-								>For å endre skiftstørrelse må vi gi endre
-								<code>font-size</code> sin verdi til noe
-								annet.</li
-							>
-							<li
-								>Vi begynner med å definere en
-								<a
+								>Slik som forrige oppgaver må vi først velge
+								hvilket element vi vil endre standardverdi til
+								(<a
 									href="https://css-tricks.com/css-ruleset-terminology/"
 									>selector</a
-								>, i dette tilfellet er det
-								<code>&lt;h2&gt;</code>.</li
+								>). I teksten nedenfor brukes
+								<code>&lt;h2&gt;</code> for overskrift og
+								<code>&lt;p&gt;</code> for brødtekst.</li
 							>
 							<li
-								>Deretter skriver vi inn hvilken egenskap vi vil
-								endre verdien til. Her blir det
-								<code>font-size</code>, og til slutt gir vi
-								egenskapen en verdi.</li
+								>For å endre skifttype i CSS må vi gi
+								<code>font-family</code> en verdi.</li
 							>
-							<li>F.eks: <code>h2 { font-size: 24px; }</code></li>
+							<li
+								><code>font-family</code> støtter noe vi kaller
+								"fallback-verdier". Det vil si at hvis ikke
+								nettsiden klarer å laste inn en skrifttype for
+								eksempel hvis det er i feil format, eller
+								font-filen ikke finnes, vil den prøve å laste
+								inn neste verdi.
+							</li>
+							<li
+								>Hvis vi skriver
+								<code
+									>h2 { font-family: 'Lora', 'Times New
+									Roman', serif; }</code
+								>
+								vil nettsiden først prøve å sette skrifttypen
+								til <code>&lt;h2&gt;</code>-tittelen til
+								<code>'Lora'</code>, hvis denne ikke laster så
+								prøver den <code>'Times New Roman'</code>,
+								dersom denne også ikke skulle lastes inn vil den
+								falle tilbake til <code>serif</code>.
+								<code>serif</code> er en ikke en spesifikk font,
+								så den vil være annerledes på din PC, min PC og
+								vennene dine sine PCer.</li
+							>
+							<li
+								>Jeg har importert noen high-quality fonter du
+								kan benytte deg av i oppgaven:
+								<ul>
+									<li
+										><a
+											href="https://fonts.google.com/specimen/Lora"
+											>Lora</a
+										>
+										(serif)</li
+									>
+									<li
+										><a
+											href="https://fonts.google.com/specimen/Merriweather"
+											>Merriweather</a
+										>
+										(serif)</li
+									>
+									<li
+										><a
+											href="https://fonts.google.com/specimen/Inter"
+											>Inter</a
+										>
+										(sans-serif)</li
+									>
+									<li
+										><a
+											href="https://fonts.google.com/specimen/Montserrat"
+											>Montserrat</a
+										>
+										(sans-serif)</li
+									>
+									<li
+										><a
+											href="https://fonts.google.com/specimen/Noto+Sans+Mono"
+											>Noto Sans Mono</a
+										>
+										(monospace)</li
+									>
+									<li
+										><a
+											href="https://fonts.google.com/specimen/JetBrains+Mono"
+											>JetBrains Mono</a
+										>
+										(monospace)</li
+									>
+									<li
+										><a
+											href="https://fonts.google.com/specimen/Cousine"
+											>Cousine</a
+										>
+										(monospace)</li
+									>
+								</ul>
+								Du kan også velge i
+								nettleservalgte/nettlseserspesifikke
+								fallback-fonter som:
+								<ul>
+									<li><code>sans-serif</code></li>
+									<li><code>serif</code></li>
+									<li><code>monospace</code></li>
+									<li><code>cursive</code></li>
+									<li><code>fantasy</code></li>
+									<li><code>unset</code> (ingen verdi)</li>
+								</ul></li
+							>
+							<li
+								>Nå som du vet litt om hvordan man endrer
+								skrifttype i CSS kan du prøve å endre
+								skrifttypen på overskriften
+								(<code>&lt;h2&gt;</code>) til
+								<code>'Montserrat'</code> og brødteksten til
+								<code>'Noto Sans Mono'</code> med
+								<code>monospace</code> som fallback.</li
+							>
 						</ul>
 					</div>
 					<div class="editor">
 						<span id="css-task-2" class="error-message"
-							>Invalid kode. Sjekk eksempelet ovenfor.</span
+							>Koden er invalid/feil. Gå gjennom koden og prøv å
+							finne ut av problemet selv!</span
 						>
 						<span
 							class="input"
@@ -240,26 +391,28 @@
 							'Inter', sans-serif;&nbsp;&nbsp;&nbsp; <br />}
 							<br /><br />p {
 							<br />&nbsp;&nbsp;&nbsp;&nbsp;font-family: 'Lora',
-							serif;&nbsp;&nbsp;&nbsp; <br />}
+							'Merriweather', serif;&nbsp;&nbsp;&nbsp; <br />}
 						</span>
 					</div>
 				</div>
 				<div class="row-2" id="cssOutput">
-					<h2 id="css-task-2-h2"
+					<h2 id="css-task-2-h2" contenteditable="true"
 						>Lorem Ipsum er Placeholder-tekst for de som ikke vet
-						hva de skal skrive</h2
+						hva de skal skrive 🤭</h2
 					>
-					<p id="css-task-2-p"
-						>Lorem ipsum dolor sit amet consectetur adipisicing
-						elit. Possimus repellat, voluptate saepe aspernatur
-						assumenda porro tempora consequuntur, perspiciatis ex
-						laboriosam in esse nulla ut magni ipsam atque commodi
-						distinctio ullam sed sunt, vel deleniti amet molestias?
-						Voluptates omnis, rerum amet placeat harum ab minus
-						reiciendis eveniet perferendis quidem at consequuntur
-						dolor ad aspernatur, molestias voluptatibus quaerat
-						culpa nobis laboriosam neque. Odit, quia. Numquam cum ex
-						ab odit impedit ad voluptatem ipsa autem possimus rerum
+					<p id="css-task-2-p" contenteditable="true"
+						>Du kan skrive hva du vil her. Som default har jeg lagt
+						inn 200 ord med Lorem-Ipsum-placeholder-tekst Lorem
+						ipsum dolor sit amet consectetur adipisicing elit.
+						Possimus repellat, voluptate saepe aspernatur assumenda
+						porro tempora consequuntur, perspiciatis ex laboriosam
+						in esse nulla ut magni ipsam atque commodi distinctio
+						ullam sed sunt, vel deleniti amet molestias? Voluptates
+						omnis, rerum amet placeat harum ab minus reiciendis
+						eveniet perferendis quidem at consequuntur dolor ad
+						aspernatur, molestias voluptatibus quaerat culpa nobis
+						laboriosam neque. Odit, quia. Numquam cum ex ab odit
+						impedit ad voluptatem ipsa autem possimus rerum
 						doloremque consectetur et sit quisquam enim temporibus,
 						magni hic, recusandae aliquid, ducimus facere?
 						Voluptatum dolor veritatis consequatur aliquid
