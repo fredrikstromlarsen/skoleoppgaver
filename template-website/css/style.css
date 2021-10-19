@@ -34,7 +34,6 @@ body, html {
     display: flex;
     flex-direction: column;
     scroll-snap-type: y proximity;
-    scroll-snap-stop: always;
 
     font-family: var(--font-sans-serif);
 }
