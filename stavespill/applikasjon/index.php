@@ -7,22 +7,15 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Stavespill</title>
 	<link rel="stylesheet" href="style.css">
+	<script src="test.js" defer></script>
 </head>
 
 <body>
-	<!-- Foreløpig ikke nødvendig da det kun trengs en session. -->
-	<section id="loginCode">
-		<?php include("login/index.php"); ?>
-	</section>
-	<section id="loginUsername">
-		<?php include("loginUsername/index.php"); ?>
-	</section>
-	<section id="leaderboard">
-		<?php include("leaderboard/index.php"); ?>
-	</section>
-	<section id="game">
-		<?php include("game/index.php"); ?>
-
+	<?php
+	$page = preg_match("/\d{4}\s{1}[A-Za-z]*/", base64_decode($_SESSION['id'])) ? "game" : "login";
+	echo "<section id='$page'>";
+	include($page . "/index.php");
+	?>
 	</section>
 </body>
 
