@@ -7,14 +7,23 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Stavespill</title>
 	<link rel="stylesheet" href="style.css">
-	<script src="test.js" defer></script>
 </head>
 
 <body>
 	<?php
-	$page = preg_match("/\d{4}\s{1}[A-Za-z]*/", base64_decode($_SESSION['id'])) ? "game" : "login";
-	echo "<section id='$page'>";
-	include($page . "/index.php");
+	if (isset($_COOKIE['id'])) {
+		showThisPage("game");
+		echo "game";
+	} else {
+		showThisPage("login");
+		echo "login 1st else";
+	}
+
+	function showThisPage($page)
+	{
+		echo "<section id='" . $page . "'>";
+		include($page . "/index.php");
+	}
 	?>
 	</section>
 </body>

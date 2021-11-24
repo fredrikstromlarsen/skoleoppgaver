@@ -1,4 +1,11 @@
 <!-- Leaderboard side -->
+<?php
+$game = array(
+    'id' => trim(preg_replace("/.\.*$/", "", base64_decode($_COOKIE['id']))),
+    'name' => trim(preg_replace("/^\.*./", "", base64_decode($_COOKIE['id'])))
+);
+
+?>
 <div class="col-center">
     <table class="leaderboard" border="1">
         <tr>

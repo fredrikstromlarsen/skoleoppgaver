@@ -139,6 +139,7 @@ function checkLang(element) {
 	var lang = element.getAttribute('data-language');
 	if (lang == 'html') tryHTML(element);
 	else if (lang == 'css') tryCSS(element);
+	else if (lang == 'js') tryJS(element);
 }
 
 var inputArray = document.querySelectorAll('input, .input');
