@@ -11,19 +11,26 @@
 
 <body>
 	<?php
-	if (isset($_COOKIE['id'])) {
-		showThisPage("game");
-		echo "game";
-	} else {
-		showThisPage("login");
-		echo "login 1st else";
-	}
+	// Initialize connection to database
+	include("db.php");
 
-	function showThisPage($page)
-	{
-		echo "<section id='" . $page . "'>";
-		include($page . "/index.php");
-	}
+	// Check if user has logged in
+	if (isset($_COOKIE['username'])) {
+
+		// ... and if it's a valid cookie, not just someone changing their cookie client side 
+		$tmp = $con->query("SELECT * FROM user WHERE name='".$_COOKIE['username']."'");
+
+		// If exactly 1 user exists with the name, continue
+		if ($tmp->num_rows==1) {
+			$p = "game";
+
+			// Otherwise, return to the login screen
+		} else $p = "login";
+	} else $p = "login";
+
+	// Show the appropriate page without redirecting
+	echo "<section id='" . $p . "'>";
+	include($p . "/index.php");
 	?>
 	</section>
 </body>

@@ -1,12 +1,26 @@
-# Programming Tasks Assigned at School
+# Oppgave Express.js med databasetilkobling
 
-## Contributers
+Express.js er en Node.js web application rammeverk, som vi kan bruke til å lage webapplikasjoner, både frontend og backend.
+I denne oppgaven skal vi se på node.js som et backend-verktøy, mens MAMP-webserver (php-side) fungerer som et frontend-verktøy.
 
-- [**Fredrik Strøm-Larsen**](https://github.com/fredrikstromlarsen) - Owner
+## Oppgaven går som følger:
+  
+### Produktet er en nettside:
+	Frontend:
 
-## Current List of Projects
+	Viser data fra databasen i en tabell
+	Lager et enkelt brukergrensesnitt for å oppdatere rader, sette inn rader og slette rader (Enkel navigation bar). 
+	Style det med CSS, men ikke "overdrevent".
+	Bruk MAMP web-server til html, CSS og JS 
 
-- **node-express-db** - A javascript project to fetch and display a database table from MySQL using NodeJS/ExpressJS backend.
-- **sql-querying** - A list SQL queries to retrieve specific information from a database with multiple tables.
-- **stavespill** - A simple game requested by the special needs students at our school. In short it is a multiplayer spelling game in Norwegian to help the students learn how to spell the most common words in our vocabulary.
-- **template-website** - A website made for people who are new to programming websites. Currently it has three tasks; inserting an image with HTML, changing font-size with CSS and changing font-family with CSS. Still working on adding a JS task to create images (check out [p5.js](https://p5js.org/) for more information).
+	Backend:
+
+	Lag en Express.js backend-server.
+	Koble til mysql - databasen din (MAMP sql server)
+	Lag et API som forteller serveren å respondere data fra databasen
+	Input til databasen skal sendes med URL. 
+	
+	Bruk Javascript både frontend og backend.
+	
+### Lykke til!
+	

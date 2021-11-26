@@ -5,13 +5,21 @@
             <th>Spiller</th>
             <th>Score</th>
         </tr>
-        <tr>
-            <td></td>
-            <td>58</td>
-        </tr>
-        <tr>
-            <td>Mira</td>
-            <td>29</td>
-        </tr>
+        <?php
+        for ($i = 0; $i < count($players); $i++) {
+        ?>
+            <tr>
+                <td>
+                    <?php echo $players[$i]["name"]; ?>
+                </td>
+                <td>
+                    <?php echo $players[$i]["score"]; ?>
+                </td>
+            </tr>
+        <?php
+            echo "</tr>";
+        }
+        ?>
+    </table>
     </table>
 </div>

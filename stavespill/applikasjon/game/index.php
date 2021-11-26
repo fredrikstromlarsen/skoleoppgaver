@@ -1,24 +1,17 @@
 <!-- Leaderboard side -->
 <?php
-$game = array(
-    'id' => trim(preg_replace("/.\.*$/", "", base64_decode($_COOKIE['id']))),
-    'name' => trim(preg_replace("/^\.*./", "", base64_decode($_COOKIE['id'])))
-);
+echo $_COOKIE['code'];
+echo "<br>" . $_COOKIE['username'];
+echo "<br>";
+$game = [
+    'session' => trim("session"),
+    'name' => trim("name")
+];
+var_dump($game);
 
+$players = $con->query("SELECT (name, score) FROM session WHERE id=" . $game["session"]);
+var_dump($players);
 ?>
 <div class="col-center">
-    <table class="leaderboard" border="1">
-        <tr>
-            <th>Spiller</th>
-            <th>Score</th>
-        </tr>
-        <tr>
-            <td></td>
-            <td>58</td>
-        </tr>
-        <tr>
-            <td>Mira</td>
-            <td>29</td>
-        </tr>
-    </table>
+    
 </div>
