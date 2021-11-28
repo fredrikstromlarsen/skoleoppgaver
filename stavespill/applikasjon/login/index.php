@@ -62,7 +62,7 @@ if (
             setcookie("username", $un, $cookieOptions);
             $con->query("INSERT INTO user (name, favorite) VALUES ('" . $un . "', '" . $fav . "')");
 
-            // header("location: ./");
+            header("location: ./");
         } else {
             getName("En bruker med dette navnet finnes allerede :( ");
         }
@@ -76,7 +76,7 @@ if (
     // Make sure the code is just 4 digits
     if (preg_match("/^[0-9]{1,2}$/", $code)) {
         setcookie("code", $code, $cookieOptions);
-        echo $getName;
+        getName("");
     } else {
         getCode("Denne koden funger ikke :(");
     }
