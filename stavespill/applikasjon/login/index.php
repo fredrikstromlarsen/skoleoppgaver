@@ -1,39 +1,42 @@
 <?php
-include("db.php");
-function getName($errorMessage) {
-    ?>
+if (str_contains(str_replace("/", " ", $_SERVER['REQUEST_URI']), "login")) header("location:../");
+echo "<h1>login/index.php</h1>";
+function getName($errorMessage)
+{
+?>
     <div class='col-center'>
         <div class='error'><?php echo $errorMessage; ?></div>
         <h1>Hvem er du?</h1>
         <div class='input-container'>
             <form action='' method='POST'>
                 <div class='username-container'>
-                    <label for='username'>Jeg heter&nbsp;</label>
-                    <input type='text' id='username' name='username' required pattern='[A-Za-z0-9ÆØÅæøå ]{1,32}'>
+                    <b><label for='username'>Jeg heter&nbsp;</label></b>
+                    <input type='text' id='username' name='username' required pattern="[A-Za-z0-9ÆØÅæøå\-_\' ]" {1,32}'>
                 </div>
                 <div class='fav-container'>
-                    <label for='fav'>Jeg liker&nbsp;</label>
-                    <input type='text' id='fav' name='favorite' required pattern='[A-Za-zÆØÅæøå ]{1,32}'>
+                    <b><label for='fav'>Jeg liker&nbsp;</label></b>
+                    <input type='text' id='fav' name='favorite' required pattern="[A-Za-zÆØÅæøå\-_\' ]{1,32}">
                 </div>
                 <input type='submit' value='Start spillet'>
             </form>
         </div>
     </div>
-    <?php
+<?php
 }
-function getCode($errorMessage) {
-    ?>
+function getCode($errorMessage)
+{
+?>
     <div class='col-center'>
         <div class='error'><?php echo $errorMessage; ?></div>
         <div class='login-container'>
             <h1>Bli med i spillet!</h1>
             <form action='' method='POST'>
-                <input type='text' name='code' required placeholder='Skriv koden her' pattern='[0-9]{1,2}'>
+                <b><input type='text' name='code' required placeholder='Skriv koden her' pattern='[0-9]{1,2}'></b>
                 <input type='submit' value='Gå videre'>
             </form>
         </div>
     </div>
-    <?php
+<?php
 }
 
 // Cookie varer i 1 år, men gjelder kun på denne siden
@@ -44,43 +47,41 @@ if (
     isset($_POST['favorite']) &&
     isset($_COOKIE['code'])
 ) {
-    echo "username=" . $_POST['username'] . "<br>favorite=" . $_POST['favorite'] . "<br>code=" . $_COOKIE['code'];
-
-    // Remove special characters and whitespace at start+end of string
-    $un = filter_var(trim($_POST['username']), FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
-    $fav = filter_var(trim($_POST['favorite']), FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
-
+    // Check if input fields matches the expected pattern
     if (
-        $un == $_POST['username'] && preg_match("/^[A-Za-z0-9 ]{1,32}$/", $un) &&
-        $fav == $_POST['favorite'] && preg_match("/^[A-Za-z ]{1,32}$/", $fav)
+        preg_match("/^[a-zæøå0-9\-_' ]{1,32}$/i", trim($_POST['username'])) &&
+        preg_match("/^[a-zæøå\-_' ]{1,32}$/i", trim($_POST['favorite']))
     ) {
+        // Escape special characters
+        $un = filter_var(trim($_POST['username']), FILTER_SANITIZE_SPECIAL_CHARS);
+        $fav = filter_var(trim($_POST['favorite']), FILTER_SANITIZE_SPECIAL_CHARS);
 
-        // Check if username is taken
-        $tmp = $con->query("SELECT * FROM user WHERE name='$un'");
-        if ($tmp->num_rows==0) {
-            // Husk navnet til senere
+        // Check if username is avaliable
+        $exists=FALSE;
+        for ($i = 0; $i < count($userlist[$_COOKIE['code']]); $i++) $exists = $userlist[$_COOKIE['code']][$i]["name"] == $un ? TRUE:$exists;
+        if (!$exists) {
             setcookie("username", $un, $cookieOptions);
-            $con->query("INSERT INTO user (name, favorite) VALUES ('" . $un . "', '" . $fav . "')");
 
+            // Update Jason on the latest news
+            $nextIndex = count($userlist[$_COOKIE['code']]);
+            $userlist[$_COOKIE['code']] += [$nextIndex => ["name" => $un, "score" => 0, "favorite" => $fav]];
+            file_put_contents("userlist.json", json_encode($userlist));
+
+            // Redirect to proper page
             header("location: ./");
-        } else {
-            getName("En bruker med dette navnet finnes allerede :( ");
-        }
-
-    } else {
-        getName("Feltene kan bare inneholde bokstaver, tall og mellomrom :(");
-    }
+        } else getName("En bruker med dette navnet finnes allerede :(");
+    } else getName("Feltene kan bare inneholde bokstaver, tall og mellomrom :(");
 } else if (isset($_POST['code'])) {
-    // Remove whitespace from start and end of variable
     $code = trim($_POST['code']);
-    // Make sure the code is just 4 digits
+
+    // Make sure the code is 1-2 digits
     if (preg_match("/^[0-9]{1,2}$/", $code)) {
-        setcookie("code", $code, $cookieOptions);
-        getName("");
-    } else {
-        getCode("Denne koden funger ikke :(");
-    }
-} else {
-    getCode("");
-}
-$con->close();
+
+        // Check if the game with this id exists
+        if (!array_key_exists($code, $userlist));
+        else {
+            setcookie("code", $code, $cookieOptions);
+            getName("");
+        }
+    } else getCode("Denne koden funker ikke :(");
+} else getCode("");

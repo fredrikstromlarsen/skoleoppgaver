@@ -11,21 +11,25 @@
 
 <body>
 	<?php
-	// Initialize connection to database
-	include("db.php");
+	echo "<h1>index.php</h1>";
 
-	// Check if user has logged in
-	if (isset($_COOKIE['username'])) {
+	// Get data from Database
+	// Is formatted like: [gameid][userid][name|score|favorite]
+	$userlist = json_decode(file_get_contents("userlist.json"), true);
 
-		// ... and if it's a valid cookie, not just someone changing their cookie client side 
-		$tmp = $con->query("SELECT * FROM user WHERE name='".$_COOKIE['username']."'");
+	// Check if user has logged in properly
+	if (isset($_COOKIE['username']) && isset($_COOKIE['code'])) {
+		$username = $_COOKIE['username'];
+		$code = $_COOKIE['code'];
+		$tmp = $userlist[$code];
 
-		// If exactly 1 user exists with the name, continue
-		if ($tmp->num_rows==1) {
-			$p = "game";
-
-			// Otherwise, return to the login screen
-		} else $p = "login";
+		// Loop through user list to see if 
+		// any user with that username in 
+		// the chosen game exists
+		$exists = FALSE;
+		for ($i = 0; $i < count($userlist[$_COOKIE['code']]); $i++) $exists = $userlist[$_COOKIE['code']][$i]["name"] == $_COOKIE['username'] ? TRUE : $exists;
+		if ($exists) $p = "game";
+		else $p = "login";
 	} else $p = "login";
 
 	// Show the appropriate page without redirecting

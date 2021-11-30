@@ -1,4 +1,7 @@
-<!-- Leaderboard side -->
+<?php
+if (str_contains(str_replace("/", " ", $_SERVER['REQUEST_URI']), "leaderboard")) header("location:../");
+echo "<h1>leaderboard/index.php</h1>";
+?>
 <div class="col-center">
     <table class="leaderboard" border="1">
         <tr>
@@ -6,20 +9,10 @@
             <th>Score</th>
         </tr>
         <?php
-        for ($i = 0; $i < count($players); $i++) {
-        ?>
-            <tr>
-                <td>
-                    <?php echo $players[$i]["name"]; ?>
-                </td>
-                <td>
-                    <?php echo $players[$i]["score"]; ?>
-                </td>
-            </tr>
-        <?php
-            echo "</tr>";
+        foreach ($userlist[$_COOKIE['code']] as $userdata) {
+            echo "<tr><td>" . $userdata["name"] . "</td><td>" . $userdata["score"] . "</td></tr>";
         }
         ?>
-    </table>
+        </tr>
     </table>
 </div>

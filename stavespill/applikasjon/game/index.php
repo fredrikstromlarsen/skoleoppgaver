@@ -1,16 +1,7 @@
 <?php
-$game = [
-    'code' => trim($_COOKIE["code"]),
-    'name' => trim($_COOKIE["username"])
-];
-
-$tmp = $con->query("SELECT * FROM user");
-if ($tmp->num_rows > 0) {
-    while ($player=$tmp->fetch_assoc()) {
-        echo $player["userid"] . "<br>".$player["name"]."<br>".$player["favorite"]."<br>"; 
-    }
-}
+if (str_contains(str_replace("/", " ", $_SERVER['REQUEST_URI']), "game")) header("location:../");
+echo "<h1>game/index.php</h1>";
 ?>
 <div class="col-center">
-    
+    <?php include("./leaderboard/index.php");?>
 </div>
