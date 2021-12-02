@@ -11,8 +11,6 @@
 
 <body>
 	<?php
-	echo "<h1>index.php</h1>";
-
 	// Get data from Database
 	// Is formatted like: [gameid][userid][name|score|favorite]
 	$userlist = json_decode(file_get_contents("userlist.json"), true);

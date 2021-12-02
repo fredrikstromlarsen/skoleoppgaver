@@ -1,8 +1,11 @@
 <?php
-if (str_contains(str_replace("/", " ", $_SERVER['REQUEST_URI']), "leaderboard")) header("location:../");
-echo "<h1>leaderboard/index.php</h1>";
+// Redirect to homepage if user tries to open this page directly
+if (str_contains($_SERVER['REQUEST_URI'], "leaderboard")) header("location:../");
+
+function showLeaderboard()
+{
+    $userlist = json_decode(file_get_contents("userlist.json"), true);
 ?>
-<div class="col-center">
     <table class="leaderboard" border="1">
         <tr>
             <th>Spiller</th>
@@ -15,4 +18,4 @@ echo "<h1>leaderboard/index.php</h1>";
         ?>
         </tr>
     </table>
-</div>
+<?php }

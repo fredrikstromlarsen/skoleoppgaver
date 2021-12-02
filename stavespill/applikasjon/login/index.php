@@ -1,6 +1,7 @@
 <?php
-if (str_contains(str_replace("/", " ", $_SERVER['REQUEST_URI']), "login")) header("location:../");
-echo "<h1>login/index.php</h1>";
+// Redirect to homepage if user tries to open this page directly
+if (str_contains($_SERVER['REQUEST_URI'], "login")) header("location:../");
+
 function getName($errorMessage)
 {
 ?>
@@ -57,8 +58,8 @@ if (
         $fav = filter_var(trim($_POST['favorite']), FILTER_SANITIZE_SPECIAL_CHARS);
 
         // Check if username is avaliable
-        $exists=FALSE;
-        for ($i = 0; $i < count($userlist[$_COOKIE['code']]); $i++) $exists = $userlist[$_COOKIE['code']][$i]["name"] == $un ? TRUE:$exists;
+        $exists = FALSE;
+        for ($i = 0; $i < count($userlist[$_COOKIE['code']]); $i++) $exists = $userlist[$_COOKIE['code']][$i]["name"] == $un ? TRUE : $exists;
         if (!$exists) {
             setcookie("username", $un, $cookieOptions);
 
