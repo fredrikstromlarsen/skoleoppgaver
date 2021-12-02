@@ -127,3 +127,4 @@ dist
 # Description for project in project listing
 desc.txt
 /joakim/**
+userlist.json
