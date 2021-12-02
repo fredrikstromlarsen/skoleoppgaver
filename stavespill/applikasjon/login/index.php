@@ -70,7 +70,7 @@ if (
             // Redirect to proper page
             header("location: ./");
         } else getName("En bruker med dette navnet finnes allerede :(");
-    } else getName("Feltene kan bare inneholde bokstaver, tall og mellomrom :(");
+    } else getName("Feltene kan ikke inneholde de spesialtegnene :(");
 } else if (isset($_POST['code'])) {
     $code = trim($_POST['code']);
 
