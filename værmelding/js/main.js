@@ -26,19 +26,27 @@ var c = 27;
 
 var url, positionInfo;
 function getLocation(index) {
-    const cityLocationJSON = [
+	const cityLocationJSON = [
 		// { UserLocation: getLocation() },
-		{ Oslo: [59.91474087395643, 10.749578342601996] },
-		{ Bergen: [60.39157561373171, 5.321394090914947] },
-		{ Stavanger: [58.96863957875448, 5.72668425117518] },
-		{ Trondheim: [63.43069936054296, 10.399965715812566] },
-		{ Tromsø: [69.65031588066095, 18.951394588316383] },
-		{ Bodø: [67.28200155894797, 14.401972120068379] },
-		{ Lofoten: [67.99999285165653, 13.643100455501799] },
-		{ Galdhøpiggen: [61.636574298247254, 8.31251289573659] },
+		{
+			name: 'Oslo',
+			lat: 59.91474087395643,
+			lon: 10.749578342601996,
+		},
+		{ name: 'Bergen', lat: 60.39157561373171, lon: 5.321394090914947 },
+		{ name: 'Stavanger', lat: 58.96863957875448, lon: 5.72668425117518 },
+		{ name: 'Trondheim', lat: 63.43069936054296, lon: 10.399965715812566 },
+		{ name: 'Tromsø', lat: 69.65031588066095, lon: 18.951394588316383 },
+		{ name: 'Bodø', lat: 67.28200155894797, lon: 14.401972120068379 },
+		{ name: 'Lofoten', lat: 67.99999285165653, lon: 13.643100455501799 },
+		{
+			name: 'Galdhøpiggen',
+			lat: 61.636574298247254,
+			lon: 8.31251289573659,
+		},
 	];
 	var cityLocation = cityLocationJSON[0][index];
-    console.log(cityLocation);
+	console.log(cityLocation);
 	navigator.geolocation.getCurrentPosition(function (position) {
 		geolocation.innerHTML = 'Locating...';
 		timestamp.innerHTML = 'Checking...';
@@ -100,8 +108,8 @@ function getLocation(index) {
 
 		async function getData() {
 			let responseObj = await fetch(url, {
-				"mode": 'cors',
-				"Accept": 'application/json',
+				mode: 'cors',
+				Accept: 'application/json',
 				'Content-Type': 'application/json',
 				'User-Agent': 'WeatherApp/0.0.3 qdfibtlbl@relay.firefox.com',
 			});

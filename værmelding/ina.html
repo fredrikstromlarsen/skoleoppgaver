@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="no" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<script src="js/ina.js" defer></script>
+		<title>Ina's Vær-App</title>
+	</head>
+	<body>
+		<div id="nav-bar">
+			<button onclick="getData(0)"><b>Oslo</b></button>
+			<button onclick="getData(1)"><b>Bergen</b></button>
+			<button onclick="getData(2)"><b>Tromsø</b></button>
+			<button onclick="getData(3)"><b>Bodø</b></button>
+		</div>
+		<div id="main">
+			<h2 id="place">Sted</h2>
+			<table id="weather-info">
+				<tr>
+                    <th>Tid</th>
+                    <th>Temp</th>
+                    <th>Nedbør</th>
+                    <th>Vindhastighet</th>
+                    <th>Skydekke</th>
+                </tr>
+                <div id="data"></div>
+			</table>
+		</div>
+	</body>
+</html>
