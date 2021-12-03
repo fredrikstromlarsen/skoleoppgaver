@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=320, initial-scale=1.0" />
+		<title>WeatherApp</title>
+		<link rel="shortcut icon" type="image/x-icon" href="favicon.svg" />
+		<link rel="stylesheet" href="css/style.css" />
+		<script defer src="js/main.js"></script>
+	</head>
+
+	<body>
+		<div id="bg"></div>
+		<main>
+			<div class="content__container" id="contentContainer">
+				<ul class="location-picker">
+					<li
+						><button
+							value="UserLocation"
+							onclick="getLocation(this.value)"
+							>Your Location</button
+						></li
+					>
+					<li
+						><button value="Oslo" onclick="getLocation(this.value)"
+							>Oslo</button
+						></li
+					>
+					<li
+						><button
+							value="Stavanger"
+							onclick="getLocation(this.value)"
+							>Stavanger</button
+						></li
+					>
+					<li
+						><button
+							value="Bergen"
+							onclick="getLocation(this.value)"
+							>Bergen</button
+						></li
+					>
+					<li
+						><button
+							value="Tromsø"
+							onclick="getLocation(this.value)"
+							>Tromsø</button
+						></li
+					>
+					<li
+						><button
+							value="Trondheim"
+							onclick="getLocation(this.value)"
+							>Trondheim</button
+						></li
+					>
+					<li
+						><button
+							value="Galdhøpiggen"
+							onclick="getLocation(this.value)"
+							>Galdhøpiggen</button
+						></li
+					>
+					<li
+						><button value="Bodø" onclick="getLocation(this.value)"
+							>Bodø</button
+						></li
+					>
+					<li
+						><button
+							value="Lofoten"
+							onclick="getLocation(this.value)"
+							>Lofoten</button
+						></li
+					>
+				</ul>
+				<div class="fixed-width">
+					<div class="status">
+						<div>
+							<span
+								><svg
+									class="svg"
+									xmlns="https://www.w3.org/2000/svg"
+									viewBox="0 0 24 24"
+								>
+									<path d="M0 0h24v24H0z" fill="none"></path>
+									<path
+										d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3c-.46-4.17-3.77-7.48-7.94-7.94V1h-2v2.06C6.83 3.52 3.52 6.83 3.06 11H1v2h2.06c.46 4.17 3.77 7.48 7.94 7.94V23h2v-2.06c4.17-.46 7.48-3.77 7.94-7.94H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"
+									></path></svg
+							></span>
+							<span id="geolocation">Unknown</span>
+						</div>
+						<div>
+							<span id="timestamp">Unknown</span>
+							<button onclick="getLocation()"
+								><svg
+									class="svg"
+									xmlns="https://www.w3.org/2000/svg"
+									height="24px"
+									viewBox="7 0 24 24"
+									width="24px"
+									fill="#000000"
+								>
+									<path
+										d="M0 0h24v24H0V0z"
+										fill="none"
+									></path>
+									<path
+										d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"
+									></path></svg
+							></button>
+						</div>
+					</div>
+					<div class="row title">
+						<div class="cell">Time</div>
+						<div class="cell">Temperature</div>
+						<div class="cell">Wind Speed</div>
+						<div class="cell">Wind Direction</div>
+						<div class="cell">Humidity</div>
+						<div class="cell">Cloud Coverage</div>
+						<div class="cell">Precipitation</div>
+					</div>
+					<div id="times"></div>
+				</div>
+			</div>
+		</main>
+	</body>
+</html>

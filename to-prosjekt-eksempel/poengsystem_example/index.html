@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+	<head>
+		<meta charset="utf-8" />
+		<title>Game design</title>
+		<link rel="stylesheet" href="css/style.css" />
+		<script src="js/min.js" defer></script>
+	</head>
+	<body>
+    <div class="text-container">  
+      <header>
+        <span id="questionCount">0 / 0</span>
+        <span id="timeSpent">0</span>
+        <span id="scoreCount">0</span>
+      </header>
+      <h1 id="question"></h1>
+    </div>
+		<div id="btnContainer">
+			<button class="btnAlt" onclick="checkAnswer(this.value)" value="0" type="button"></button>
+			<button class="btnAlt" onclick="checkAnswer(this.value)" value="1" type="button"></button>
+			<button class="btnAlt" onclick="checkAnswer(this.value)" value="2" type="button"></button>
+			<button class="btnAlt" onclick="checkAnswer(this.value)" value="3" type="button"></button>
+		</div>
+    <div id="gameOver">
+		<div>
+			<span id="resultQuestions">0</span>
+			<span id="resultScore">0</span>
+		</div>
+      <button onclick="location.reload(false);">Spill Igjen</button>
+    </div>
+	</body>
+</html>
