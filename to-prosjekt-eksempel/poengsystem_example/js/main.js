@@ -23,6 +23,7 @@ function checkAnswer(i) {
 		oldScore = scoreCount;
 		n = 100;
 		incrementScore = Math.floor(1000 - (timeSpent / 100) * ((timeSpent / 1000) * 0.5)) 
+		
 		if (incrementScore > 50) scoreCount += incrementScore;
 		else scoreCount += 50;
 		incrementScore = setInterval(() => {
