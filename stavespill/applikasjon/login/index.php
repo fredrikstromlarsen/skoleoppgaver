@@ -32,7 +32,7 @@ function getCode($errorMessage)
         <div class='login-container'>
             <h1>Bli med i spillet!</h1>
             <form action='' method='POST'>
-                <b><input type='text' name='code' required placeholder='Skriv koden her' pattern='[0-9]{1,2}'></b>
+                <b><input type='text' name='gamecode' required placeholder='Skriv koden her' pattern='[0-9]{1,2}'></b>
                 <input type='submit' value='Gå videre'>
             </form>
         </div>
@@ -40,49 +40,47 @@ function getCode($errorMessage)
 <?php
 }
 
-// Cookie varer i 1 år, men gjelder kun på denne siden
-$cookieOptions = ['expires' => time() + 3600 * 24 * 365, 'path' => $_SERVER['REQUEST_URI'], 'samesite' => 'Lax'];
-
 if (
     isset($_POST['username']) &&
     isset($_POST['favorite']) &&
-    isset($_COOKIE['code'])
+    isset($_SESSION['gamecode'])
 ) {
-    // Check if input fields matches the expected pattern
+    // Check if input fields matches the expected pattern (and doesn't include nasty unicode characters)
     if (
-        preg_match("/^[a-zæøå0-9\-_' ]{1,32}$/i", trim($_POST['username'])) &&
-        preg_match("/^[a-zæøå\-_' ]{1,32}$/i", trim($_POST['favorite']))
+        preg_match("/^[A-ZÆØÅa-zæøå0-9\-_' ]{1,32}$/i", trim($_POST['username'])) &&
+        preg_match("/^[A-ZÆØÅa-zæøå\-_' ]{1,32}$/i", trim($_POST['favorite']))
     ) {
         // Escape special characters
-        $un = filter_var(trim($_POST['username']), FILTER_SANITIZE_SPECIAL_CHARS);
+        $username = filter_var(trim($_POST['username']), FILTER_SANITIZE_SPECIAL_CHARS);
         $fav = filter_var(trim($_POST['favorite']), FILTER_SANITIZE_SPECIAL_CHARS);
 
         // Check if username is avaliable
-        $exists = FALSE;
-        for ($i = 0; $i < count($userlist[$_COOKIE['code']]); $i++) $exists = $userlist[$_COOKIE['code']][$i]["name"] == $un ? TRUE : $exists;
-        if (!$exists) {
-            setcookie("username", $un, $cookieOptions);
+        if (!isset($userlist[$_SESSION['gamecode']]['username'])) {
 
-            // Update Jason on the latest news
-            $nextIndex = count($userlist[$_COOKIE['code']]);
-            $userlist[$_COOKIE['code']] += [$nextIndex => ["name" => $un, "score" => 0, "favorite" => $fav]];
+            // Save username in session variable
+            $_SESSION["username"] = $un;
+
+            // Add new user to userlist.json
+            $userlist[$_SESSION['gamecode']][$username] = ["name" => $username, "score" => 0, "favorite" => $fav];
             file_put_contents("userlist.json", json_encode($userlist));
 
             // Redirect to proper page
             header("location: ./");
         } else getName("En bruker med dette navnet finnes allerede :(");
     } else getName("Feltene kan ikke inneholde de spesialtegnene :(");
-} else if (isset($_POST['code'])) {
-    $code = trim($_POST['code']);
+} else if (isset($_POST['gamecode'])) {
+    $gamecode = trim($_POST['gamecode']);
 
-    // Make sure the code is 1-2 digits
-    if (preg_match("/^[0-9]{1,2}$/", $code)) {
+    // Make sure the code is 1 to 2 digits (min: 1, max: 99)
+    if (preg_match("/^[0-9]{1,2}$/", $gamecode)) {
 
         // Check if the game with this id exists
-        if (!array_key_exists($code, $userlist));
-        else {
-            setcookie("code", $code, $cookieOptions);
-            getName("");
-        }
+        $_SESSION["gamecode"] = $gamecode;
+        // if (!isset($userlist[$gamecode])) {
+        // $userlist += $gamecode;
+        // file_put_contents("userlist.json", json_encode($userlist));
+        // }
+        // After game id is found or created, get the users name and favorite.
+        getName("");
     } else getCode("Denne koden funker ikke :(");
 } else getCode("");

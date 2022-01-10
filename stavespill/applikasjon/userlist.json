@@ -1,15 +1,24 @@
-[
-	[
-		{ "name": "Fredrik", "score": "28", "favorite": "Klatring" },
-		{ "name": "Ina", "score": "11", "favorite": "Portugal" },
-		{ "name": "Theodor", "score": "14", "favorite": "Motorsykkel" },
-		{ "name": "Test", "score": 0, "favorite": "Testing" },
-		{ "name": "oliverStadven", "score": 0, "favorite": "ja" },
-		{ "name": "Emil", "score": 0, "favorite": "Dell" }
-	],
-	[
-		{ "name": "J\u00f8rgen", "score": 0, "favorite": "Kake" },
-		{ "name": "Birger", "score": 0, "favorite": "Hairy Potter" },
-		{ "name": "Bot", "score": 0, "favorite": "Black Friday" }
-	]
-]
+{
+    "0": {
+        "Teste1": {
+            "name": "Teste1",
+            "score": 0,
+            "favorite": "Skole"
+        }
+    },
+    "2": [],
+    "1": {
+        "SK0L3EN2tre": {
+            "name": "SK0L3EN2tre",
+            "score": 0,
+            "favorite": "Skole"
+        }
+    },
+    "4": {
+        "Fredrik": {
+            "name": "Fredrik",
+            "score": 0,
+            "favorite": "Spania"
+        }
+    }
+} 

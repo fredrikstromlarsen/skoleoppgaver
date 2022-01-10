@@ -1,3 +1,21 @@
+<?php
+session_start();
+
+// Generate a new session id to prevent session hijacking
+// Using boolean option true to delete old session 
+session_regenerate_id(true);
+
+// Get data from json file
+// Format: [gameid][userid][name|score|favorite]
+$userlist = json_decode(file_get_contents("userlist.json"), true);
+
+// Check if user has a valid session
+if (isset($_SESSION['gamecode']) && isset($_SESSION['username'])) {
+	if (isset($userlist[$_SESSION["gamecode"]][$_SESSION["username"]])) $p = "game";
+	else $p = "login";
+} else $p = "login";
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,26 +29,8 @@
 
 <body>
 	<?php
-	// Get data from Database
-	// Is formatted like: [gameid][userid][name|score|favorite]
-	$userlist = json_decode(file_get_contents("userlist.json"), true);
 
-	// Check if user has logged in properly
-	if (isset($_COOKIE['username']) && isset($_COOKIE['code'])) {
-		$username = $_COOKIE['username'];
-		$code = $_COOKIE['code'];
-		$tmp = $userlist[$code];
-
-		// Loop through user list to see if 
-		// any user with that username in 
-		// the chosen game exists
-		$exists = FALSE;
-		for ($i = 0; $i < count($userlist[$_COOKIE['code']]); $i++) $exists = $userlist[$_COOKIE['code']][$i]["name"] == $_COOKIE['username'] ? TRUE : $exists;
-		if ($exists) $p = "game";
-		else $p = "login";
-	} else $p = "login";
-
-	// Show the appropriate page without redirecting
+	// Load contents of the appropriate php file without redirecting
 	echo "<section id='" . $p . "'>";
 	include($p . "/index.php");
 	?>
@@ -38,3 +38,7 @@
 </body>
 
 </html>
+<?php
+
+// Close session
+// session_commit();
