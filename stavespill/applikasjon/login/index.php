@@ -58,11 +58,13 @@ if (
         if (!isset($userlist[$_SESSION['gamecode']]['username'])) {
 
             // Save username in session variable
-            $_SESSION["username"] = $un;
+            $_SESSION["username"] = $username;
 
             // Add new user to userlist.json
             $userlist[$_SESSION['gamecode']][$username] = ["name" => $username, "score" => 0, "favorite" => $fav];
             file_put_contents("userlist.json", json_encode($userlist));
+            $_SESSION["pendingWords"] = $GLOBALS['wordlist_no'];
+            $_SESSION["wordNum"] = 0;
 
             // Redirect to proper page
             header("location: ./");
@@ -74,13 +76,8 @@ if (
     // Make sure the code is 1 to 2 digits (min: 1, max: 99)
     if (preg_match("/^[0-9]{1,2}$/", $gamecode)) {
 
-        // Check if the game with this id exists
+        // Save for later
         $_SESSION["gamecode"] = $gamecode;
-        // if (!isset($userlist[$gamecode])) {
-        // $userlist += $gamecode;
-        // file_put_contents("userlist.json", json_encode($userlist));
-        // }
-        // After game id is found or created, get the users name and favorite.
         getName("");
     } else getCode("Denne koden funker ikke :(");
 } else getCode("");
