@@ -1,113 +1,90 @@
 <?php
+
 // Redirect to homepage if user tries to open this page directly
 if (str_contains($_SERVER['REQUEST_URI'], "game")) header("location:../");
 
-include("./leaderboard/index.php");
+$wordlistLanguage = $userlist[$_SESSION['gamecode']]["language"];
+$wordlist = json_decode(file_get_contents("wordlists/$wordlistLanguage.json"), true)["1000"];
+echo "Completed words index: <br>" .  print_r($_SESSION["completedWordsindex"], true);
 
-function gameFinished($s)
-{
-    switch ($s) {
-        case 0:
-            $msg = "Man lærer ofte mye av å prøve og feile!";
-            break;
-        case 1:
-            $msg = "Én riktig er bedre enn ingenting!";
-            break;
-        case 2:
-            $msg = "";
-            break;
-        case 3:
-            $msg = "";
-            break;
-        case 4:
-            $msg = "";
-            break;
-        case 5:
-            $msg = "";
-            break;
-        case 6:
-            $msg = "";
-            break;
-        case 7:
-            $msg = "";
-            break;
-        case 8:
-            $msg = "";
-            break;
-        case 9:
-            $msg = "";
-            break;
-        case 10:
-            $msg = "";
-            break;
-    }
-    // 7 correct answers == 70 points
-    $newScore = $GLOBALS['userlist'][$_SESSION['username']]["score"] = $GLOBALS['userlist'][$_SESSION['username']]["score"] + $s * 10;
-
-
-?>
-    <h1><?= $msg ?></h1>
-
-
-<?php
-}
 function newTask()
 {
-    $GLOBALS['tasknum']++;
-    $_SESSION['wordnum']++;
-    $_SESSION['currentWord'] = $_SESSION['pendingWords'][0];
+    $i = 0;
+    while ($i < count($GLOBALS['wordlist'])) {
+        if (!in_array($i, $_SESSION["completedWordsIndex"])) break;
+        $i++;
+    }
+    $_SESSION['currentWordIndex'] = $i;
+    $currentWord = $GLOBALS["wordlist"][$i];
+    echo "$i: $currentWord";
 ?>
-    <form action="" method="post" class="task">
+
+    <form action="" method="POST" class="task">
+        <div class="audioContainer">
+            <button type="button" onclick="javascript.void()">Lydikon</button>
+        </div>
         <div class="charArray">
+
             <?php
-            print_r($_SESSION['currentWord']);
-            // for ($i = 0; $i < strlen($_SESSION['currentWord']); $i++) {
-            $inputOptions = "class='char' type='text' name='input[]' pattern='/^[A-ZÆØÅa-zæøå]$/' autocomplete='off' required='true'";
-            // if ($i = 0) $inputOptions .= " autofocus='true'";
+            for ($i = 0; $i < strlen($currentWord); $i++) {
+                $inputOptions = "class='char' type='text' name='charInput[]' pattern='" . $GLOBALS["regex"]["char"] . "' autocomplete='off' required='true'";
+                if ($i == 0) $inputOptions .= " autofocus='true'";
+                echo "<input $inputOptions>";
+            }
             ?>
-            <input <?= $inputOptions ?>>
-            <?php //} 
-            ?>
+
         </div>
         <input type="submit" class="answer" value="Sjekk svar" disabled="true">
     </form>
+
 <?php
 }
-function correctAnswer()
+
+
+function showFavorite()
 {
+
+    newTask();
 }
 
-function wrongAnswer()
+function showFail()
 {
+    newTask();
 }
-
-
 ?>
-<h1>php/game.php</h1>
+
+<div class="col-left">
+    <button onclick="location.href = 'logout/index.php'">Logg ut</button>
+</div>
 <div class="col-center">
+
     <?php
+    if (isset($_POST["charInput"])) {
+        $input = implode("", $_POST["charInput"]);
+        $currentScore = $GLOBALS['userlist'][$_SESSION['gamecode']]["users"][$_SESSION['userid']]["score"];
+        $currentWord = $GLOBALS['wordlist'][$_SESSION["currentWordIndex"]];
 
-    // Set $tasknum to value stored in session if it exists
-    $tasknum = isset($_SESSION['tasknum']) ? $_SESSION['tasknum'] : 1;
-
-    if (isset($_POST["answerInput"])) {
-        $input = implode(",", $_POST["answerInput"]);
-        $_SESSION["pendingWords"] = array_splice($_SESSION["pendingWords"], 0, 1);
-        if ($input == $currentWord) {
-            $_SESSION['completedWords'][] = $currentWord;
-            correctAnswer();
+        if (trim(strtolower($input)) == strtolower($currentWord)) {
+            $_SESSION['completedWordsIndex'][] = $currentWord;
+            $newScore = $currentScore + 10;
+            showFavorite();
         } else {
-            $_SESSION['wrongWords'][] = $currentWord;
-            wrongAnswer();
+            $_SESSION['wrongWordsIndex'][] = $currentWord;
+            $newScore = $currentScore < 2 ? 0 : $currentScore - 1;
+            showFail();
         }
-    }
-    // If game is done
-    if ($tasknum == 10) gameFinished($score);
-    else newTask();
 
+        // ZZ
+        $GLOBALS['userlist'][$_SESSION['gamecode']]["users"][$_SESSION['userid']]["score"] = $newScore;
+        exportData();
+    } else newTask();
     ?>
+
 </div>
 <div class="col-right">
-    <?php // showLeaderboard(); 
+
+    <?php
+    showLeaderboard();
     ?>
+
 </div>

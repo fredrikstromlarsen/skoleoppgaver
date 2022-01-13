@@ -1,26 +1,59 @@
 <?php
 // Redirect to homepage if user tries to open this page directly
 if (str_contains($_SERVER['REQUEST_URI'], "login")) header("location:../");
+function isFirst($g)
+{
+    return is_null($GLOBALS['userlist'][$g]["language"]) ? TRUE : FALSE;
+}
 
-function getName($errorMessage)
+function getName($errorMessage, $first)
 {
 ?>
     <div class='col-center'>
-        <div class='error'><?php echo $errorMessage; ?></div>
+        <button onclick="location.href = 'logout/index.php'">Gå tilbake</button>
         <h1>Hvem er du?</h1>
+        <div class='error'><?php echo $errorMessage; ?></div>
         <div class='input-container'>
             <form action='' method='POST'>
-                <div class='username-container'>
+                <div class='input-container'>
                     <b><label for='username'>Jeg heter&nbsp;</label></b>
-                    <input type='text' id='username' name='username' required pattern="[A-Za-z0-9ÆØÅæøå\-_\' ]" {1,32}'>
+                    <input type='text' id='username' name='username' required pattern="<?= $GLOBALS['regex']['user'] ?>" autofocus>
                 </div>
-                <div class='fav-container'>
+                <div class='input-container'>
                     <b><label for='fav'>Jeg liker&nbsp;</label></b>
-                    <input type='text' id='fav' name='favorite' required pattern="[A-Za-zÆØÅæøå\-_\' ]{1,32}">
+                    <input type='text' id='fav' name='favorite' required pattern="<?= $GLOBALS['regex']['user'] ?>">
                 </div>
+
+                <?php
+                if ($first) {
+                ?>
+
+                    <div class="input-container">
+                        <p>Du er første spiller i dette spillet!</p>
+                        <label for="languagePreference">Hvilket språk vil du bruke?</label>
+                        <select name="language" id="languagePreference" required>
+                            <option value="" disabled selected>Velg språk</option>
+                            <option value="no_nb">Norsk Bokmål</option>
+                            <option value="no_nn">Norsk Nynorsk</option>
+                            <option value="en_gb">Engelsk (Storbritannia)</option>
+                            <option value="en_us">Engelsk (USA)</option>
+                        </select>
+                    </div>
+
+                <?php
+                }
+                ?>
+
                 <input type='submit' value='Start spillet'>
             </form>
         </div>
+    </div>
+    <div class="col-right">
+
+        <?php
+        if (!$first) showLeaderboard();
+        ?>
+
     </div>
 <?php
 }
@@ -28,11 +61,11 @@ function getCode($errorMessage)
 {
 ?>
     <div class='col-center'>
-        <div class='error'><?php echo $errorMessage; ?></div>
-        <div class='login-container'>
+        <div class='input-container'>
             <h1>Bli med i spillet!</h1>
+            <div class='error'><?php echo $errorMessage; ?></div>
             <form action='' method='POST'>
-                <b><input type='text' name='gamecode' required placeholder='Skriv koden her' pattern='[0-9]{1,2}'></b>
+                <b><input type='text' name='gamecode' required placeholder='Spillkode' pattern='<?= $GLOBALS['regex']['code'] ?>' autofocus></b>
                 <input type='submit' value='Gå videre'>
             </form>
         </div>
@@ -40,44 +73,60 @@ function getCode($errorMessage)
 <?php
 }
 
-if (
-    isset($_POST['username']) &&
-    isset($_POST['favorite']) &&
-    isset($_SESSION['gamecode'])
-) {
-    // Check if input fields matches the expected pattern (and doesn't include nasty unicode characters)
-    if (
-        preg_match("/^[A-ZÆØÅa-zæøå0-9\-_' ]{1,32}$/i", trim($_POST['username'])) &&
-        preg_match("/^[A-ZÆØÅa-zæøå\-_' ]{1,32}$/i", trim($_POST['favorite']))
-    ) {
-        // Escape special characters
+if (isset($_POST['username']) && isset($_POST['favorite']) && isset($_SESSION['gamecode'])) {
+
+    // Check if input values matches the expected pattern.
+    if (preg_match("/" . $regex["user"] . "/", trim($_POST['username'])) && preg_match("/" . $regex["user"] . "/", trim($_POST['favorite']))) {
+
+        // Escape special characters.
         $username = filter_var(trim($_POST['username']), FILTER_SANITIZE_SPECIAL_CHARS);
+        $userid = strtolower($username);
         $fav = filter_var(trim($_POST['favorite']), FILTER_SANITIZE_SPECIAL_CHARS);
 
-        // Check if username is avaliable
-        if (!isset($userlist[$_SESSION['gamecode']]['username'])) {
+        // Check if username is avaliable.
+        if (is_null($userlist[$_SESSION['gamecode']]["users"][$userid])) {
+            $gamecode = $_SESSION['gamecode'];
 
-            // Save username in session variable
-            $_SESSION["username"] = $username;
+            // If user was first in the game they could choose a language.
+            // Check if language input was set, and matches regex.
+            if (isset($_POST['language'])) {
+                if (preg_match("/" . $regex["lang"] . "/", $_POST['language'])) {
 
-            // Add new user to userlist.json
-            $userlist[$_SESSION['gamecode']][$username] = ["name" => $username, "score" => 0, "favorite" => $fav];
-            file_put_contents("userlist.json", json_encode($userlist));
-            $_SESSION["pendingWords"] = $GLOBALS['wordlist_no'];
-            $_SESSION["wordNum"] = 0;
+                    // Each game lasts for 12 hours.
+                    $userlist["$gamecode"]["expiration"] = time() + 43200;
 
-            // Redirect to proper page
+                    // Set game language.
+                    $userlist["$gamecode"]["language"] = $_POST['language'];
+                } else getName("", isFirst($_SESSION['gamecode']));
+            }
+
+            // Save username in session variable.
+            $_SESSION["userid"] = $userid;
+
+            // Add new user to userlist.json.
+            $userlist[$_SESSION['gamecode']]["users"][$userid] = ["name" => $username, "score" => 0, "favorite" => $fav];
+
+            // Set default value for list of words completed.
+            $_SESSION["completedWordsIndex"] = [];
+
+            // Update json file with input data.
+            exportData();
+
+            // Redirect to front page to validate login session.
             header("location: ./");
-        } else getName("En bruker med dette navnet finnes allerede :(");
-    } else getName("Feltene kan ikke inneholde de spesialtegnene :(");
+        } else getName("En bruker med dette navnet finnes allerede :(", isFirst($_SESSION['gamecode']));
+    } else getName("Feltene kan ikke inneholde de spesialtegnene :(", isFirst($_SESSION['gamecode']));
 } else if (isset($_POST['gamecode'])) {
     $gamecode = trim($_POST['gamecode']);
 
     // Make sure the code is 1 to 2 digits (min: 1, max: 99)
-    if (preg_match("/^[0-9]{1,2}$/", $gamecode)) {
+    if (preg_match("/" . $regex["code"] . "/", $gamecode)) {
 
-        // Save for later
+        // Save in session
         $_SESSION["gamecode"] = $gamecode;
-        getName("");
+
+        // Get users name and favorite thing
+        // Allow players who is first in a game to change language.
+        getName("", isFirst($_SESSION['gamecode']));
     } else getCode("Denne koden funker ikke :(");
 } else getCode("");
