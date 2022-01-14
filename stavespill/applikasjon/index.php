@@ -60,27 +60,28 @@ function showLeaderboard()
 	</table>
 <?php
 }
-function purgeData()
-{
-	// Delete games which have expired.
-	$time = time();
-	$changed = FALSE;
-	for ($i = 0; $i < count($GLOBALS['db']); $i++) {
-		$gameid = array_keys($GLOBALS['db'])[$i];
-		if (
-			$time > $GLOBALS['db'][$gameid]["expiration"]
-			|| $GLOBALS['db'][$gameid]["users"] == []
-		) {
-			unset($db[$gameid]);
-			$changed = TRUE;
-		}
-	}
-	// Reload database
-	if ($changed) {
-		exportData();
-		header("Location:./");
+
+// Works the same way apt does, users update the db upon logging in.
+// OK-ish for small scale apps. Does not scale. 
+// Delete games which have expired.
+$time = time();
+$changed = FALSE;
+for ($i = 0; $i < count($GLOBALS['db']); $i++) {
+	$gameid = array_keys($GLOBALS['db'])[$i];
+	if (
+		$time > $GLOBALS['db'][$gameid]["expiration"]
+		|| $GLOBALS['db'][$gameid]["users"] == []
+	) {
+		unset($db[$gameid]);
+		$changed = TRUE;
 	}
 }
+// Reload database
+if ($changed) {
+	exportData();
+	header("Location:./");
+}
+
 // Get data from json file and decode from json to an associative array.
 $db = json_decode(file_get_contents("json/db.json"), TRUE);
 // Regex patterns for input validation.
