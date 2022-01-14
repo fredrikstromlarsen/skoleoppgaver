@@ -10,6 +10,8 @@ $wordlist = json_decode(file_get_contents("wordlists/$wordlistLanguage/1k.json")
 $activeMethod = "standard";
 function createTask($createNew, $method)
 {
+    if (preg_match("/" . $GLOBALS['regex']["mode"] . "/", $method)) $method = "normal";
+
     // Use previous method if input is inherit.
     // Save method in global variable if it's not "inherit".
     if ($method == "inherit") $method = $GLOBALS['activeMethod'];
@@ -61,7 +63,7 @@ function createTask($createNew, $method)
 
 function showResult($res)
 {
-    createTask(TRUE, "normal");
+    createTask($res, "inherit");
 }
 
 // Set game mode using buttons as input. 
