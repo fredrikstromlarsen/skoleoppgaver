@@ -7,15 +7,14 @@ if (str_contains($_SERVER['REQUEST_URI'], "game")) header("location:../");
 $wordlistLanguage = $db[$_SESSION['gamepin']]["language"];
 $wordlist = json_decode(file_get_contents("wordlists/$wordlistLanguage/1k.json"), true);
 
-$activeMethod = "standard";
 function createTask($createNew, $method)
 {
     if (preg_match("/" . $GLOBALS['regex']["mode"] . "/", $method)) $method = "normal";
 
     // Use previous method if input is inherit.
     // Save method in global variable if it's not "inherit".
-    if ($method == "inherit") $method = $GLOBALS['activeMethod'];
-    else $GLOBALS['activeMethod'] = $method;
+    if ($method == "inherit") $method = $_SESSION['activeMethod'];
+    else $_SESSION['activeMethod'] = $method;
 
     if ($createNew) $_SESSION['currentWordIndex']++;
 
@@ -34,6 +33,7 @@ function createTask($createNew, $method)
             $index = $_SESSION["wrongWordsIndex"][rand(0, count($_SESSION["wrongWordsIndex"]))];
             break;
     }
+    echo "Index: $index, Mode: $method";
     $currentWord = $GLOBALS["wordlist"][$index];
 ?>
 
@@ -55,7 +55,7 @@ function createTask($createNew, $method)
             ?>
 
         </div>
-        <input type="submit" class="answer" value="Sjekk svar" disabled="true">
+        <input type="submit" class="answer" value="Svar" disabled="true">
     </form>
 
 <?php
@@ -63,17 +63,19 @@ function createTask($createNew, $method)
 
 function showResult($res)
 {
-    createTask($res, "inherit");
+    createTask(TRUE, "inherit");
 }
 
 // Set game mode using buttons as input. 
 // Make sure the input hasn't been tampered with using preg_match.
-if (isset($_POST['mode']) && preg_match($regex["mode"], $_POST['mode']))
+if (isset($_POST['mode']) && preg_match($regex["mode"], $_POST['mode'])) {
     $activeMethod = $_POST['mode'];
+    header("Location:./");
+}
 ?>
 <div class="top-bar space-between">
-    <button tabindex="-1" type="button" id="exit">Avslutt Spill</button>
-    <p class="space-between"><span><?= count($_SESSION['completedWordsIndex']) ?> ✔️</span><span><?= count($_SESSION['wrongWordsIndex']) ?> ❌</span></p>
+    <button tabindex="-1" type="button" id="exit">Avslutt Spill <span class="icon"></span></button>
+    <p class="space-between"><span><?= count($_SESSION['completedWordsIndex']) ?> <span class="icon"></span></span><span><?= count($_SESSION['wrongWordsIndex']) ?> <span class="icon"></span></span></p>
     <form action="" method="POST">
         <button name="mode" value="repeat" title="Gå gjennom oppgaver du allerede har klart.">Repetisjon</button>
         <button name="mode" value="normal" title="Gå gjennom alle oppgavene bare èn gang.">Normal</button>
@@ -107,7 +109,7 @@ if (isset($_POST['mode']) && preg_match($regex["mode"], $_POST['mode']))
         $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"] = $newScore;
         exportData();
         header("location:./");
-    } else createTask(FALSE, "normal");
+    } else createTask(FALSE, "inherit");
     ?>
 
 </div>

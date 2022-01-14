@@ -12,22 +12,11 @@ if (document.querySelector('form.task')) {
 		return (submit.disabled = false);
 	});
 	for (let char of chars) {
-		char.addEventListener('keypress', function (e) {
-			// Prevent more than 1 character in input field.
-			// Whitelist characters such as Backspace and Enter.
-			console.log(e);
-
-			// Allow only return, delete (default) and backspace
-			// (default ), when ipnut field has length of 1.
-			if (
-				char.value.length >= 1 &&
-				(e.keyCode !== 13 || e.which !== 13)
-			) {
-				e.preventDefault();
-				return false;
-			}
-		});
 		char.addEventListener('input', () => {
+			if (char.value.length > 1) {
+				char.value = char.value.substring(0, 1);
+			}
+
 			// Get the index of char in chars array,
 			// add 1 to it, and set focus on the next
 			// input field (unless it's last).
@@ -41,7 +30,37 @@ if (document.querySelector('form.task')) {
 	}
 }
 
+// Use logout.php to handle logout event.
 if (document.querySelector('button#exit'))
 	document.querySelector('button#exit').onclick = () => {
 		return (location.href = 'php/logout.php');
 	};
+
+function test1() {
+	var audio = new Audio();
+	audio.src =
+		'http://translate.google.com/translate_tts?ie=utf-8&tl=en&q=Hello%20World.';
+	audio.play();
+}
+
+function test() {
+	var msg = new SpeechSynthesisUtterance('Hello World');
+	var msg = new SpeechSynthesisUtterance();
+	var voices = window.speechSynthesis.getVoices();
+	msg.voice = voices[10]; // Note: some voices don't support altering params
+	msg.voiceURI = 'native';
+	msg.volume = 1; // 0 to 1
+	msg.rate = 1; // 0.1 to 10
+	msg.pitch = 2; //0 to 2
+	msg.text = 'Hello World';
+	msg.lang = 'en-US';
+
+	msg.onend = function (e) {
+		console.log('Finished in ' + e.elapsedTime + ' seconds.');
+	};
+	speechSynthesis.speak(msg);
+
+	speechSynthesis.getVoices().forEach(function (voice) {
+		console.log(voice.name, voice.default ? voice.default : '');
+	});
+}

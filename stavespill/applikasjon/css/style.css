@@ -16,6 +16,10 @@ section {
 	width: calc(100vw - 4rem);
 }
 
+.icon {
+	font-family: 'NotoEmoji NF', 'NotoMono NF', 'Segoe UI', monospace;
+}
+
 .disable-selection {
 	-webkit-user-select: none;
 	-moz-user-select: none;

@@ -113,6 +113,7 @@ if (isset($_POST['username']) && isset($_POST['favorite']) && isset($_SESSION['g
             $_SESSION["completedWordsIndex"] = [];
             $_SESSION["wrongWordsIndex"] = [];
             $_SESSION["currentWordIndex"] = 0;
+            $_SESSION["activeMethod"] = "normal";
 
             // Update json file with input data.
             exportData();
