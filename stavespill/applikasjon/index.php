@@ -27,7 +27,7 @@ session_regenerate_id(true);
 // Make code more readable.
 function exportData()
 {
-	file_put_contents('json/db.json', json_encode($GLOBALS['db']));
+	file_put_contents('./json/db.json', json_encode($GLOBALS['db']));
 }
 function showLeaderboard()
 {
@@ -62,7 +62,7 @@ function showLeaderboard()
 }
 
 // Get data from json file and decode from json to an associative array.
-$db = json_decode(file_get_contents("json/db.json"), TRUE);
+$db = json_decode(file_get_contents("./json/db.json"), TRUE);
 
 // Works the same way apt does, users update the db upon logging in.
 // OK-ish for small scale apps. Does not scale. 

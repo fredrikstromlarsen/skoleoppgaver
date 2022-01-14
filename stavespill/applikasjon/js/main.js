@@ -34,7 +34,9 @@ if (document.querySelector('form.task')) {
 			let id = char.id;
 			let index =
 				parseInt(id.substring(id.length - 1, id.length), 10) + 1;
-			if (char.value != '' && index < chars.length) chars[index].focus();
+			if (index >= chars.length) submit.focus();
+			else if (char.value != '' && index < chars.length)
+				chars[index].focus();
 		});
 	}
 }

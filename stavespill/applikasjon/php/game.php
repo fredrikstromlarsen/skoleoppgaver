@@ -1,5 +1,5 @@
 <?php
-print_r($_SESSION);
+// print_r($_SESSION);
 
 // Redirect to homepage if user tries to open this page directly
 if (str_contains($_SERVER['REQUEST_URI'], "game")) header("location:../");
@@ -71,8 +71,9 @@ function showResult($res)
 if (isset($_POST['mode']) && preg_match($regex["mode"], $_POST['mode']))
     $activeMethod = $_POST['mode'];
 ?>
-<div>
+<div class="top-bar space-between">
     <button tabindex="-1" type="button" id="exit">Avslutt Spill</button>
+    <p class="space-between"><span><?= count($_SESSION['completedWordsIndex']) ?> ✔️</span><span><?= count($_SESSION['wrongWordsIndex']) ?> ❌</span></p>
     <form action="" method="POST">
         <button name="mode" value="repeat" title="Gå gjennom oppgaver du allerede har klart.">Repetisjon</button>
         <button name="mode" value="normal" title="Gå gjennom alle oppgavene bare èn gang.">Normal</button>
@@ -105,6 +106,7 @@ if (isset($_POST['mode']) && preg_match($regex["mode"], $_POST['mode']))
         // ZZ
         $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"] = $newScore;
         exportData();
+        header("location:./");
     } else createTask(FALSE, "normal");
     ?>
 
