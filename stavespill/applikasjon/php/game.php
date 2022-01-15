@@ -1,11 +1,11 @@
 <?php
-// print_r($_SESSION);
-
 // Redirect to homepage if user tries to open this page directly
 if (str_contains($_SERVER['REQUEST_URI'], "game")) header("location:../");
 
-$wordlistLanguage = $db[$_SESSION['gamepin']]["language"];
-$wordlist = json_decode(file_get_contents("wordlists/$wordlistLanguage/1k.json"), true);
+print_r($_SESSION);
+
+$wordlist = json_decode(file_get_contents("wordlists/" . $db[$_SESSION['gamepin']]["language"] . ".json"), true)["words"];
+$wordlistLength = json_decode(file_get_contents("wordlists/wlinfo.json"), TRUE)[$db[$_SESSION['gamepin']]["language"]]["length"];
 
 function createTask($createNew, $method)
 {
@@ -20,7 +20,7 @@ function createTask($createNew, $method)
 
     switch ($method) {
         case "normal":
-            $index = $_SESSION["currentWordIndex"];
+            $index = rand($_SESSION["currentWordIndex"], $GLOBALS['wordlistLength']);
             break;
 
         case "repeat":
@@ -33,7 +33,8 @@ function createTask($createNew, $method)
             $index = $_SESSION["wrongWordsIndex"][rand(0, count($_SESSION["wrongWordsIndex"]))];
             break;
     }
-    echo "Index: $index, Mode: $method";
+    echo "Index: $index, Session Stored Mode: " . $_SESSION['activeMethod'] . ", Mode: $method";
+    $
     $currentWord = $GLOBALS["wordlist"][$index];
 ?>
 

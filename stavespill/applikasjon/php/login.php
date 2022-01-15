@@ -28,15 +28,21 @@ function getName($errorMessage, $first)
 
                 <?php
                 if ($first) {
+                    // Get info about all language files.
+                    $wlInfo = json_decode(file_get_contents("wordlists/wlinfo.json"), TRUE);
                 ?>
-
                     <div class="input-container">
                         <p>Du er den første spilleren i dette spillet!</p>
                         <label for="languagePreference">Hvilket språk vil du bruke for dette spillet?</label>
                         <select name="language" id="languagePreference" required>
                             <option value="" disabled selected>Velg språk</option>
-                            <option value="nb">Norsk Bokmål</option>
-                            <option value="en">Engelsk</option>
+                            <?php
+                            foreach ($wlInfo as $iso => $lang) {
+                            ?>
+                                <option value="<?= $iso ?>"><?= $lang['name'] . " (" . $lang['length'] . " ord)" ?></option>
+                            <?php
+                            }
+                            ?>
                         </select>
                     </div>
 

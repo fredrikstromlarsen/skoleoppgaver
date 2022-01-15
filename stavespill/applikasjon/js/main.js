@@ -14,15 +14,14 @@ if (document.querySelector('form.task')) {
 	for (let char of chars) {
 		char.addEventListener('input', () => {
 			if (char.value.length > 1) {
-				char.value = char.value.substring(0, 1);
+				char.value = char.value.substr(0, 1);
 			}
 
 			// Get the index of char in chars array,
 			// add 1 to it, and set focus on the next
 			// input field (unless it's last).
 			let id = char.id;
-			let index =
-				parseInt(id.substring(id.length - 1, id.length), 10) + 1;
+			let index = parseInt(id.replace('charInput', ''), 10) + 1;
 			if (index >= chars.length) submit.focus();
 			else if (char.value != '' && index < chars.length)
 				chars[index].focus();

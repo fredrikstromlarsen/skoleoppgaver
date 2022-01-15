@@ -1,0 +1,210 @@
+{
+    "ar": {
+        "length": 9332,
+        "name": "Arabic"
+    },
+    "be": {
+        "length": 1000,
+        "name": "Belarusian"
+    },
+    "bn": {
+        "length": 9894,
+        "name": "Bangla"
+    },
+    "ca": {
+        "length": 1000,
+        "name": "Catalan"
+    },
+    "cs": {
+        "length": 9632,
+        "name": "Czech"
+    },
+    "cy": {
+        "length": 1000,
+        "name": "Welsh"
+    },
+    "da": {
+        "length": 9996,
+        "name": "Danish"
+    },
+    "de": {
+        "length": 239648,
+        "name": "German"
+    },
+    "el": {
+        "length": 209,
+        "name": "Greek"
+    },
+    "en": {
+        "length": 451706,
+        "name": "English"
+    },
+    "eo": {
+        "length": 36344,
+        "name": "Esperanto"
+    },
+    "es": {
+        "length": 9997,
+        "name": "Spanish"
+    },
+    "et": {
+        "length": 10000,
+        "name": "Estonian"
+    },
+    "fa": {
+        "length": 200,
+        "name": "Persian"
+    },
+    "fi": {
+        "length": 10000,
+        "name": "Finnish"
+    },
+    "fl": {
+        "length": 1000,
+        "name": "Filipino"
+    },
+    "fr": {
+        "length": 10487,
+        "name": "French"
+    },
+    "ga": {
+        "length": 200,
+        "name": "Irish"
+    },
+    "he": {
+        "length": 200,
+        "name": "Hebrew"
+    },
+    "hi": {
+        "length": 1000,
+        "name": "Hindi"
+    },
+    "hr": {
+        "length": 212,
+        "name": "Croatian"
+    },
+    "hu": {
+        "length": 2501,
+        "name": "Hungarian"
+    },
+    "id": {
+        "length": 1019,
+        "name": "Indonesian"
+    },
+    "is": {
+        "length": 1000,
+        "name": "Icelandic"
+    },
+    "it": {
+        "length": 279868,
+        "name": "Italian"
+    },
+    "jp": {
+        "length": 594,
+        "name": "Japanese"
+    },
+    "ka": {
+        "length": 200,
+        "name": "Georgian"
+    },
+    "kk": {
+        "length": 205,
+        "name": "Kazakh"
+    },
+    "lt": {
+        "length": 3005,
+        "name": "Lithuanian"
+    },
+    "mg": {
+        "length": 1000,
+        "name": "Malagasy"
+    },
+    "mi": {
+        "length": 978,
+        "name": "Maori"
+    },
+    "mk": {
+        "length": 1000,
+        "name": "Macedonian"
+    },
+    "mn": {
+        "length": 9219,
+        "name": "Mongolian"
+    },
+    "ms": {
+        "length": 231,
+        "name": "Malay"
+    },
+    "nb": {
+        "length": 10000,
+        "name": "Norwegian"
+    },
+    "nl": {
+        "length": 9998,
+        "name": "Dutch"
+    },
+    "pl": {
+        "length": 199981,
+        "name": "Polish"
+    },
+    "pt": {
+        "length": 3043,
+        "name": "Portuguese"
+    },
+    "ro": {
+        "length": 270,
+        "name": "Romanian"
+    },
+    "ru": {
+        "length": 10000,
+        "name": "Russian"
+    },
+    "sk": {
+        "length": 10001,
+        "name": "Slovak"
+    },
+    "sl": {
+        "length": 309,
+        "name": "Slovenian"
+    },
+    "sq": {
+        "length": 1000,
+        "name": "Albanian"
+    },
+    "sr": {
+        "length": 212,
+        "name": "Serbian"
+    },
+    "sv": {
+        "length": 995,
+        "name": "Swedish"
+    },
+    "sw": {
+        "length": 1000,
+        "name": "Swahili"
+    },
+    "th": {
+        "length": 972,
+        "name": "Thai"
+    },
+    "tr": {
+        "length": 997,
+        "name": "Turkish"
+    },
+    "uk": {
+        "length": 50000,
+        "name": "Ukrainian"
+    },
+    "ur": {
+        "length": 1000,
+        "name": "Urdu"
+    },
+    "vi": {
+        "length": 5000,
+        "name": "Vietnamese"
+    },
+    "yo": {
+        "length": 732,
+        "name": "Yoruba"
+    }
+}
