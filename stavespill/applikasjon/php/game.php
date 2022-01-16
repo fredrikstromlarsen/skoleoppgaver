@@ -20,7 +20,16 @@ function createTask($createNew, $method)
 
     switch ($method) {
         case "normal":
-            $index = rand($_SESSION["currentWordIndex"], $GLOBALS['wordlistLength']);
+            // Get random index from non-completed word index.
+            // Not using as a session variable because with the english wordlist of 
+            // 451k words, the session-file would be large and prevent the application
+            // from scaling.
+
+            // 1. Marge completedWordsIndex and wrongWordsIndex to a single array.
+            // 2. Get all index values from wordlist (0, 1, 2, 3, 4, 5, 6, ...).
+            // 3. Remove all values from ^ which exist in the merged array.
+            $unseenWords = array_diff(array_keys($GLOBALS['wordlist']), array_merge($_SESSION['completedWordsIndex'], $_SESSION['wrongWordsIndex']));
+            $index = $unseenWords[rand(0, count($unseenWords) - 1)];
             break;
 
         case "repeat":
@@ -34,14 +43,14 @@ function createTask($createNew, $method)
             break;
     }
     echo "Index: $index, Session Stored Mode: " . $_SESSION['activeMethod'] . ", Mode: $method";
-    $
     $currentWord = $GLOBALS["wordlist"][$index];
 ?>
 
     <form action="" method="POST" class="task">
         <div class="audioContainer">
             <!-- Temporary. Will be replaced by audio button later. -->
-            <button type="button" id="audio"><?= $currentWord ?></button>
+            <button type="button" id="audioNormal"></button>
+            <button type="button" id="audioSlow">🐢</button>
         </div>
         <div class="charArray">
 
@@ -59,28 +68,56 @@ function createTask($createNew, $method)
         <input type="submit" class="answer" value="Svar" disabled="true">
     </form>
 
-<?php
+    <?php
 }
 
 function showResult($res)
 {
-    createTask(TRUE, "inherit");
+    if ($res) {
+        $imgUrl = "";
+    ?>
+        <div class="result-container result-correct">
+            <h1>Wow! Det var riktig!</h1>
+            <img src="<?= $imgUrl ?>" alt="<?= $_SESSION["favorite"] ?>">
+            <form action=""><button type="submit" name="nextWord">Neste ord</button></form>
+        </div>
+    <?php
+    } else {
+        // Show image with 
+        $imgUrl = "";
+    ?>
+        <div class="result-container result-wrong">
+            <h1>Det var dessverre feil.</h1>
+            <img src="<?= $imgUrl ?>" alt="Bilde for motivasjon">
+            <form action=""><button type="submit" name="nextWord">Neste ord</button></form>
+        </div>
+
+<?php
+    }
 }
 
 // Set game mode using buttons as input. 
 // Make sure the input hasn't been tampered with using preg_match.
-if (isset($_POST['mode']) && preg_match($regex["mode"], $_POST['mode'])) {
-    $activeMethod = $_POST['mode'];
-    header("Location:./");
+if (isset($_POST['mode'])) { // && preg_match($regex["mode"], $_POST['mode'])) {
+    echo "<br><br>Mode:" . $_POST["mode"] . "<br><br>";
+    $_SESSION['activeMethod'] = $_POST['mode'];
+    // header("Location:./");
 }
+
+if (isset($_POST['nextWord'])) createTask(TRUE, "inherit");
+
+
 ?>
 <div class="top-bar space-between">
     <button tabindex="-1" type="button" id="exit">Avslutt Spill <span class="icon"></span></button>
     <p class="space-between"><span><?= count($_SESSION['completedWordsIndex']) ?> <span class="icon"></span></span><span><?= count($_SESSION['wrongWordsIndex']) ?> <span class="icon"></span></span></p>
-    <form action="" method="POST">
-        <button name="mode" value="repeat" title="Gå gjennom oppgaver du allerede har klart.">Repetisjon</button>
-        <button name="mode" value="normal" title="Gå gjennom alle oppgavene bare èn gang.">Normal</button>
-        <button name="mode" value="hard" title="Gå gjennom oppgaver du har prøvd, men ikke klart.">Vanskelig</button>
+    <form action="" method="POST" onchange="this.submit()">
+        <label for=" modeChange">Spillmodus</label>
+        <select name="mode" id="modeChange">
+            <option value="repeat" <?php echo $_SESSION["mode"] == "repeat" ? "selected" : ""; ?>>Repetisjon</option>
+            <option value="normal" <?php echo $_SESSION["mode"] == "normal" ? "selected" : ""; ?>>Normal</option>
+            <option value="hard" <?php echo $_SESSION["mode"] == "hard" ? "selected" : ""; ?>>Vanskelig</option>
+        </select>
     </form>
 </div>
 <div>

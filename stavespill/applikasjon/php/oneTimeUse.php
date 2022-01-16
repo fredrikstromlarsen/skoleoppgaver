@@ -59,8 +59,9 @@ function scrambleWordlistOrder()
         |      |||
         |    newWordsArray = ["How", -, "Hello", -]
         |    keysAvailable = [1,3]
+        |      
         |      |
-        |______|
+        \_____/
             
             */
             $randomIndex = $keysAvailable[rand(0, count($keysAvailable))];

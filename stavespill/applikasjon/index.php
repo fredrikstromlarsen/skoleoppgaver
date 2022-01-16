@@ -1,8 +1,9 @@
 <?php
 /* TODO:
 * [ ] Allow users to login, not just register.
-* [ ] Audio recordings for all words.
+* [ ] Implement WebSpeech API for multilanguage word pronounciation.
 * [ ] CSS.
+* [ ] Show image of favorite thing when user answers correctly with https://rapidapi.com/contextualwebsearch/api/web-search?endpoint=apiendpoint_2799d2c8-3abb-4518-a544-48d2c32d6662.
 * [ ] Buttons for every (required) letter in the word to click instead of input fields.
 * [ ] Prevent reload from being interpreted as feil.
 * [X] Fix login json problems.
@@ -15,9 +16,11 @@
 * [X] Sort userlist based on score.
 * [X] Kill the bugs.
 */
+
 // Highest level of error reporting.
-// Used for optimizing and debugging.
-error_reporting(-1);
+// Used for optimizing and debugging code.
+declare(strict_types=1);
+error_reporting(E_ALL | E_NOTICE);
 // PHP Sessions last for 12 hours
 ini_set('session.gc_maxlifetime', '43200');
 session_start();
@@ -90,8 +93,8 @@ $regex = [
 	"code" => "^[0-9]{1,2}$",
 	"lang" => "^[a-z]{2}$",
 	"user" => "^[A-ZÆØÅa-zæøå0-9\-_' ]{1,32}$",
-	"char" => "^[A-ZÆØÅa-zæøå]{1}$",
-	"mode" => "^(normal|repeat|hard|inherit)$"
+	"char" => "^[A-ZÆØÅa-zæøå]{1}$"
+	// "mode" => "^(normal|repeat|hard|inherit)$"
 ];
 // Check if user has a valid session.
 if (isset($_SESSION['gamepin']) && isset($_SESSION['userid'])) {

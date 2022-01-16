@@ -78,6 +78,30 @@ function getCode($errorMessage)
     </div>
 <?php
 }
+function getFavorite($search)
+{
+    $client = new http\Client;
+    $request = new http\Client\Request;
+
+    $request->setRequestUrl('https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/ImageSearchAPI');
+    $request->setRequestMethod('GET');
+    $request->setQuery(new http\QueryString([
+        'q' => 'taylor swift',
+        'pageNumber' => '1',
+        'pageSize' => '10',
+        'autoCorrect' => 'true'
+    ]));
+
+    $request->setHeaders([
+        'x-rapidapi-host' => 'contextualwebsearch-websearch-v1.p.rapidapi.com',
+        'x-rapidapi-key' => $_ENV['IMAGE_SEARCH_API_KEY']
+    ]);
+
+    $client->enqueue($request)->send();
+    $response = $client->getResponse();
+
+    echo $response->getBody();
+}
 
 if (isset($_POST['username']) && isset($_POST['favorite']) && isset($_SESSION['gamepin'])) {
 
@@ -119,7 +143,7 @@ if (isset($_POST['username']) && isset($_POST['favorite']) && isset($_SESSION['g
             $_SESSION["completedWordsIndex"] = [];
             $_SESSION["wrongWordsIndex"] = [];
             $_SESSION["currentWordIndex"] = 0;
-            $_SESSION["activeMethod"] = "normal";
+            $_SESSION["activeMethod"] = "repeat";
 
             // Update json file with input data.
             exportData();
