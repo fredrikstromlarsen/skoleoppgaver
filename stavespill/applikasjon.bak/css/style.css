@@ -1,0 +1,33 @@
+body {
+	height: calc(100vh - 2rem);
+	max-width: calc(100vw - 4rem);
+	padding: 1rem 2rem;
+	overflow-x: hidden;
+
+	margin: 0;
+
+	scroll-snap-type: y mandatory;
+}
+
+section {
+	scroll-snap-align: start;
+
+	height: calc(100vh - 4rem);
+	width: calc(100vw - 4rem);
+}
+
+.icon {
+	font-family: 'NotoEmoji NF', 'NotoMono NF', 'Segoe UI', monospace;
+}
+
+.disable-selection {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.space-between {
+	display: flex;
+	justify-content: space-between;
+}

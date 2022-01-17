@@ -1,11 +1,22 @@
 <?php
-/* TODO:
-* [ ] Allow users to login, not just register.
-* [ ] Implement WebSpeech API for multilanguage word pronounciation.
-* [ ] CSS.
+/* NB: If this error pops up when loading the website:
+"""
+Error: This page is not redirecting properly.
+"""
+... then make sure to set the appropriate permissions for the json files.
+
+# chmod 644 wordlists/*.json
+# chmod 666 wordlists/wlInfo.json
+# chmod 644 json/db.json
+
+TODO:
+* [ ] Resolve error: "Warning: Undefined array key 1331 in /opt/lampp/htdocs/2_active/skoleoppgaver/stavespill/applikasjon/php/game.php on line 33
 * [ ] Show image of favorite thing when user answers correctly with https://rapidapi.com/contextualwebsearch/api/web-search?endpoint=apiendpoint_2799d2c8-3abb-4518-a544-48d2c32d6662.
+* [ ] CSS.
+* [ ] Allow users to login, not just register.
 * [ ] Buttons for every (required) letter in the word to click instead of input fields.
-* [ ] Prevent reload from being interpreted as feil.
+* [X] Implement Speech Synthesis for multilanguage word pronounciation.
+* [X] Prevent reload from being interpreted as a fail.
 * [X] Fix login json problems.
 * [X] Fix new task not changing.
 * [X] Users who register in a game first can choose wordlist language.
@@ -26,7 +37,7 @@ ini_set('session.gc_maxlifetime', '43200');
 session_start();
 // Generate a new session id to prevent session hijacking.
 // Using boolean option true to delete old session .
-session_regenerate_id(true);
+session_regenerate_id(TRUE);
 // Make code more readable.
 function exportData()
 {
@@ -93,8 +104,8 @@ $regex = [
 	"code" => "^[0-9]{1,2}$",
 	"lang" => "^[a-z]{2}$",
 	"user" => "^[A-ZÆØÅa-zæøå0-9\-_' ]{1,32}$",
-	"char" => "^[A-ZÆØÅa-zæøå]{1}$"
-	// "mode" => "^(normal|repeat|hard|inherit)$"
+	"char" => "^[A-ZÆØÅa-zæøå]{1}$",
+	"mode" => "^(normal|repeat|hard|inherit)$"
 ];
 // Check if user has a valid session.
 if (isset($_SESSION['gamepin']) && isset($_SESSION['userid'])) {
