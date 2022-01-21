@@ -128,5 +128,10 @@ dist
 desc.txt
 /joakim/**
 userlist.json
-/tfp/**
-audio/**
+db.json
+/tfp/
+audio/
+
+# PyCharm Files
+.idea/
+venv/
