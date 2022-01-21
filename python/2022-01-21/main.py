@@ -1,9 +1,9 @@
 # 1.
 # e)
-def print_result(task, varName, result):
+def print_result(task, var_name, result):
     print(f"\nOppgave {task}:")
-    for n in range(len(varName)):
-        print(f"\t{varName[n]} = {result[n]}")
+    for n in range(len(var_name)):
+        print(f"\t{var_name[n]} = {result[n]}")
 
 
 # a)
@@ -85,7 +85,6 @@ nationality()
 print("\nOppgave 4:")
 
 import random as r
-import sys as s
 
 min = 0
 max = 1000
@@ -106,11 +105,15 @@ while True:
 # 0-50: 25
 # Høyere.
 # Nå som vi vet at den er høyere, vil minimumverdien være 26, og maks vil være 50.
-# Halvparten av 26-50 = 12. Halvparten av gyldige tall er da 26+12 = 38.
+# Halvparten av 50 - 26 = 12. Halvveis i gyldige tall er da 26 + 12 = 38.
+
+# Svar = 26 + 12
 # 0-50: 38
 # Lavere.
 # Rinse and repeat.
-# 0-50: 32
+# Gyldige tall: 26 -> 37
+# Halvveis: 26 + (37 - 26) / 2 = 31
+# 0-50: 31
 # Lavere.
 # 0-50: 29
 # Høyere.
