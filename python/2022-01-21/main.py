@@ -87,8 +87,10 @@ print("\nOppgave 4:")
 import random as r
 import sys as s
 
-answer = r.randint(0, 50)
-guess = int(input("\tGjett tallet jeg tenker på (0-50): "))
+min = 0
+max = 1000
+answer = r.randint(min, max)
+guess = int(input(f"\tGjett tallet jeg tenker på ({min}-{max}): "))
 while True:
     if answer == guess:
         print("\tRiktig!")
