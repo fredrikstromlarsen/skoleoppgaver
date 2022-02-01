@@ -3,15 +3,13 @@
 """
 Error: This page is not redirecting properly.
 """
-... then make sure to set the appropriate permissions for the json files.
-
+then do:
 # chmod 644 wordlists/*.json
-# chmod 666 wordlists/wlInfo.json
+# chmod 666 wordlists/wlinfo.json
 # chmod 644 json/db.json
 
 TODO:
 * [ ] Resolve error: "Warning: Undefined array key 1331 in /opt/lampp/htdocs/2_active/skoleoppgaver/stavespill/applikasjon/php/game.php on line 33
-* [ ] Show image of favorite thing when user answers correctly with https://rapidapi.com/contextualwebsearch/api/web-search?endpoint=apiendpoint_2799d2c8-3abb-4518-a544-48d2c32d6662.
 * [ ] CSS.
 * [ ] Allow users to login, not just register.
 * [ ] Buttons for every (required) letter in the word to click instead of input fields.
@@ -32,6 +30,10 @@ TODO:
 // Used for optimizing and debugging code.
 declare(strict_types=1);
 error_reporting(E_ALL | E_NOTICE);
+
+// Turn on output buffering for performance gains.
+ob_start();
+
 // PHP Sessions last for 12 hours
 ini_set('session.gc_maxlifetime', '43200');
 session_start();
@@ -136,3 +138,5 @@ if (isset($_SESSION['gamepin']) && isset($_SESSION['userid'])) {
 </body>
 
 </html>
+
+<?php ob_flush();

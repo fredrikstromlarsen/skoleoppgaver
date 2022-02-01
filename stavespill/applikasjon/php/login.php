@@ -21,51 +21,31 @@ function getName($errorMessage, $first)
                     <label for='username'>Jeg heter&nbsp;</label>
                     <input type='text' id='username' name='username' required pattern="<?= $GLOBALS['regex']['user'] ?>" autofocus>
                 </div>
-                <div class='input-container'>
-                    <label for='favorite'>Jeg liker&nbsp;</label>
-                    <input type='text' id='favorite' name='favorite' required pattern="<?= $GLOBALS['regex']['user'] ?>">
-                </div>
 
-                <?php
-                if ($first) {
+                <?php if ($first) {
                     // Get info about all language files.
-                    $wlInfo = json_decode(file_get_contents("wordlists/wlinfo.json"), TRUE);
-                ?>
+                    $wlInfo = json_decode(file_get_contents("wordlists/wlinfo.json"), TRUE); ?>
                     <div class="input-container">
-                        <p>Du er den første spilleren i dette spillet!</p>
+                        <p>Du ble førstemann til mølla!</p>
                         <label for="languagePreference">Hvilket språk vil du bruke for dette spillet?</label>
                         <select name="language" id="languagePreference" required>
                             <option value="" disabled selected>Velg språk</option>
-                            <?php
-                            foreach ($wlInfo as $iso => $lang) {
-                            ?>
+                            <?php foreach ($wlInfo as $iso => $lang) { ?>
                                 <option value="<?= $iso ?>"><?= $lang['name'] . " (" . $lang['length'] . " ord)" ?></option>
-                            <?php
-                            }
-                            ?>
+                            <?php } ?>
                         </select>
                     </div>
-
-                <?php
-                }
-                ?>
-
+                <?php } ?>
                 <input type='submit' value='Start spillet'>
             </form>
         </div>
     </div>
     <div class="col-right">
-
-        <?php
-        if (!$first) showLeaderboard();
-        ?>
-
+        <?php if (!$first) showLeaderboard(); ?>
     </div>
-<?php
-}
+<?php }
 function getCode($errorMessage)
-{
-?>
+{ ?>
     <div>
         <div class='input-container'>
             <h1>Bli med i eller start et spill!</h1>
@@ -76,42 +56,16 @@ function getCode($errorMessage)
             </form>
         </div>
     </div>
-<?php
-}
-function getFavorite($search)
-{
-    $client = new http\Client;
-    $request = new http\Client\Request;
+<?php }
 
-    $request->setRequestUrl('https://contextualwebsearch-websearch-v1.p.rapidapi.com/api/Search/ImageSearchAPI');
-    $request->setRequestMethod('GET');
-    $request->setQuery(new http\QueryString([
-        'q' => 'taylor swift',
-        'pageNumber' => '1',
-        'pageSize' => '10',
-        'autoCorrect' => 'true'
-    ]));
-
-    $request->setHeaders([
-        'x-rapidapi-host' => 'contextualwebsearch-websearch-v1.p.rapidapi.com',
-        'x-rapidapi-key' => $_ENV['IMAGE_SEARCH_API_KEY']
-    ]);
-
-    $client->enqueue($request)->send();
-    $response = $client->getResponse();
-
-    echo $response->getBody();
-}
-
-if (isset($_POST['username']) && isset($_POST['favorite']) && isset($_SESSION['gamepin'])) {
+if (isset($_POST['username']) && isset($_SESSION['gamepin'])) {
 
     // Check if input values matches the expected pattern.
-    if (preg_match("/" . $regex["user"] . "/", trim($_POST['username'])) && preg_match("/" . $regex["user"] . "/", trim($_POST['favorite']))) {
+    if (preg_match("/" . $regex["user"] . "/", trim($_POST['username']))) {
 
         // Escape special characters.
         $username = filter_var(trim($_POST['username']), FILTER_SANITIZE_SPECIAL_CHARS);
         $userid = strtolower($username);
-        $fav = filter_var(trim($_POST['favorite']), FILTER_SANITIZE_SPECIAL_CHARS);
 
         // Check if username is avaliable.
         if (is_null($db[$_SESSION['gamepin']]["users"][$userid])) {
@@ -137,13 +91,12 @@ if (isset($_POST['username']) && isset($_POST['favorite']) && isset($_SESSION['g
             $_SESSION["userid"] = $userid;
 
             // Add new user to db.json.
-            $db[$gamepin]["users"][$userid] = ["name" => $username, "score" => 0, "favorite" => $fav];
+            $db[$gamepin]["users"][$userid] = ["name" => $username, "score" => 0];
 
             // Set default value for list of words completed.
-            $_SESSION["completedWordsIndex"] = [];
-            $_SESSION["wrongWordsIndex"] = [];
+            $_SESSION["completedWords"] = 0;
+            $_SESSION["wrongWords"] = 0;
             $_SESSION["currentWordIndex"] = 0;
-            $_SESSION["activeMethod"] = "repeat";
 
             // Update json file with input data.
             exportData();

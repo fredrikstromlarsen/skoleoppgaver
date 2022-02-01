@@ -1,1 +1,22 @@
-[]
+{
+    "2": {
+        "expiration": 1643712078,
+        "language": "ar",
+        "users": {
+            "arabic": {
+                "name": "arabic",
+                "score": 0
+            }
+        }
+    },
+    "3": {
+        "expiration": 1643712558,
+        "language": "bn",
+        "users": {
+            "bangla": {
+                "name": "bangla",
+                "score": 5
+            }
+        }
+    }
+}

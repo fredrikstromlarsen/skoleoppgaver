@@ -4,16 +4,23 @@ if (document.querySelector('button#exit'))
 		return (location.href = 'php/logout.php');
 	};
 
-// if (document.querySelector('button#audio'))
-// document.querySelector('button#audio').onclick = () => {
-// return document.getElementById('audio#synthesizedAudio')();
-// };
+function playAudio(id, trg, delay) {
+	try {
+		const audio = document.getElementById(id);
+		setTimeout(() => {
+			window.onload = audio.play();
+		}, delay);
 
-if (document.getElementById('synthesizedAudio')) {
-	const audio = document.getElementById('synthesizedAudio');
-	const trigger = document.getElementById('audioTrigger');
-	window.onload = audio.play();
-	trigger.addEventListener('click', () => {
-		audio.play();
-	});
+		if (trg != '') {
+			const trigger = document.getElementById(trg);
+			trigger.addEventListener('click', () => {
+				audio.play();
+			});
+		}
+	} catch (e) {
+		console.log(e.message);
+	}
 }
+
+playAudio('synthesizedAudio', 'audioTrigger', 800);
+playAudio('response', '');
