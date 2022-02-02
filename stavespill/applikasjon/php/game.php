@@ -10,7 +10,7 @@ function createTask($createNew, $responseAction)
 {
     if ($responseAction == 0 && isset($_SESSION["responseAction"])) $responseAction = $_SESSION["responseAction"];
     else $_SESSION["responseAction"] = $responseAction;
-    
+
     if ($createNew) $_SESSION['currentWordIndex']++;
     $language = $GLOBALS["db"][$_SESSION['gamepin']]['language'];
     $currentWord = $GLOBALS["wordlist"][$_SESSION['currentWordIndex']];
@@ -31,8 +31,9 @@ function createTask($createNew, $responseAction)
 function downloadSynthesizedAudio($word, $lang)
 {
     $path = "audio/$lang";
+
     // https://php.watch/articles/php-hash-benchmark
-    $file = "$path/" . hash("xxh128", $word) . ".mp3";
+    $file = "$path/" . hash("xxh3", $word) . ".mp3";
     $urlsafeWord = urlencode($word);
     if (!file_exists($path) || !is_dir($path)) mkdir($path, 0777);
     if (!file_exists($file)) {
@@ -43,40 +44,41 @@ function downloadSynthesizedAudio($word, $lang)
     return $file;
 }
 ?>
-<div class="top-bar space-between">
-    <h1><?= $wordlistInfo["name"] ?></h1>
-    <p class="space-between">
-        <span>
-            <?= $_SESSION['completedWords'] ?>
-            <span class="icon"></span>
-        </span>
-        &nbsp;&nbsp;
-        <span>
-            <?= $_SESSION['wrongWords'] ?>
-            <span class="icon"></span>
-        </span>
+<header class="bar">
+    <p><b><?= $db[$_SESSION['gamepin']]["users"][$_SESSION["userid"]]["name"] ?></b></p>
+    <p class="counter">
+        <span><?= $_SESSION['completedWords'] ?>&nbsp;<img src="img/correct.svg" alt="riktige" class="icon i-inline"></span>
+        <span><?= $_SESSION['wrongWords'] ?>&nbsp;<img src="img/wrong.svg" alt="riktige" class="icon i-inline"></span>
     </p>
-    <button tabindex="-1" type="button" id="exit">Avslutt Spill <span class="icon"></span></button>
-</div>
-<div>
-    <?php if (isset($_POST["answer"])) {
+    <button tabindex="-1" type="button" id="exit">Avslutt Spill <img src="img/exit.svg" alt="avslutt spillet" class="icon i-inline"></button>
+</header>
+<div class="playarea">
+    <div id="question">
 
-        $input = base64_encode(strtolower(trim($_POST["answer"])));
-        $currentScore = $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"];
-        $currentWord = $GLOBALS['wordlist'][$_SESSION["currentWordIndex"]];
+        <?php if (isset($_POST["answer"])) {
 
-        if ($input === base64_encode(strtolower($currentWord))) {
-            $_SESSION["completedWords"]++;
-            createTask(TRUE, 1);
-        } else {
-            $_SESSION["wrongWords"]++;
-            createTask(FALSE, 2);
-        }
-        $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"] = $_SESSION["completedWords"] * 10 - $_SESSION["wrongWords"];
-        exportData();
-        header("Location:./");
-    } else createTask(FALSE, 0); ?>
+            $input = base64_encode(strtolower(trim($_POST["answer"])));
+            $currentScore = $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"];
+            $currentWord = $GLOBALS['wordlist'][$_SESSION["currentWordIndex"]];
+
+            if ($input === base64_encode(strtolower($currentWord))) {
+                $_SESSION["completedWords"]++;
+                createTask(TRUE, 1);
+            } else {
+                $_SESSION["wrongWords"]++;
+                createTask(FALSE, 2);
+            }
+            $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"] = $_SESSION["completedWords"] * 10 - $_SESSION["wrongWords"];
+            exportData();
+            header("Location:./");
+        } else createTask(FALSE, 0); ?>
+    </div>
+    <div id="scoreboard">
+        <?php scoreboard(); ?>
+    </div>
 </div>
-<div>
-    <?php showLeaderboard(); ?>
-</div>
+<footer class="bar bar-slim">
+    <p>Spillkode: <b><?= $_SESSION["gamepin"] ?></b></p>
+    <p><?= $wordlistInfo["name"] ?></p>
+    <p>ord <b><?= $_SESSION["completedWords"] + 1?></b> av <?= $wordlistInfo["length"] ?></p>
+</footer>

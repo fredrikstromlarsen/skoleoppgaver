@@ -41,7 +41,7 @@ function getName($errorMessage, $first)
         </div>
     </div>
     <div class="col-right">
-        <?php if (!$first) showLeaderboard(); ?>
+        <?php if (!$first) scoreboard(); ?>
     </div>
 <?php }
 function getCode($errorMessage)

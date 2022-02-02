@@ -1,23 +1,77 @@
-body {
-	height: calc(100vh - 2rem);
-	max-width: calc(100vw - 4rem);
-	padding: 1rem 2rem;
-	overflow-x: hidden;
+:root {
+	--bg: #0d121b;
+	--bg-b: #151d2c;
+	--fg: #d5e0e8;
+	--fg-b: #afb3b6;
+	--hl: #038de9;
+	--hl-b: #1170af;
+}
 
+* {
+	font-family: "Nunito", sans-serif;
+}
+
+body {
+	height: calc(100vh - 4rem);
+	max-width: calc(100vw - clamp(1rem, 4vw, 4rem));
+	overflow-x: hidden;
+	padding: 2rem clamp(0.5rem, 2vw, 2rem);
 	margin: 0;
 
 	scroll-snap-type: y mandatory;
+
+	background-color: var(--bg);
+	color: var(--fg-b);
 }
 
 section {
 	scroll-snap-align: start;
+	min-height: calc(100% - 4rem);
+	max-width: 60rem;
+	width: calc(100% - 4rem);
 
-	height: calc(100vh - 4rem);
-	width: calc(100vw - 4rem);
+	margin: 0 auto;
+	border: 0.1rem solid var(--bg-b);
+	border-radius: 0.5rem;
+	-webkit-border-radius: 0.5rem;
+	-moz-border-radius: 0.5rem;
+	-ms-border-radius: 0.5rem;
+	-o-border-radius: 0.5rem;
+}
+
+section>*:not(:last-child) {
+	border-bottom: 0.1rem solid var(--bg-b);
+	padding: 1.5rem 0;
+}
+
+section>* {
+	margin: 0 2rem;
+}
+
+section#game {
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+
+}
+
+.counter {
+	display: flex;
+	gap: 2rem;
+}
+
+.counter>* {
+	display: flex;
+	align-items: center;
+	font-size: 1.2rem;
 }
 
 .icon {
-	font-family: 'NotoEmoji NF', 'NotoMono NF', 'Segoe UI', monospace;
+}
+
+.i-inline {
+	display: inline-block;
+	height: 1em;
+
 }
 
 .disable-selection {
@@ -27,7 +81,81 @@ section {
 	user-select: none;
 }
 
-.space-between {
-	display: flex;
-	justify-content: space-between;
+.bar {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1rem;
+
+	margin: 0 2rem;
+	padding: 1.5rem 0;
+	height: min-content;
+}
+
+.bar-slim {
+	padding: 1rem 0 !important;
+}
+
+.bar>*:first-child {
+	margin: auto auto auto 0;
+}
+.bar>*:not(:first-child):not(:last-child) {
+	margin: auto;
+}
+.bar>*:last-child {
+	margin: auto 0 auto auto;
+}
+
+header {
+	color: var(--fg);
+}
+
+table {
+
+}
+tr {
+
+}
+td {
+
+}
+
+b {
+	font-weight: 900;
+}
+
+button {
+	background-color: var(--hl);
+	box-shadow: 0 0.3rem 0 var(--hl-b);
+	transform:translateY(0rem);
+	margin-bottom: 0.3rem;
+	color: var(--bg);
+	font-weight: 900;
+	font-size: 1rem;
+	border-radius: 0.5rem;
+	border: none;
+	padding: 0.75rem 0.9rem;
+	height: min-content;
+	-webkit-border-radius: 0.5rem;
+	-moz-border-radius: 0.5rem;
+	-ms-border-radius: 0.5rem;
+	-o-border-radius: 0.5rem;
+	transition: all 0.1s ease-out;
+	-webkit-transition: all 0.1s ease-out;
+	-moz-transition: all 0.1s ease-out;
+	-ms-transition: all 0.1s ease-out;
+	-o-transition: all 0.1s ease-out;
+	-webkit-transform:translateY(0rem);
+	-moz-transform:translateY(0rem);
+	-ms-transform:translateY(0rem);
+	-o-transform:translateY(0rem);
+}
+
+button:active {
+	box-shadow: 0 0rem 0 var(--hl-b);
+	transform: translateY(0.3rem);
+	background-color: var(--hl-b);
+	-webkit-transform: translateY(0.3rem);
+	-moz-transform: translateY(0.3rem);
+	-ms-transform: translateY(0.3rem);
+	-o-transform: translateY(0.3rem);
 }

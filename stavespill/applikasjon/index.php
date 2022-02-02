@@ -45,43 +45,12 @@ function exportData()
 {
 	file_put_contents('./json/db.json', json_encode($GLOBALS['db']));
 }
-function showLeaderboard()
-{
-	// Sort user list based on score
-	$userlistSorted = $GLOBALS['db'][$_SESSION['gamepin']]["users"];
-	usort($userlistSorted, function ($a, $b) {
-		return $b["score"] - $a["score"];
-	});
-?>
-	<table class="leaderboard" border="1">
-		<tr>
-			<th>Spiller</th>
-			<th>Score</th>
-		</tr>
-		<?php
-		foreach ($userlistSorted as $userdata) {
-			$isMe = "";
-			if (isset($_SESSION["userid"]) && strtolower($userdata["name"]) == $_SESSION["userid"]) {
-				$isMe = "👉 ";
-			}
-		?>
-			<tr>
-				<td><?= $isMe . $userdata["name"] ?></td>
-				<td><?= $userdata["score"] ?></td>
-			</tr>
-		<?php
-		}
-		?>
-		</tr>
-	</table>
-<?php
-}
 
 // Get data from json file and decode from json to an associative array.
 $db = json_decode(file_get_contents("./json/db.json"), TRUE);
 
 // Works the same way apt does, users update the db upon logging in.
-// OK-ish for small scale apps. Does not scale. 
+// OK-ish for small scale apps. 
 // Delete games which have expired.
 $time = time();
 $changed = FALSE;
@@ -95,7 +64,7 @@ for ($i = 0; $i < count($db); $i++) {
 		$changed = TRUE;
 	}
 }
-// Reload database
+// Reload page with updated db.
 if ($changed) {
 	exportData();
 	header("Location:./");
@@ -114,6 +83,8 @@ if (isset($_SESSION['gamepin']) && isset($_SESSION['userid'])) {
 	if (isset($db[$_SESSION["gamepin"]]["users"][$_SESSION["userid"]])) $p = "game";
 	else $p = "login";
 } else $p = "login";
+
+include("php/scoreboard.php");
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -125,7 +96,10 @@ if (isset($_SESSION['gamepin']) && isset($_SESSION['userid'])) {
 	<title>Stavespill</title>
 	<link rel="stylesheet" href="css/style.css">
 	<link rel="stylesheet" href="css/fonts.css">
-	<script src="js/main.js" defer></script>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;800&display=swap" rel="stylesheet">
+	<script src="js/main.js" async></script>
 </head>
 
 <body>

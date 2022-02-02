@@ -12,12 +12,6 @@ function generateInfo()
         }
     file_put_contents("../wordlists/wlinfo.json", json_encode($f));
 }
-function hashAll() {
-    echo "<h1>Hello world: </h1>";
-    foreach(hash_algos() as $hashalgo) {
-        echo "<br>$hashalgo: " . hash($hashalgo, "Hello world");
-    }
-}
 
 // Execute function respective to user input.
 if (isset($_POST["function"])) $_POST["function"]();
@@ -28,7 +22,6 @@ if (isset($_POST["function"])) $_POST["function"]();
     <label for="function">Hvilken funksjon skal kjøres?</label>
     <select name="function" id="function">
         <option value="generateInfo">generateInfo()</option>
-        <option value="hashAll">hashAll()</option>
     </select>
     <input type="submit" value="Kjør">
 </form>
