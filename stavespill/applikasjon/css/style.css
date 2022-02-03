@@ -1,10 +1,13 @@
 :root {
 	--bg: #0d121b;
+	--bg-a: #06090e;
 	--bg-b: #151d2c;
 	--fg: #d5e0e8;
 	--fg-b: #afb3b6;
 	--hl: #038de9;
 	--hl-b: #1170af;
+	--btn-submit: #1ddb1d;
+	--btn-submit-b: #1fa31f;
 }
 
 * {
@@ -51,7 +54,6 @@ section>* {
 section#game {
 	display: grid;
 	grid-template-rows: auto 1fr auto;
-
 }
 
 .counter {
@@ -60,25 +62,29 @@ section#game {
 }
 
 .counter>* {
-	display: flex;
 	align-items: center;
 	font-size: 1.2rem;
-}
-
-.icon {
 }
 
 .i-inline {
 	display: inline-block;
 	height: 1em;
-
+	margin: 0 0.2rem;
+	transform: translateY(0.1rem);
+	-webkit-transform: translateY(0.1rem);
+	-moz-transform: translateY(0.1rem);
+	-ms-transform: translateY(0.1rem);
+	-o-transform: translateY(0.1rem);
 }
 
+.i-xl {
+	height: 4rem;
+}
 .disable-selection {
+	user-select: none;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
-	user-select: none;
 }
 
 .bar {
@@ -109,32 +115,106 @@ header {
 	color: var(--fg);
 }
 
-table {
-
+.playarea {
+	display: grid;
+	grid-template-columns: minmax(30rem, 1fr) 15rem;
+	gap: 2rem;
 }
-tr {
 
+#question {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
 }
-td {
 
+.top {
+	display: flex;
+	justify-content: space-between;
+	gap: 2rem;
+	max-width: 100%;
+}
+
+#answer {
+	padding: 0.75em 0.9em;
+	font-size: 2rem;
+	font-weight: 900;
+	font-kerning: auto;
+
+	min-width: none;
+	width: 100%;
+}
+
+#scoreboard {
+	padding-left: 2rem;
+	width: calc(100% - 2rem);
+	border-left: 0.1rem solid var(--bg-b);
+}
+#scoreboard>table {
+	border-collapse: collapse;
+}
+
+th {
+	text-align: left;
+}
+td, th {
+	padding: 0.75rem;
+	overflow: hidden;
+}
+td:first-child, tr:first-child {
+	padding-left: 1rem;
+	border-radius: 0.5rem 0 0 0.5rem;
+	-webkit-border-radius: 0.5rem 0 0 0.5rem;
+	-moz-border-radius: 0.5rem 0 0 0.5rem;
+	-ms-border-radius: 0.5rem 0 0 0.5rem;
+	-o-border-radius: 0.5rem 0 0 0.5rem;
+}
+
+td:last-child, tr:last-child {
+	padding-right: 1rem;
+	border-radius: 0 0.5rem 0.5rem 0;
+	-webkit-border-radius: 0 0.5rem 0.5rem 0;
+	-moz-border-radius: 0 0.5rem 0.5rem 0;
+	-ms-border-radius: 0 0.5rem 0.5rem 0;
+	-o-border-radius: 0 0.5rem 0.5rem 0;
+}
+
+td.r, th.r {
+	text-align: right;
+}
+
+tr.current-user>* {
+	background-color: var(--bg-a);
+	font-weight: 900;
+	/* color: var(--fg); */
 }
 
 b {
 	font-weight: 900;
 }
 
+input[type=text] {
+	background-color: var(--bg-a);
+	color: var(--fg);
+	padding: 0.75rem 0.9rem;
+	border: none;
+	border-radius: 0.5rem;
+	-webkit-border-radius: 0.5rem;
+	-moz-border-radius: 0.5rem;
+	-ms-border-radius: 0.5rem;
+	-o-border-radius: 0.5rem;
+}
+
 button {
 	background-color: var(--hl);
-	box-shadow: 0 0.3rem 0 var(--hl-b);
-	transform:translateY(0rem);
-	margin-bottom: 0.3rem;
+	box-shadow: 0 0.4rem 0 var(--hl-b);
 	color: var(--bg);
 	font-weight: 900;
 	font-size: 1rem;
-	border-radius: 0.5rem;
-	border: none;
+	border: 0.1rem solid var(--hl-b);
 	padding: 0.75rem 0.9rem;
+	margin-bottom: 0.4rem;
 	height: min-content;
+	border-radius: 0.5rem;
 	-webkit-border-radius: 0.5rem;
 	-moz-border-radius: 0.5rem;
 	-ms-border-radius: 0.5rem;
@@ -144,18 +224,44 @@ button {
 	-moz-transition: all 0.1s ease-out;
 	-ms-transition: all 0.1s ease-out;
 	-o-transition: all 0.1s ease-out;
-	-webkit-transform:translateY(0rem);
-	-moz-transform:translateY(0rem);
-	-ms-transform:translateY(0rem);
-	-o-transform:translateY(0rem);
+	transform: translateY(0rem);
+	-webkit-transform: translateY(0rem);
+	-moz-transform: translateY(0rem);
+	-ms-transform: translateY(0rem);
+	-o-transform: translateY(0rem);
 }
 
 button:active {
 	box-shadow: 0 0rem 0 var(--hl-b);
-	transform: translateY(0.3rem);
-	background-color: var(--hl-b);
-	-webkit-transform: translateY(0.3rem);
-	-moz-transform: translateY(0.3rem);
-	-ms-transform: translateY(0.3rem);
-	-o-transform: translateY(0.3rem);
+	background-color: var(--hl);
+	transform: translateY(0.4rem);
+	-webkit-transform: translateY(0.4rem);
+	-moz-transform: translateY(0.4rem);
+	-ms-transform: translateY(0.4rem);
+	-o-transform: translateY(0.4rem);
+}
+
+button[type=submit] {
+	border-color: var(--btn-submit-b);
+	background-color: var(--btn-submit);
+	box-shadow: 0 0.4rem 0 var(--btn-submit-b);
+
+	padding: 1rem;
+	width: 100%;
+}
+
+button[type="submit"]:active {
+	background-color: var(--btn-submit-b);
+	box-shadow: 0 0rem 0 var(--btn-submit-b);
+}
+
+button.secondary {
+	border-color: var(--bg-b);
+	color: var(--fg-b);
+	background-color: var(--bg);
+	box-shadow: 0 0.4rem 0 var(--bg-b);
+}
+
+button.secondary:active {
+	box-shadow: 0 0rem 0 var(--bg-b);
 }

@@ -10,21 +10,22 @@ function scoreboard()
         return $b["score"] - $a["score"];
     });
 ?>
-    <table class="leaderboard" border="1">
+    <table>
         <tr>
+            <th></th>
             <th>Spiller</th>
-            <th>Score</th>
+            <th class="r">Poeng</th>
         </tr>
         <?php
-        foreach ($userlistSorted as $userdata) {
+        foreach ($userlistSorted as $key=>$userdata) {
             $isMe = "";
-            if (isset($_SESSION["userid"]) && strtolower($userdata["name"]) == $_SESSION["userid"]) {
-                $isMe = "<img src=\"img/arrow.svg\" alt=\"Du\" class=\"icon i-inline\">&nbsp;";
-            }
+            if (isset($_SESSION["userid"]) && strtolower($userdata["name"]) == $_SESSION["userid"])
+                $isMe = "class=\"current-user\"";
         ?>
-            <tr>
-                <td><?= $isMe . $userdata["name"] ?></td>
-                <td><?= $userdata["score"] ?></td>
+            <tr <?= $isMe ?>>
+                <td class="r"><?= $key + 1 ?>.</td>
+                <td><?= $userdata["name"] ?></td>
+                <td class="r"><?= $userdata["score"] ?></td>
             </tr>
         <?php
         }

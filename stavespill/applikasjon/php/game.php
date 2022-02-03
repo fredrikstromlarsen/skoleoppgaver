@@ -16,15 +16,19 @@ function createTask($createNew, $responseAction)
     $currentWord = $GLOBALS["wordlist"][$_SESSION['currentWordIndex']];
     $path = downloadSynthesizedAudio($currentWord, $language);
 ?>
-    <div class="audioContainer">
-        <audio id="synthesizedAudio" type="audio/mpeg" src="<?= $path ?>"></audio>
-        <button type="button" id="audioTrigger"><img src="img/audio.svg" alt="Lydikon"></button>
-        <audio src="audio/response/<?= $responseAction ?>.mp3" type="audio/mpeg" id="response"></audio>
-    </div>
-    <form action="" method="POST" class="task">
-        <input class='answer' type='text' name='answer' id='answer' autofocus="true" autocomplete="off">
-        <!-- <button type="button" name="skip" value=>Hopp over</button> -->
-        <input type="submit" class="answer" value="Svar">
+    <form action="" method="POST" id="question" class="task">
+        <div class="top">
+            <div class="audio">
+                <audio id="synthesizedAudio" type="audio/mpeg" src="<?= $path ?>"></audio>
+                <button type="button" id="audioTrigger"><img src="img/audio.svg" alt="Hør på ordet" class="i-xl"></button>
+                <audio src="audio/response/<?= $responseAction ?>.mp3" type="audio/mpeg" id="response"></audio>
+            </div>
+            <!-- <div class="merge-bar"> -->
+            <input type='text' name='answer' id='answer' required autofocus autocomplete="off">
+            <!-- <button type="button" name="skip"><img class="i-inline" src="img/skip.svg" alt="Hopp over"></button> -->
+            <!-- </div> -->
+        </div>
+        <button type="submit">Svar</button>
     </form>
 <?php
 }
@@ -50,29 +54,27 @@ function downloadSynthesizedAudio($word, $lang)
         <span><?= $_SESSION['completedWords'] ?>&nbsp;<img src="img/correct.svg" alt="riktige" class="icon i-inline"></span>
         <span><?= $_SESSION['wrongWords'] ?>&nbsp;<img src="img/wrong.svg" alt="riktige" class="icon i-inline"></span>
     </p>
-    <button tabindex="-1" type="button" id="exit">Avslutt Spill <img src="img/exit.svg" alt="avslutt spillet" class="icon i-inline"></button>
+    <button tabindex="-1" type="button" class="secondary" id="exit">Avslutt <img src="img/exit.svg" alt="avslutt spillet" class="icon i-inline"></button>
 </header>
 <div class="playarea">
-    <div id="question">
 
-        <?php if (isset($_POST["answer"])) {
+    <?php if (isset($_POST["answer"])) {
+        $input = base64_encode(strtolower(trim($_POST["answer"])));
+        $currentScore = $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"];
+        $currentWord = $GLOBALS['wordlist'][$_SESSION["currentWordIndex"]];
 
-            $input = base64_encode(strtolower(trim($_POST["answer"])));
-            $currentScore = $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"];
-            $currentWord = $GLOBALS['wordlist'][$_SESSION["currentWordIndex"]];
-
-            if ($input === base64_encode(strtolower($currentWord))) {
-                $_SESSION["completedWords"]++;
-                createTask(TRUE, 1);
-            } else {
-                $_SESSION["wrongWords"]++;
-                createTask(FALSE, 2);
-            }
-            $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"] = $_SESSION["completedWords"] * 10 - $_SESSION["wrongWords"];
-            exportData();
-            header("Location:./");
-        } else createTask(FALSE, 0); ?>
-    </div>
+        if ($input === base64_encode(strtolower($currentWord))) {
+            $_SESSION["completedWords"]++;
+            createTask(TRUE, 1);
+        } else {
+            $_SESSION["wrongWords"]++;
+            createTask(FALSE, 2);
+        }
+        $GLOBALS['db'][$_SESSION['gamepin']]["users"][$_SESSION['userid']]["score"] = $_SESSION["completedWords"] * 5 - $_SESSION["wrongWords"];
+        exportData();
+        unset($_POST["answer"]);
+        header("Location:./");
+    } else createTask(FALSE, 0); ?>
     <div id="scoreboard">
         <?php scoreboard(); ?>
     </div>
@@ -80,5 +82,5 @@ function downloadSynthesizedAudio($word, $lang)
 <footer class="bar bar-slim">
     <p>Spillkode: <b><?= $_SESSION["gamepin"] ?></b></p>
     <p><?= $wordlistInfo["name"] ?></p>
-    <p>ord <b><?= $_SESSION["completedWords"] + 1?></b> av <?= $wordlistInfo["length"] ?></p>
+    <p>ord <b><?= $_SESSION["completedWords"] + 1 ?></b> av <?= $wordlistInfo["length"] ?></p>
 </footer>
