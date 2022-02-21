@@ -1,8 +1,8 @@
-import random
+from random import randint
 from pprint import pprint
 import math
 
-randomNumbers = [random.randint(1, 50) for i in range(20)]
+randomNumbers = [randint(1, 50) for i in range(20)]
 pprint(randomNumbers)
 
 
@@ -86,7 +86,7 @@ print("")
 
 
 def j(arr):
-    arr.append(random.randint(0, 50))
+    arr.append(randint(0, 50))
     return arr
 
 
@@ -95,14 +95,13 @@ pprint(j(randomNumbers))
 print("")
 
 
-def k(arr, multiplicand, max_val):
+def k(multiplicand, max_val):
     products = []
-    multiplier = 0
     for multiplier in range(math.floor(max_val/multiplicand)):
-        products.append(multiplicand * multiplier)
-
+        products.append(multiplicand * (multiplier+1))
     return products
 
 print("k) 3-gangeren er som følger:")
-pprint(k(randomNumbers, 3, 100))
+pprint(k(3, 100))
+pprint(k(21, 21*10))
 print("")
