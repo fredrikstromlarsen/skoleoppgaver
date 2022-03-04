@@ -135,3 +135,4 @@ audio/
 # PyCharm Files
 .idea/
 venv/
+__pychache__/
