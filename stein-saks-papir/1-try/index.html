@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Stein Sax Papir</title>
+		<link rel="stylesheet" href="css/style.css" />
+
+        <!-- Import RequireJS -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+		<script src="js/main.js" defer></script>
+	</head>
+	<body>
+        <header>
+            <h2>Deg</h2>
+            <div class="score">
+                <p class=""><span id="playerScore">0</span>&nbsp;-&nbsp;<span id="machineScore">0</span></p>
+            </div>
+            <h2>Maskin</h2>
+        </header>
+        <main>
+            <div class="player">
+                <div value="rock" class="clickable">
+                    <img src="img/player/rock.png" alt="Stein" />
+                </div>
+                <div value="scissor" class="clickable">
+                    <img src="img/player/scissor.png" alt="Saks" />
+                </div>
+                <div value="paper" class="clickable">
+                    <img src="img/player/paper.png" alt="Papir" />
+                </div>
+            </div>
+            <div id="result">
+                <p>
+                    <span id="resultText">Klik på en av bildene for å spille!</span>
+                </p>
+            </div>
+            <div class="machine">
+                <div>
+                    <img src="img/machine/rock.png" alt="Stein" />
+                </div>
+                <div>
+                    <img src="img/machine/scissor.png" alt="Saks" />
+                </div>
+                <div>
+                    <img src="img/machine/paper.png" alt="Papir" />
+                </div>
+            </div>
+        </main>
+
+        </div>
+    </body>
+</html>
