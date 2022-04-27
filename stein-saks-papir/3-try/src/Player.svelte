@@ -1,5 +1,7 @@
 <script>
     import Action from './Action.svelte';
+
+    export let actions;
 </script>
 
 <style>
@@ -9,12 +11,17 @@
 
         display: flex;
         flex-direction: column;
-        justify-content: space-evenly;
+
+        gap: 0.75rem;
     }
 </style>
 
-<div class="player">
-    <!-- <Action actionType={"rock"} /> -->
-    <!-- <Action actionType={"scissor"} /> -->
-    <!-- <Action actionType={"paper"} /> -->
+<div>
+    <h2>Deg</h2>
+    <div class="player">
+        
+        <Action actionType={0} {actions}/>
+        <Action actionType={1} {actions}/>
+        <Action actionType={2} {actions}/>
+    </div>
 </div>

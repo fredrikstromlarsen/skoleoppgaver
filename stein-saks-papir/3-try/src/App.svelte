@@ -1,34 +1,27 @@
 <script>
-	import Player from './Player.svelte'
-	import Machine from './Machine.svelte'
-	import Score from './Score.svelte'
+	import Player from './Player.svelte';
+	import Machine from './Machine.svelte';
+	import Historic from './Historic.svelte';
 
-	let scoreBoard = {"player": 0, "machine": 0}
+	export let scoreBoard = {"player": 0, "machine": 0};
+    export const actions = [
+		["rock", "✊"],
+        ["paper", "🖐"],
+        ["scissor", "✌"]
+	];
 </script>
 
-<header>
-	<h2>Deg</h2>
-	<Score status={scoreBoard} />
-	<h2>Maskin</h2>
-</header>
-<main>
-	<Player />
-	<!-- <Result result={} /> -->
-	<Machine />
-</main>
-
 <style>
-	header, main {
-		display: flex;
+	main {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
 		padding: 1rem 2rem;
 	}
 
-	header {
-		justify-content: space-around;
-		align-items: center;
-	}
-
-	main {
-		justify-content: space-between;
-	}
 </style>
+
+<main>
+	<Player {actions} />
+	<Historic {actions} {scoreBoard} />
+	<Machine {actions} />
+</main>

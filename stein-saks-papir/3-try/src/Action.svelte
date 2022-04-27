@@ -3,32 +3,23 @@
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
+    export let actions;
     export let actionType;
-    let action;
-
-    switch(actionType) {
-        case "rock":
-            action = "✊";
-            break;
-        case "paper":
-            action = "🖐️";
-            break;
-        case "scissor":
-            action = "✌️";
-            break;
-    }
 
 </script>
 
 <style>
     button {
-        padding: 1rem;
-        margin: 0.5rem;
+        height: 7rem;
+        width: 7rem;
 
-        font-size: 2rem;
+        border-radius: 0.25rem; 
+
+        background: #f2f2f2;
+        border: none;
     }
 </style>
 
 <button> <!-- on:click={gameInit(action)}> -->
-    <abbr title="{capitalize(actionType)}">{action}</abbr>
+    <abbr title="{capitalize(actions[actionType][0])}">{actions[actionType][1]}</abbr>
 </button>
