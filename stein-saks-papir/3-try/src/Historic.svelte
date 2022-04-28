@@ -12,16 +12,9 @@
     }
     
     export let scoreBoard;
- 
-    let gameHistory = [
-        [0, 1],
-        [2, 1],
-        [0, 2],
-        [1, 1],
-        [0, 2]
-    ];
-
+    export let gameHistory;
     export let actions;
+
     const results = ["🟩", "🟥", "🟨"];
 
 </script>

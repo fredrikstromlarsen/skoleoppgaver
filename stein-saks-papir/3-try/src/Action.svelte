@@ -5,7 +5,7 @@
 
     export let actions;
     export let actionType;
-
+    export let setPlayerAction;
 </script>
 
 <style>
@@ -20,6 +20,7 @@
     }
 </style>
 
-<button> <!-- on:click={gameInit(action)}> -->
+<!-- <button on:click={playerAction=actionType}>  -->
+<button on:click={setPlayerAction(actionType)}> 
     <abbr title="{capitalize(actions[actionType][0])}">{actions[actionType][1]}</abbr>
 </button>
