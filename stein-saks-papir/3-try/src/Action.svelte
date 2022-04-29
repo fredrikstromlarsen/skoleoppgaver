@@ -3,9 +3,12 @@
         return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
+    // Imported values from Player.svelte
     export let actions;
     export let actionType;
+    // export let playerAction;
     export let setPlayerAction;
+
 </script>
 
 <style>

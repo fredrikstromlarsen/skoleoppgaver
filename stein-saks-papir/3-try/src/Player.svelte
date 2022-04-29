@@ -1,14 +1,14 @@
 <script>
     import Action from './Action.svelte';
 
+    // Imported values from App.svelte
     export let actions;
-    export let playerAction;
-    export function setPlayerAction(a){
-        console.log(a);
-        playerAction = [actions[a][0], actions[a][1]];
-        playerAction
-    }
 
+    // Export values to be used in other components
+    export let playerAction = 0;
+    export function setPlayerAction(actionType) {
+        playerAction = actionType;
+    }
 </script>
 
 <style>
@@ -25,7 +25,7 @@
 
 <div>
     <h2>Deg</h2>
-    <p>{ playerAction }</p>
+    <!-- <p>{ actions[playerAction][1] }</p> -->
     <div class="player">
         <Action actionType={0} {actions} {setPlayerAction} />
         <Action actionType={1} {actions} {setPlayerAction} />
