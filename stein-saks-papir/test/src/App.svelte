@@ -1,6 +1,10 @@
 <script>
 	// Stein-, saks-, papirmekanikk
-	let totalRounds = 1
+	let totalRounds = 1000000
+	let scoreboard
+	let machineAction
+	let winner
+	let random
 
 	const winTable = [[2, 0, 1],[1, 2, 0], [0, 1, 2]] 
 	let gameHistory = [[8, 5, 7], [100, 1034, 32]]
@@ -12,19 +16,19 @@
 	export function game(playerAction){
 		// Wins, losses, ties
 		scoreboard = [0, 0, 0]
+		if (playerAction === 3) random = 1
+		else random = 0
 
-		for(i=0; i<totalRounds; i++){
-			if (playerAction === 3) playerAction = Math.floor(Math.random() * 3)
+		console.log(playerAction, random)
+		
+		for(let i=0; i<totalRounds; i++){
+			if (random===1) playerAction = Math.floor(Math.random() * 3)
 			machineAction = Math.floor(Math.random() * 3)
 			winner = winTable[playerAction][machineAction]
 			scoreboard[winner]++
 		}
 
-		gameHistory[gameHistory.length] = {
-			wins: scoreboard[0],
-			losses: scoreboard[1],
-			ties: scoreboard[2]
-		}
+		gameHistory[gameHistory.length] = [scoreboard[0], scoreboard[1], scoreboard[2]]
 	}
 
 </script>
@@ -47,9 +51,9 @@
 		</tr>
 		{#each gameHistory as game}
 			<tr>
-				<td>{game[0]} ({percentage(game[0], game.reduce((x,y) => x+y))}%)</td>
-				<td>{game[1]} ({percentage(game[1], game.reduce((x,y) => x+y))}%)</td>
-				<td>{game[2]} ({percentage(game[2], game.reduce((x,y) => x+y))}%)</td>
+				<td>{game[0]} ({percentage(game[0], game[0]+game[1]+game[2])}%)</td>
+				<td>{game[1]} ({percentage(game[1], game[0]+game[1]+game[2])}%)</td>
+				<td>{game[2]} ({percentage(game[2], game[0]+game[1]+game[2])}%)</td>
 			</tr>
 		{/each}
 	</table>
@@ -59,5 +63,8 @@
 	.btn-container {
 		display: flex;
 		flex-direction: row;
+	}
+	td, th {
+		padding: 0.25rem 0.5rem;
 	}
 </style>
