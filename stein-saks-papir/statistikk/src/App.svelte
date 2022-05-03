@@ -7,7 +7,8 @@
 	let random
 
 	const winTable = [[2, 0, 1],[1, 2, 0], [0, 1, 2]] 
-	let gameHistory = [[8, 5, 7], [100, 1034, 32]]
+	let gameHistory = []
+	// $: gameHistoryNew = gameHistory.reverse()
 
     export function percentage(score, totalGames) {
         return Math.round((score / totalGames) * 10000) / 100;
@@ -18,9 +19,6 @@
 		scoreboard = [0, 0, 0]
 		if (playerAction === 3) random = 1
 		else random = 0
-
-		console.log(playerAction, random)
-		
 		for(let i=0; i<totalRounds; i++){
 			if (random===1) playerAction = Math.floor(Math.random() * 3)
 			machineAction = Math.floor(Math.random() * 3)
@@ -28,7 +26,7 @@
 			scoreboard[winner]++
 		}
 
-		gameHistory[gameHistory.length] = [scoreboard[0], scoreboard[1], scoreboard[2]]
+		gameHistory[gameHistory.length] = [scoreboard[0], scoreboard[1], scoreboard[2]];
 	}
 
 </script>
