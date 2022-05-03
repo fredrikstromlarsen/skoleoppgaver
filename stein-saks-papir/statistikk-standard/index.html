@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stein saks papir</title>
+    <script src="main.js"></script>
+</head>
+<body>
+    <label for="rounds">Antall runder</label>
+	<input type="text" id="rounds" bind:value={totalRounds}>
+	<div class="btn-container">
+		<button onclick="game(0)">Stein</button>
+		<button onclick="game(1)">Saks</button>
+		<button onclick="game(2)">Papir</button>
+		<button onclick="game(3)">Tilfeldig</button>
+	</div>
+
+	<table border=1>
+		<tr>
+			<th>Vinn</th>
+			<th>Tap</th>
+			<th>Likt</th>
+		</tr>
+        <div id="gameHistory">
+
+        </div>
+	</table>
+</body>
+</html>
