@@ -1,31 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stein saks papir</title>
-    <script src="main.js"></script>
-</head>
-<body>
-    <label for="rounds">Antall runder</label>
-	<input type="text" id="rounds" bind:value={totalRounds}>
-	<div class="btn-container">
-		<button onclick="game(0)">Stein</button>
-		<button onclick="game(1)">Saks</button>
-		<button onclick="game(2)">Papir</button>
-		<button onclick="game(3)">Tilfeldig</button>
-	</div>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Stein saks papir</title>
+		<script>
+			// Stein-, saks-, papirmekanikk
+			let totalRounds;
+			let machineAction;
+			let winner;
+			let random;
+			let gameHistory = [];
 
-	<table border=1>
-		<tr>
-			<th>Vinn</th>
-			<th>Tap</th>
-			<th>Likt</th>
-		</tr>
-        <div id="gameHistory">
+			// 0 = spiller vinner, 1 = maskin vinner, 2 = uavgjort
+			const winMatrix = [
+				[2, 0, 1],
+				[1, 2, 0],
+				[0, 1, 2],
+			];
 
-        </div>
-	</table>
-</body>
+			function percentage(score, totalGames) {
+				return Math.round((score / totalGames) * 10000) / 100;
+			}
+
+			function renderHistory(history) {
+				const container = document.getElementById('gameHistory');
+				let markup =
+					'<tr><td>' +
+					history[0] +
+					' (' +
+					percentage(
+						history[0],
+						history[0] + history[1] + history[2]
+					) +
+					'%)</td><td>' +
+					history[1] +
+					' (' +
+					percentage(
+						history[1],
+						history[0] + history[1] + history[2]
+					) +
+					'%)</td><td>' +
+					history[2] +
+					' (' +
+					percentage(
+						history[2],
+						history[0] + history[1] + history[2]
+					) +
+					'%)</td></tr>';
+				container.insertAdjacentHTML('beforeend', markup);
+			}
+
+			function game(playerAction) {
+				totalRounds = document.getElementById('totalRounds').value;
+				// Wins, losses, ties
+				var scoreboard = [0, 0, 0];
+
+				if (playerAction === 3) random = 1;
+				else random = 0;
+
+				for (let i = 0; i < totalRounds; i++) {
+					if (random === 1)
+						playerAction = Math.floor(Math.random() * 3);
+
+					machineAction = Math.floor(Math.random() * 3);
+					winner = winMatrix[playerAction][machineAction];
+					scoreboard[winner]++;
+				}
+
+				gameHistory.push([scoreboard[0], scoreboard[1], scoreboard[2]]);
+				renderHistory(gameHistory[gameHistory.length - 1]);
+			}
+		</script>
+		<style>
+			html,
+			body {
+				position: relative;
+				width: 100%;
+				height: 100%;
+			}
+
+			body {
+				color: #333;
+				margin: 0;
+				padding: 8px;
+				box-sizing: border-box;
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI',
+					Roboto, Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue',
+					sans-serif;
+			}
+
+			a {
+				color: rgb(0, 100, 200);
+				text-decoration: none;
+			}
+
+			a:hover {
+				text-decoration: underline;
+			}
+
+			a:visited {
+				color: rgb(0, 80, 160);
+			}
+
+			label {
+				display: block;
+			}
+
+			input,
+			button,
+			select,
+			textarea {
+				font-family: inherit;
+				font-size: inherit;
+				-webkit-padding: 0.4em 0;
+				padding: 0.4em;
+				margin: 0 0 0.5em 0;
+				box-sizing: border-box;
+				border: 1px solid #ccc;
+				border-radius: 2px;
+			}
+
+			input:disabled {
+				color: #ccc;
+			}
+
+			button {
+				color: #333;
+				background-color: #f4f4f4;
+				outline: none;
+			}
+
+			button:disabled {
+				color: #999;
+			}
+
+			button:not(:disabled):active {
+				background-color: #ddd;
+			}
+
+			button:focus {
+				border-color: #666;
+			}
+
+			.btn-container {
+				display: flex;
+				flex-direction: row;
+			}
+			td,
+			th {
+				padding: 0.25rem 0.5rem;
+			}
+		</style>
+	</head>
+	<body>
+		<label for="totalRounds">Antall runder</label>
+		<input type="text" id="totalRounds" value="100" />
+		<div class="btn-container">
+			<button onclick="game(0)">Stein</button>
+			<button onclick="game(1)">Saks</button>
+			<button onclick="game(2)">Papir</button>
+			<button onclick="game(3)">Tilfeldig</button>
+		</div>
+
+		<table border="1" id="gameHistory">
+			<tr>
+				<th>Vinn</th>
+				<th>Tap</th>
+				<th>Likt</th>
+			</tr>
+		</table>
+	</body>
 </html>
