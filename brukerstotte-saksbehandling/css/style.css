@@ -1,0 +1,139 @@
+/* GLOBAL */
+
+html, body {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+body {
+    background-color: #eee;
+	color: #333;
+	margin: 0;
+	padding: 2rem;
+	box-sizing: border-box;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+a {
+	color: rgb(0,100,200);
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:visited {
+	color: rgb(0,80,160);
+}
+
+label {
+	display: block;
+}
+
+input, button, select, textarea {
+	font-family: inherit;
+	font-size: inherit;
+	-webkit-padding: 0.4em 0;
+	padding: 0.4em;
+	box-sizing: border-box;
+	border: 1px solid #ccc;
+	border-radius: 2px;
+}
+
+input:disabled {
+	color: #ccc;
+}
+
+button {
+    color: #333;
+    background-color: #f4f4f4;
+    outline: none;
+    transition: all 0.1s ease-out;
+    -webkit-transition: all 0.1s ease-out;
+    -moz-transition: all 0.1s ease-out;
+    -ms-transition: all 0.1s ease-out;
+    -o-transition: all 0.1s ease-out;
+}
+
+button:hover {
+    cursor: pointer;
+}
+
+button:disabled {
+	color: #999;
+}
+
+button:not(:disabled):active {
+	background-color: #ddd;
+}
+
+button:focus {
+	border-color: #666;
+}
+
+i {
+    height: 1em;
+    width: 1em;
+    font-size: 1.25rem;
+}
+
+/* Project specific */
+
+.chat-window {
+    position: fixed;
+    right: 3rem;
+    bottom: 5rem;
+
+    width: 30rem;
+    max-width: 100vw;
+    overflow: hidden;
+    border-radius: 0.75rem;
+    -webkit-border-radius: 0.75rem;
+    -moz-border-radius: 0.75rem;
+    -ms-border-radius: 0.75rem;
+    -o-border-radius: 0.75rem;
+}
+
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center !important;
+
+    padding: 0.5rem 1rem 0.5rem 2rem;
+
+    /* Nice blue background */
+    background-color: rgb(86, 128, 255);
+    color: #f7f7ff;
+}
+
+.chat-header h1 {
+    line-height: 0.5em;
+    font-size: x-large;
+}
+
+.chat-header-buttons {
+    display: flex;
+    align-items: center;
+}
+
+.chat-header button, .chat-header button:hover, .chat-header button:focus {
+    border: none;
+    background: none;
+    color: inherit;
+}
+
+.chat-header button:active {
+    color: #d3d3e0;
+}
+
+.chat-header button > i {
+    font-size: 1.5rem;
+}
+
+.chat-body {
+    background-color: #fff;
+    height: 100%;
+    width: 100%;
+}
