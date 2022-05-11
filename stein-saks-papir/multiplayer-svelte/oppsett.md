@@ -15,20 +15,33 @@
    2.2 Vent på begge spillerhandlinger.
 
 3. Resultat
-    3.1 Broadcast resultat.
-    3.2 Søk etter ny lobby (steg 1) eller spill igjen (steg 2).
+   3.1 Broadcast resultat.
+   3.2 Søk etter ny lobby (steg 1) eller spill igjen (steg 2).
 
 ## Variabler
 
-Server:
-- const `io`: Socket.io-objekt.
-- const `gameid`: Lobby-ID.
-  - `users`: [`userid`, `userid`]
-- const `userid`: Spiller-ID.
-- let `actions`: Spiller-handlinger.
-- let `gameHistory`: Spillhistorikk.
+```typescript
+// Server:
+const io = require('socket.io')(server);
+export const gameid: string = "base64:string";
+const userid: string = "base64:string";
+let actions: object = {"userid": "action"};
+let gameHistory: Array<Object> = {
+   "gameid": [
+      {
+         "users": ["userid", "userid"],
+         "actions": {
+            "userid": "action",
+            "userid": "action"
+         },
+         "result": "result"
+      }
+   ]
+};
 
-Klient:
-- inherited `gameid`: Lobby-ID.
-- const `username`: Spiller-navn.
-- let `action`: Spiller-handling.
+
+// Klient:
+export const gameid;
+const username: string = "username";
+let action: number = 0;
+```

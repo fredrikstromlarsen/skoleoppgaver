@@ -2,12 +2,24 @@
 <script lang="ts">
 	import { io } from '$lib/realtime';
 	import { onMount } from 'svelte';
+	import History from '../History.svelte';
 
-	let gameHistory: Array<Object> = [];
-	let gameResults: Array<String> = ['', '', 'Uavgjort'];
+	let username: string = '';
+	let uid: string = '';
+	export let gameHistory: Array<Object> = [];
+	const actions: Array<any> = [
+		{ id: 0, name: 'Stein' },
+		{ id: 1, name: 'Saks' },
+		{ id: 2, name: 'Papir' }
+	];
 
 	// Kjører når siden laster inn hos klienten
 	onMount(() => {
+		io.on('loaded', (userid) => {
+			uid = userid;
+			username = `user${uid}`;
+		});
+
 		io.on('waitingForLobby', () => {
 			// Venteanimasjon
 		});
@@ -29,38 +41,45 @@
                 winner: 'userid'
             } 
             */
-			gameHistory = [...gameHistory, result];
+			// gameHistory = [...gameHistory, result];
 		});
 
 		io.on('playAgain', () => {
 			// Spill igjen mot samme spiller.
 		});
+
+		io.on('test', (value) => {
+			console.log(value);
+		});
 	});
 
-	function sendMessage(action: number) {
+	// Sett brukernavn ved å sende til server sammen med brukerid.
+
+	function setUsername() {
+		return io.emit('setUsername', username);
+	}
+
+	function sendAction(action: number) {
 		if (!action) return;
-		io.emit('message', action); // Send the message
+		io.emit('action', action); // Send the message
 	}
 </script>
 
-{#if gameHistory.length > 0}
-	{#each gameHistory as game}
-		<div>
-			<span>{game.users[0]}</span>
-			<span>{game.users[1]}</span>
-		</div>
-		<div>
-			<span>{game.actions[0]}</span>
-			<span>{game.actions[1]}</span>
-		</div>
-		<div>
-			<!-- Hvis en av spillerene vant: vis vinneren, ellers, vis "Tie". -->
-			{(gameResults = [game.users[0], game.users[1], 'Tie'])}
-			{gameResults[game.winner]}`}
-		</div>
-	{/each}
-{/if}
+<!-- {#if gameHistory.length > 0} -->
+<!-- <History /> -->
+<!-- {/if} -->
+<div>
+	<label for="usernameInput">Brukernavn: </label>
+	<input
+		id="usernameInput"
+		type="text"
+		pattern="[A-Za-z0-9-_.,:;\s]{(1, 24)}"
+		bind:value={username}
+		required
+	/>
+	<button on:click={setUsername}>Bytt brukernavn</button>
+</div>
 
-<button on:click={sendMessage(0)}>Stein</button>
-<button on:click={sendMessage(1)}>Saks</button>
-<button on:click={sendMessage(2)}>Papir</button>
+{#each actions as action}
+	<button on:click={sendAction(action.id)}>{action.name}</button>
+{/each}
