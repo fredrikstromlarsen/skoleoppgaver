@@ -1,5 +1,7 @@
 # Stein Saks Papir - Socket.io
 
+## Oppsett
+
 1. Initialisering
    1.1 Søk etter lobby.
    1.2 Hopp til steg 2 om ledig lobby finnes.
@@ -14,5 +16,19 @@
 
 3. Resultat
     3.1 Broadcast resultat.
-    3.2 Hopp til steg 2.
+    3.2 Søk etter ny lobby (steg 1) eller spill igjen (steg 2).
 
+## Variabler
+
+Server:
+- const `io`: Socket.io-objekt.
+- const `gameid`: Lobby-ID.
+  - `users`: [`userid`, `userid`]
+- const `userid`: Spiller-ID.
+- let `actions`: Spiller-handlinger.
+- let `gameHistory`: Spillhistorikk.
+
+Klient:
+- inherited `gameid`: Lobby-ID.
+- const `username`: Spiller-navn.
+- let `action`: Spiller-handling.
