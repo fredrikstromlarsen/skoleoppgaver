@@ -24,7 +24,7 @@ Title: 48 chars max (5 words of description)
 Description: 512 chars max
 Category: Login, network, disk
 Page: Paste URL
-Response Time: 11m
-ETA: 60m
+Response Time: antall minutter
+ETA: antall minutter
 
 <img src="https://i.imgur.com/KkC28SS.png">

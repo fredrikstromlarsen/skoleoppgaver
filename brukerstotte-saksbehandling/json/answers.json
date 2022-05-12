@@ -1,18 +1,48 @@
 [
-	{
-		"Jeg trenger hjelp.": [0, 0],
-		"Jeg vil rapportere en feil.": [0, 1],
-		"Annet (beskriv)": [0, 2]
-	},
-    [
-        "Login",
-        "Registrering",
-        "Programvarenedlasting",
-        "Kontaktskjemaet",
-        "Nettverket"
-    ],
-    [
-        "Endring",
-        "Feil"
-    ]
+	[
+		{
+			"message": "Jeg trenger hjelp.",
+			"nextStep": 0,
+			"nextIndex": 0
+		},
+		{
+			"message": "Jeg vil rapportere en feil.",
+			"nextStep": 0,
+			"nextIndex": 1
+		},
+		{
+			"message": "Noe annet.",
+			"nextStep": 0,
+			"nextIndex": 2
+		}
+	],
+    [],
+    [],
+	[
+		{
+			"message": "Login",
+			"nextStep": 3,
+			"nextIndex": 0
+		},
+		{
+			"message": "Rettigheter",
+			"nextStep": 3,
+			"nextIndex": 0
+		},
+		{
+			"message": "Programvarenedlasting",
+			"nextStep": 3,
+			"nextIndex": 0
+		},
+		{
+			"message": "Kontaktskjemaet",
+			"nextStep": 3,
+			"nextIndex": 0
+		},
+		{
+			"message": "Nettverk",
+			"nextStep": 3,
+			"nextIndex": 0
+		}
+	]
 ]

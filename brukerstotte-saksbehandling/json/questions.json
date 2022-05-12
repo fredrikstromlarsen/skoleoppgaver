@@ -1,23 +1,63 @@
 [
-    {
-        "Hva kan vi hjelpe deg med? Gi en kort beskrivelse av det du trenger hjelp med.": [1, 0, 1],
-        "Gi en kort beskrivelse av feilen du har funnet.": [1, 1, 1],
-        "Beskrivelsen er registrert. Hvilken av sidene på nettstedet vårt trenger du hjelp med?": [2, 0, 0]
-    },
-    {
-        "Mottatt. Hvilken av sidene på nettstedet vårt trenger du hjelp med?": [2, 0, 0],
-        "Bra jobba, dette må vi fikse på! Hvor fant du feilen?": [2, 0, 0]
-    },
-    {
-        "Takk. Hvilke av følgende kategorier passer best til beskrivelsen av feilen?": [3, 0, 0]
-    },
-    {
-        "Skriv ned e-postaddressen din for å bli varslet når saken er løst.": -1
-    }
+	[
+		{
+			"message": "Hva kan vi hjelpe deg med? Gi en kort beskrivelse av det du trenger hjelp med (maks 512 tegn).",
+			"nextStep": 1,
+			"nextIndex": 0,
+			"answerType": 1
+		},
+		{
+			"message": "Gi en kort beskrivelse av feilen du har funnet (maks 512 tegn).",
+			"nextStep": 1,
+			"nextIndex": 1,
+			"answerType": 1
+		},
+		{
+			"message": "Gi en kort beskrivelse av henvendelsen din så kan vi hjelpe deg med det (maks 512 tegn).",
+			"nextStep": 1,
+			"nextIndex": 2,
+			"answerType": 1
+		}
+	],
+	[
+		{
+			"message": "Mottatt. Hvilken av sidene på nettstedet vårt trenger du hjelp med?",
+			"nextStep": 2,
+			"nextIndex": 0,
+			"answerType": 1
+		},
+		{
+			"message": "Bra jobba, dette må vi fikse opp i! Hvor fant du feilen?",
+			"nextStep": 2,
+			"nextIndex": 0,
+			"answerType": 1
+		},
+		{
+			"message": "Beskrivelsen er registrert. Hvilken av sidene på nettstedet vårt trenger du hjelp med?",
+			"nextStep": 2,
+			"nextIndex": 0,
+			"answerType": 1
+		}
+	],
+	[
+		{
+			"message": "Takk. Hvilken av følgende kategorier passer best til beskrivelsen av feilen?",
+			"nextStep": 3,
+			"nextIndex": 0,
+			"answerType": 0
+		}
+	],
+	[
+		{
+			"message": "Skriv ned e-postaddressen din for å bli varslet når saken er løst.",
+			"nextStep": 4,
+			"nextIndex": 0,
+			"answerType": 1
+		}
+	],
+	[
+		{
+			"message": "Takk for henvendelsen din. Vi vil kontakte deg snart."
+		}
+	]
 ]
-
-tittel
-beskrivelse
-side
-kategori
-
