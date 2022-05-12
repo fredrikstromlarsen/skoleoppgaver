@@ -1,9 +1,18 @@
 <?php
 
-    // Set $timestamp variable to the current time in hours:minutes
-    $timestamp = date("H:i");
+/*/
+/* [0] = step
+/* [1] = index in step
+/* [2] = answer type (0 = buttons, 1 = text)
+/*/
+$questions = json_decode(file_get_contents("json/questions.json"));
 
-    
+/*/
+/* [0] = step
+/* [1] = index in step
+/*/
+$answers = json_decode(file_get_contents("json/answers.json"));
+
 
 ?>
 
@@ -16,34 +25,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bedrift AS</title>
     <link rel="stylesheet" href="css/style.css">
-    <script src="js/main.js"></script>
-    <script src="https://kit.fontawesome.com/4a2b7708f8.js" crossorigin="anonymous"></script>
+    <script src="js/main.js" async></script>
+    <script src="https://kit.fontawesome.com/4a2b7708f8.js" crossorigin="anonymous" async></script>
 </head>
 
 <body>
     <div class="chat-window">
         <div class="chat-header">
             <div class="chat-header-title">
-                <h1>Bedrift AS</h1>
-            </div>
-            <div class="chat-header-buttons">
-                <!-- <button class="chat-header-button">
-                    <i class="fa-solid fa-gear"></i>
-                </button> -->
-                <button class="chat-header-button">
-                    <i class="fa-solid fa-xmark"></i>
-                </button>
+                <h1>Chat med oss!</h1>
             </div>
         </div>
-        <div class="chat-body">
-            <div class="chat-body-messages">
-                <div class="chat-body-message">
-                    <div class="chat-body-message-text">
-                        <p>Hei, hva kan vi hjelpe deg med?</p>
-                    </div>
-                    <div class="chat-body-message-info">
-                        <p><?= $timestamp ?></p>
-                    </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-body-messages" id="chatMessagesContainer">
+                <div class="spacing-20"></div>
+            </div>
+            <div class="chat-alternatives">
+                <div id="chatButtonAction">
+                    <button class="chat-alternative" data-type="click">Jeg vil rapportere en feil</button>
+                    <button class="chat-alternative" data-type="click">Jeg trenger hjelp</button>
+                    <button class="chat-alternative" data-type="write">Annet (beskriv)</button>
+                </div>
+                <div id="chatTypingField">
+                    <div id="textField" contenteditable="true"></div>
+                    <button id="sendBtn">
+                        <i class="fa-solid fa-arrow-up"></i>
+                    </button>
                 </div>
             </div>
         </div>

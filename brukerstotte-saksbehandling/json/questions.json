@@ -1,0 +1,23 @@
+[
+    {
+        "Hva kan vi hjelpe deg med? Gi en kort beskrivelse av det du trenger hjelp med.": [1, 0, 1],
+        "Gi en kort beskrivelse av feilen du har funnet.": [1, 1, 1],
+        "Beskrivelsen er registrert. Hvilken av sidene på nettstedet vårt trenger du hjelp med?": [2, 0, 0]
+    },
+    {
+        "Mottatt. Hvilken av sidene på nettstedet vårt trenger du hjelp med?": [2, 0, 0],
+        "Bra jobba, dette må vi fikse på! Hvor fant du feilen?": [2, 0, 0]
+    },
+    {
+        "Takk. Hvilke av følgende kategorier passer best til beskrivelsen av feilen?": [3, 0, 0]
+    },
+    {
+        "Skriv ned e-postaddressen din for å bli varslet når saken er løst.": -1
+    }
+]
+
+tittel
+beskrivelse
+side
+kategori
+

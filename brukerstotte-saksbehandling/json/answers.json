@@ -1,0 +1,18 @@
+[
+	{
+		"Jeg trenger hjelp.": [0, 0],
+		"Jeg vil rapportere en feil.": [0, 1],
+		"Annet (beskriv)": [0, 2]
+	},
+    [
+        "Login",
+        "Registrering",
+        "Programvarenedlasting",
+        "Kontaktskjemaet",
+        "Nettverket"
+    ],
+    [
+        "Endring",
+        "Feil"
+    ]
+]
