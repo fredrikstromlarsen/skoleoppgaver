@@ -17,20 +17,22 @@ const config = {
 					configureServer(server) {
 						const io = new Server(server.httpServer);
 						let users = [];
+						// let gameHistory = [];
 
 						io.on('connection', (socket) => {
-							// Tilfeldig base64
-							// let gameHistory = [];
+							console.log('Users: ', users);
 							let actions = [];
 							let winner;
-							const userid = Date.now();
-							let username = `user${userid}`;
+							const userid = socket.id;
+							let username = `user${users.length}`;
 
 							users[userid] = username;
 							io.emit('loaded', userid);
 
 							socket.on('setUsername', (name) => {
+								console.log(users);
 								users[userid] = name;
+								console.log(users);
 								io.emit('test', users);
 							});
 
@@ -71,6 +73,19 @@ const config = {
 									*/
 								}
 							});
+							/*
+							socket.on("disconnect", () => {
+								console.log(`${users[userid]} disconnected`);
+
+								// socket.emit End game
+								// io.emit('gameEnded', {
+
+								// });
+								// Remove user from users
+								delete users[userid];
+
+							});
+							*/
 						});
 					}
 				}

@@ -23,18 +23,21 @@
 ```typescript
 // Server:
 const io = require('socket.io')(server);
-export const gameid: string = "base64:string";
-const userid: string = "base64:string";
-let actions: object = {"userid": "action"};
+export const gameid: number = n;
+const userid: number = new Date.now();
+let actions: object = {
+   "userid": "action",
+   "userid": "action"
+};
 let gameHistory: Array<Object> = {
-   "gameid": [
+   0: [
       {
-         "users": ["userid", "userid"],
+         "users": [163249342, 165064349],
          "actions": {
-            "userid": "action",
-            "userid": "action"
+            163249342: 0,
+            165064349: 2
          },
-         "result": "result"
+         "result": 1
       }
    ]
 };
@@ -42,6 +45,6 @@ let gameHistory: Array<Object> = {
 
 // Klient:
 export const gameid;
-const username: string = "username";
+let username: string = "user16234298";
 let action: number = 0;
 ```

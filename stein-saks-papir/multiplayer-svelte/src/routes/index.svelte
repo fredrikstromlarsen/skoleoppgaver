@@ -4,10 +4,9 @@
 	import { onMount } from 'svelte';
 	import History from '../History.svelte';
 
-	let username: string = '';
-	let uid: string = '';
-	export let gameHistory: Array<Object> = [];
-	const actions: Array<any> = [
+	let username: string, uid: number;
+	// export let gameHistory: Array<object>;
+	const actions: Array<object> = [
 		{ id: 0, name: 'Stein' },
 		{ id: 1, name: 'Saks' },
 		{ id: 2, name: 'Papir' }
@@ -18,19 +17,23 @@
 		io.on('loaded', (userid) => {
 			uid = userid;
 			username = `user${uid}`;
+			console.log(`${username} er logget inn`);
 		});
 
 		io.on('waitingForLobby', () => {
 			// Venteanimasjon
+			console.log('waitingForLobby');
 		});
 
 		io.on('joinedLobby', (opponentUsername) => {
 			// Oppdaterer siden med gameid og opponentUsername
 			// Gjør det mulig å starte spillet
+			console.log('joinedLobby, opponentUsername: ', opponentUsername);
 		});
 
 		io.on('gameStarted', () => {
 			// Gi spillere mulighet til å trykke stein saks eller papir.
+			console.log('gameStarted');
 		});
 
 		io.on('gameEnded', (result) => {
@@ -42,10 +45,12 @@
             } 
             */
 			// gameHistory = [...gameHistory, result];
+			console.log('gameEnded, result: ', result);
 		});
 
 		io.on('playAgain', () => {
 			// Spill igjen mot samme spiller.
+			console.log('playAgain');
 		});
 
 		io.on('test', (value) => {
@@ -73,7 +78,7 @@
 	<input
 		id="usernameInput"
 		type="text"
-		pattern="[A-Za-z0-9-_.,:;\s]{(1, 24)}"
+		pattern="[A-Za-z0-9-_.]{24}"
 		bind:value={username}
 		required
 	/>
