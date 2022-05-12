@@ -5,7 +5,8 @@
 	import History from '../History.svelte';
 
 	let username: string, uid: number;
-	// export let gameHistory: Array<object>;
+	let gameActive: boolean = false;
+	export let gameHistory: Array<object>;
 	const actions: Array<object> = [
 		{ id: 0, name: 'Stein' },
 		{ id: 1, name: 'Saks' },
@@ -14,29 +15,26 @@
 
 	// Kjører når siden laster inn hos klienten
 	onMount(() => {
-		io.on('loaded', (userid) => {
-			uid = userid;
-			username = `user${uid}`;
-			console.log(`${username} er logget inn`);
-		});
-
-		io.on('waitingForLobby', () => {
+		io.on('waitingForPlayers', () => {
 			// Venteanimasjon
-			console.log('waitingForLobby');
+			console.log('waitingForPlayers');
 		});
 
-		io.on('joinedLobby', (opponentUsername) => {
+		io.on('joinedLobby', (players) => {
 			// Oppdaterer siden med gameid og opponentUsername
 			// Gjør det mulig å starte spillet
-			console.log('joinedLobby, opponentUsername: ', opponentUsername);
+			console.log('joinedLobby');
+			console.log(players);
 		});
 
 		io.on('gameStarted', () => {
 			// Gi spillere mulighet til å trykke stein saks eller papir.
 			console.log('gameStarted');
+			gameActive = true;
 		});
 
 		io.on('gameEnded', (result) => {
+			gameActive = false;
 			/* 
             result = {
                 users: ['userid', 'userid'],
@@ -48,21 +46,15 @@
 			console.log('gameEnded, result: ', result);
 		});
 
-		io.on('playAgain', () => {
+		// io.emit('playAgain', () => {
 			// Spill igjen mot samme spiller.
-			console.log('playAgain');
-		});
+			// console.log('playAgain');
+		// });
 
 		io.on('test', (value) => {
 			console.log(value);
 		});
 	});
-
-	// Sett brukernavn ved å sende til server sammen med brukerid.
-
-	function setUsername() {
-		return io.emit('setUsername', username);
-	}
 
 	function sendAction(action: number) {
 		if (!action) return;
@@ -73,18 +65,8 @@
 <!-- {#if gameHistory.length > 0} -->
 <!-- <History /> -->
 <!-- {/if} -->
-<div>
-	<label for="usernameInput">Brukernavn: </label>
-	<input
-		id="usernameInput"
-		type="text"
-		pattern="[A-Za-z0-9-_.]{24}"
-		bind:value={username}
-		required
-	/>
-	<button on:click={setUsername}>Bytt brukernavn</button>
-</div>
-
-{#each actions as action}
-	<button on:click={sendAction(action.id)}>{action.name}</button>
-{/each}
+{#if gameActive === true}
+	{#each actions as action}
+		<button on:click={sendAction(action.id)}>{action.name}</button>
+	{/each}
+{/if}

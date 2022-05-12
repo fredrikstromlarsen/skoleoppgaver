@@ -23,8 +23,10 @@
 ```typescript
 // Server:
 const io = require('socket.io')(server);
-export const gameid: number = n;
-const userid: number = new Date.now();
+let games: Array<object> = [
+   ["socket-id", "socket-id"]
+]
+];
 let actions: object = {
    "userid": "action",
    "userid": "action"
