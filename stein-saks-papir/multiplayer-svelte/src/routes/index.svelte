@@ -13,24 +13,25 @@
 		{ id: 2, name: 'Papir' }
 	];
 
+	// Testing
+	let waitingForPlayers: boolean = false,
+		joinedLobby: boolean = false;
+	let status: string = '';
+	let players: Array<String> = [];
+
 	// Kjører når siden laster inn hos klienten
 	onMount(() => {
 		io.on('waitingForPlayers', () => {
 			// Venteanimasjon
 			console.log('waitingForPlayers');
+			waitingForPlayers = true;
 		});
 
-		io.on('joinedLobby', (players) => {
-			// Oppdaterer siden med gameid og opponentUsername
-			// Gjør det mulig å starte spillet
-			console.log('joinedLobby');
-			console.log(players);
-		});
-
-		io.on('gameStarted', () => {
+		io.on('gameStarted', (game) => {
 			// Gi spillere mulighet til å trykke stein saks eller papir.
 			console.log('gameStarted');
 			gameActive = true;
+			players = game.players;
 		});
 
 		io.on('gameEnded', (result) => {
@@ -47,9 +48,18 @@
 		});
 
 		// io.emit('playAgain', () => {
-			// Spill igjen mot samme spiller.
-			// console.log('playAgain');
+		// Spill igjen mot samme spiller.
+		// console.log('playAgain');
 		// });
+		io.on('status', (message) => {
+			status = message;
+			if (message === 'opponentDisconnected') {
+				console.log('Opponent disconnected');
+
+				// Reload siden
+				window.location.reload(true);
+			}
+		});
 
 		io.on('test', (value) => {
 			console.log(value);
@@ -65,6 +75,13 @@
 <!-- {#if gameHistory.length > 0} -->
 <!-- <History /> -->
 <!-- {/if} -->
+<div>
+	<p>joinedLobby: {joinedLobby.toString()}</p>
+	<p>players: {players[0]} & {players[1]}</p>
+	<p>gameActive: {gameActive.toString()}</p>
+	<p>status: {status}</p>
+</div>
+
 {#if gameActive === true}
 	{#each actions as action}
 		<button on:click={sendAction(action.id)}>{action.name}</button>

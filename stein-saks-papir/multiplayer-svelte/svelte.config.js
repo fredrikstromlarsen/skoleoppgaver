@@ -21,82 +21,34 @@ const config = {
 								[1, 2, 0],
 								[0, 1, 2]
 							];
-						let gameHistory = [],
-							games = [];
+						let players = [];
 
 						io.on('connection', (socket) => {
-							function findGame() {
-								// Find a game with just one player in it
-								return games.find((game) => game.players.length === 1);
+							// Player joined
+							// Find room !-> Create room
+							// Start game <- Wait for players
+							// Gather both player actions
+							// Send result && register game in gameHistory
+							// Play again || Join new game
+							console.log(socket.id);
+							if (players.length < 2) {
+								players.push(socket);
 							}
+							if (players.length === 2) {
+								socket.emit('status', 'gameStarted');
 
-							function createGame(socket) {
-								// Create a new game and join it
-								const game = {
-									id: games.length,
-									players: [socket.id]
-								};
-								socket.join(game.id);
-								socket.emit('waitingForPlayers', game);
-								joinedGameID = game.id;
-								games = [...games, game];
-							}
-							// Run findGame(), then createGame() if there is none available.
-							let availableGame = findGame();
-							let joinedGameID;
+								let actions = {};
+								let winner;
 
-							if (availableGame) {
-								// Join the game
-								availableGame.players.push(socket.id);
-								games[availableGame.id] = availableGame;
-								socket.join(availableGame.id);
-								socket.emit('joinedLobby', availableGame.players);
-								socket.to(availableGame.id).emit('gameStarted', availableGame);
+								socket.on('action', (actionid) => {
+									actions[socket.id] = actionid;
+									actions = [...actions];
+								});
 
-								joinedGameID = availableGame.id;
-							} else createGame(socket);
-
-							// io.to(joinedGameID).emit('gameEnded', result);
-							// io.to(joinedGameID).on('playAgain', () => {
-							// 
-							// })
-							/*
-							socket.on('action', (action, player) => {
-								// Wait for both actions to be sent,
-								// then save the game on the server
-								// in gameHistory. Emit result to
-								// both clients.
-								actions[player] = action;
-								if (actions[0] && actions[1]) {
+								if (actions.length === 2) {
 									winner = winMatrix[actions[0]][actions[1]];
-									
-									game = {
-										players: [gameid['users'][0], gameid['users'][1]],
-										actions: [actions[0], actions[1]],
-										winner: gameid['users'][winner]
-									};
-									gameHistory = [...gameHistory, [...actions, winner]];
-									io.to(joinedGameID).emit('gameEnded', {
-										gameHistory: gameHistory,
-										message: message
-										// time: new Date().toLocaleString()
-									});
-									
 								}
-							});
-							*/
-							socket.on('disconnect', () => {
-								// Remove user from game
-								games.splice(games[joinedGameID].players[socket.id], 1);
-
-								// Check if game is empty
-								if (games[joinedGameID].players.length === 0) {
-									// Remove game
-									games.splice(joinedGameID, 1);
-								}
-								// Update list of games
-								games = [...games];
-							});
+							}
 						});
 					}
 				}

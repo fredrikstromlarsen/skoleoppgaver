@@ -1,0 +1,122 @@
+import adapter from '@sveltejs/adapter-auto';
+import preprocess from 'svelte-preprocess';
+import { Server } from 'socket.io';
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+	// Consult https://github.com/sveltejs/svelte-preprocess
+	// for more information about preprocessors
+	preprocess: preprocess(),
+
+	kit: {
+		adapter: adapter(),
+		vite: {
+			plugins: [
+				{
+					name: 'sveltekit-socket-io',
+					configureServer(server) {
+						const io = new Server(server.httpServer),
+							winMatrix = [
+								[2, 0, 1],
+								[1, 2, 0],
+								[0, 1, 2]
+							];
+						let gameHistory = [],
+							games = [];
+
+						io.on('connection', (socket) => {
+							// Player joined
+							// Find room !-> Create room
+							// Start game <- Wait for players
+							// Gather both player actions
+							// Send result && register game in gameHistory
+							// Play again || Join new game
+
+							// Find a game, or create one if there is no game available (= 1 player).
+							function joinGame() {
+								for (let i = 0; i < games.length; i++) {
+									if (games[i].players.length < 2) {
+										games[i].players.push(socket.id);
+										socket.join(games[i].id);
+										socket.emit('gameStarted', games[i].id);
+
+										// Svelte-way of broadcasting that the array has changed: Reassign variable.
+										games = [...games];
+										return games[i];
+									}
+								}
+								// Game not found, create one
+								// Set room.id
+								let id;
+								for (let i = 0; i < games.length + 1; i++) {
+									if (!games[i]) id = i;
+								}
+								const game = {
+									id: id,
+									players: [socket.id]
+								};
+								socket.join(game.id);
+								socket.emit('waitingForPlayers', game);
+								games = [...games, game];
+
+								return game;
+							}
+
+							let game = joinGame();
+
+							console.log(
+								'-----------------------------------------------------------------------------'
+							);
+							console.log(games);
+
+							// io.to(joinedGameID).emit('gameEnded', result);
+							// io.to(joinedGameID).on('playAgain', () => {
+							//
+							// })
+							/*
+							socket.on('action', (action, player) => {
+								// Wait for both actions to be sent,
+								// then save the game on the server
+								// in gameHistory. Emit result to
+								// both clients.
+								actions[player] = action;
+								if (actions[0] && actions[1]) {
+									winner = winMatrix[actions[0]][actions[1]];
+									
+									game = {
+										players: [gameid['users'][0], gameid['users'][1]],
+										actions: [actions[0], actions[1]],
+										winner: gameid['users'][winner]
+									};
+									gameHistory = [...gameHistory, [...actions, winner]];
+									io.to(joinedGameID).emit('gameEnded', {
+										gameHistory: gameHistory,
+										message: message
+										// time: new Date().toLocaleString()
+									});
+									
+								}
+							});
+							*/
+							socket.on('disconnect', () => {
+								// Force other player in the room to reload the page // join a new game
+								io.to(game.id).emit('status', 'opponentDisconnected');
+
+								// Remove user from socket.room
+								socket.leave(game.id);
+
+								// Update Games array
+								console.log(games);
+								games.splice(games[games.indexOf(game)], 1);
+								games = [...games];
+								console.log(games);
+							});
+						});
+					}
+				}
+			]
+		}
+	}
+};
+
+export default config;
