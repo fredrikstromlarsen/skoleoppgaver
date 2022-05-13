@@ -1,21 +1,3 @@
-<?php
-
-/*/
-/* [0] = step
-/* [1] = index in step
-/* [2] = answer type (0 = buttons, 1 = text)
-/*/
-$questions = file_get_contents("json/questions.json");
-
-/*/
-/* [0] = step
-/* [1] = index in step
-/*/
-$answers = file_get_contents("json/answers.json");
-
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,8 +8,7 @@ $answers = file_get_contents("json/answers.json");
     <title>Bedrift AS</title>
     <link rel="stylesheet" href="css/style.css">
     <script>
-        const questions = <?= $questions; ?>;
-        const answers = <?= $answers; ?>;
+        const chatMessages = <?= file_get_contents("json/chat-messages.json") ?>;
 
         function sendChatMessage(message, sender) {
             var senderClass, markup;
@@ -60,7 +41,6 @@ $answers = file_get_contents("json/answers.json");
 
             container.insertAdjacentHTML('beforeend', markup);
             scrollToBottom('.chat-body-messages');
-            return markup;
         }
 
         function scrollToBottom(elementQuery) {
@@ -91,68 +71,88 @@ $answers = file_get_contents("json/answers.json");
                 sendChatMessage(message, 'user');
             }
 
+            setChatInput(Number(nextStep));
+
             // Send robo-question
-            let question = questions[nextStep][nextIndex];
-            let roboMsg = question["message"];
-            setTimeout(() => sendChatMessage(roboMsg, 'robot'), 1500);
+            // let question = questions[nextStep][nextIndex];
+            // let roboMsg = question["message"];
+            // setTimeout(() => sendChatMessage(roboMsg, 'robot'), 1500);
 
             // Set chat inputs according to robot question type
-            let answerType = question["answerType"];
-            if (answerType === 0)
-                setChatInput(nextStep);
-            else {
-                writeChatMessage();
-            }
+            // let answerType = question["answerType"];
+            // if (answerType === 0)
+            // setChatInput(nextStep);
+            // else {
+            // writeChatMessage();
+            // }
         }
 
-        function setChatInput(index) {
-            /* 
-            if buttons
-                ...
+        function setChatInput(step) {
+            console.log(step);
+            let chat = chatMessages[step];
+            let sender = chat[0]["sender"];
 
-            else if text
-                markup = <div id="chatTypingField">
-                    <div id="textField" contenteditable="true"></div>
-                    <button id="sendBtn">
-                        <i class="fa-solid fa-arrow-up"></i>
-                    </button>
-                </div>
-            
-            */
+            // If sender is user, set the input options according to previous question.
+            // Otherwise, send the chat message/question as bot.
+            if (sender === "user") {
+                // Set the user inputs according to answerType in previous chat message/question.
 
-            const container = document.getElementById('chatButtonAction');
-            let markup = "";
-            for (let i = 0; i < answers[index].length; i++) {
-                let x = answers[index][i];
-                console.log("x", x);
-                markup += '<button class="chat-alternative" data-type="click" data-next-step="' + x["nextStep"] + '" data-next-index="' + x["nextIndex"] + '">' + x["message"] + '</button>';
+                const container = document.getElementById('chatActions');
+                let markup = "";
+                let nextChat = chatMessages[step + 1];
+                let prevChat = chatMessages[step - 1];
+                let answerType = prevChat[0]["answerType"];
+                // answerType: 0 = buttons
+                if (answerType === 0) {
+
+                    // Loop over all button alternatives (answers) in chatMessage and add to markup
+                    for (let i = 0; i < chat.length; i++)
+                        markup += '<button class="chat-alternative" data-type="click" data-next-step="' + chat[i]["nextStep"] + '" data-next-index="' + chat[i]["nextIndex"] + '">' + chat[i]["message"] + '</button>';
+                    container.innerHTML = markup;
+
+                    // Add onclick-listeners to buttons 
+                    document.querySelectorAll('.chat-alternative')
+                        .forEach((alt) =>
+                            alt.addEventListener('click', () =>
+                                handleUserInput(alt)
+                            )
+                        );
+
+                    // answerType: 1 = text 
+                } else if (answerType === 1) {
+                    let q = chat[0];
+                    markup = '\
+                        <div id="chatTypingField">\
+                            <div id="textField" contenteditable="true" data-type="text" data-next-step="' + q["nextStep"] + '" data-next-index="' + q["nextIndex"] + '"></div>\
+                            <button id="sendBtn">\
+                                <i class="fa-solid fa-arrow-up"></i>\
+                            </button>\
+                        </div>';
+
+                    container.innerHTML = markup;
+
+                    var typingField = document.getElementById('textField');
+                    var typingFieldBtn = document.getElementById('sendBtn');
+
+                    typingFieldBtn.addEventListener('click', () => handleUserInput(typingField));
+                    typingField.addEventListener('keydown', (e) => {
+                        // If Return was pressed send the message. Prevent inputting newline.
+                        if (e.keyCode === 13) {
+                            e.preventDefault();
+                            handleUserInput(typingField);
+                        }
+                    });
+                }
+            } else {
+                // Send robo-question
+                setTimeout(() => sendChatMessage(chatMessages[step][0]["message"], 'robot'), 1500);
+                setChatInput(Number(step) + 1);
             }
-            container.innerHTML = markup;
-
-            var alts = document.querySelectorAll('.chat-alternative');
-
-            // Add "click" eventlistener to all button alternatives.
-            alts.forEach(
-                (alt) => alt.addEventListener('click',
-                    () => handleUserInput(alt)
-                )
-            );
         }
 
         window.onload = () => {
-            var typingField = document.getElementById('textField');
-            var typingFieldBtn = document.getElementById('sendBtn');
-
-            typingFieldBtn.addEventListener('click', () => handleUserInput(typingField));
-            typingField.addEventListener('keydown', (e) => {
-                // If Return was pressed send the message. Prevent inputting newline.
-                if (e.keyCode === 13) {
-                    e.preventDefault();
-                    handleUserInput(typingField);
-                }
-            });
-
             setChatInput(0);
+
         };
     </script>
     <script src="https://kit.fontawesome.com/4a2b7708f8.js" crossorigin="anonymous" async></script>

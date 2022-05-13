@@ -1,5 +1,5 @@
-[
-	[
+{
+	"0": [
 		{
 			"message": "Jeg trenger hjelp.",
 			"nextStep": 0,
@@ -16,9 +16,7 @@
 			"nextIndex": 2
 		}
 	],
-    [],
-    [],
-	[
+	"3": [
 		{
 			"message": "Login",
 			"nextStep": 3,
@@ -45,4 +43,4 @@
 			"nextIndex": 0
 		}
 	]
-]
+}

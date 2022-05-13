@@ -49,7 +49,7 @@
 	],
 	[
 		{
-			"message": "Skriv ned e-postaddressen din for å bli varslet når saken er løst.",
+			"message": "Supert! Skriv ned e-postaddressen din for å bli varslet når saken er løst.",
 			"nextStep": 4,
 			"nextIndex": 0,
 			"answerType": 1
