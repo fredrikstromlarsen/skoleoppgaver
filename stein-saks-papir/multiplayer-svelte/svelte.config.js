@@ -22,6 +22,7 @@ const config = {
 								[0, 1, 2]
 							];
 						let players = [];
+						let gameHistory = [];
 
 						io.on('connection', (socket) => {
 							// Player joined
@@ -33,22 +34,41 @@ const config = {
 							console.log(socket.id);
 							if (players.length < 2) {
 								players.push(socket);
-							}
-							if (players.length === 2) {
-								socket.emit('status', 'gameStarted');
+								// TODO: Join room
 
-								let actions = {};
-								let winner;
+								if (players.length === 2) {
+									socket.emit('status', 'gameStarted', []);
 
-								socket.on('action', (actionid) => {
-									actions[socket.id] = actionid;
-									actions = [...actions];
-								});
+									let game = [
+										{ playerid: `${players[0].id}`, action: '' },
+										{ playerid: `${players[1].id}`, action: '' }
+									];
+									let winner;
 
-								if (actions.length === 2) {
-									winner = winMatrix[actions[0]][actions[1]];
+									socket.on('action', (actionid) => {
+										let playerindex = game.indexOf({ playerid: socket.id, action: '' });
+										game[playerindex].action = actionid;
+
+										// Reassign variable to update its value globally.
+										game = [...game];
+									});
+
+									if (game[0].action != '' && game[1].action != '') {
+										winner = winMatrix[game[0].action][game[1].action];
+										socket.emit('status', 'gameEnded', [game, winner]);
+										gameHistory = [...gameHistory, game];
+									}
 								}
 							}
+							socket.on('disconnect', () => {
+								// Check if socket.id is in the players array
+								// If so, remove it from the game
+								if (players.indexOf(socket) > -1) {
+									console.log("Player removed from game", socket.id);
+									players.splice(players.indexOf(socket), 1);
+								} else
+									console.log("A player left the queue");
+							});
 						});
 					}
 				}

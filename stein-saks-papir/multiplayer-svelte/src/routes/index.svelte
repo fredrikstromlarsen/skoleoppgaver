@@ -2,88 +2,86 @@
 <script lang="ts">
 	import { io } from '$lib/realtime';
 	import { onMount } from 'svelte';
-	import History from '../History.svelte';
+	// import History from '../History.svelte';
 
-	let username: string, uid: number;
-	let gameActive: boolean = false;
-	export let gameHistory: Array<object>;
-	const actions: Array<object> = [
+	const actions: Array<any> = [
 		{ id: 0, name: 'Stein' },
 		{ id: 1, name: 'Saks' },
 		{ id: 2, name: 'Papir' }
 	];
 
-	// Testing
-	let waitingForPlayers: boolean = false,
-		joinedLobby: boolean = false;
-	let status: string = '';
-	let players: Array<String> = [];
+	let status: string = '',
+		data: Array<any> = [];
+
+	function showInput() {
+		var inputContainer: any = document.getElementById('actions');
+		console.log('Setting visibility of input', inputContainer.style.display);
+		if (inputContainer.style.display == 'none') inputContainer.style.display = 'flex';
+		else inputContainer.style.display = 'none';
+		console.log('Visibility of input has been set', inputContainer.style.display);
+	}
+
+	function sendAction(actionid: number) {
+		if (!actionid) return;
+		io.emit('action', actionid); // Send the message
+	}
+
+	function showResult(game: any) {
+		const container = document.getElementById('result');
+		const outcomes = ['Player1 wins', 'Player2 wins', 'Draw'];
+		const winMatrix: Array<Array<number>> = [
+			[2, 0, 1],
+			[1, 2, 0],
+			[0, 1, 2]
+		];
+
+		const win = winMatrix[game.player][game.computer];
+
+		let markup: string = `
+			<tr>
+				<td>${game.player[0]}</td>
+				<td>${game.player[1]}</td>
+				<td>${outcomes[win]}</td>
+			</tr>`;
+
+		container?.insertAdjacentHTML('beforeend', markup);
+	}
 
 	// Kjører når siden laster inn hos klienten
 	onMount(() => {
-		io.on('waitingForPlayers', () => {
-			// Venteanimasjon
-			console.log('waitingForPlayers');
-			waitingForPlayers = true;
-		});
+		io.on('status', (sm: string, d: Array<any>) => {
+			console.log('status: ', sm, d);
 
-		io.on('gameStarted', (game) => {
-			// Gi spillere mulighet til å trykke stein saks eller papir.
-			console.log('gameStarted');
-			gameActive = true;
-			players = game.players;
-		});
+			status = sm;
 
-		io.on('gameEnded', (result) => {
-			gameActive = false;
-			/* 
-            result = {
-                users: ['userid', 'userid'],
-                actions: ['userid-action', 'userid-action'],
-                winner: 'userid'
-            } 
-            */
-			// gameHistory = [...gameHistory, result];
-			console.log('gameEnded, result: ', result);
-		});
-
-		// io.emit('playAgain', () => {
-		// Spill igjen mot samme spiller.
-		// console.log('playAgain');
-		// });
-		io.on('status', (message) => {
-			status = message;
-			if (message === 'opponentDisconnected') {
-				console.log('Opponent disconnected');
-
-				// Reload siden
-				window.location.reload(true);
+			if (sm === 'gameStarted') {
+				showInput();
+			} else if (sm === 'gameEnded') {
+				showResult(d);
 			}
 		});
-
-		io.on('test', (value) => {
-			console.log(value);
-		});
 	});
-
-	function sendAction(action: number) {
-		if (!action) return;
-		io.emit('action', action); // Send the message
-	}
 </script>
 
-<!-- {#if gameHistory.length > 0} -->
-<!-- <History /> -->
-<!-- {/if} -->
 <div>
-	<p>joinedLobby: {joinedLobby.toString()}</p>
-	<p>players: {players[0]} & {players[1]}</p>
-	<p>gameActive: {gameActive.toString()}</p>
-	<p>status: {status}</p>
+	<p>Statusmelding: {status}</p>
+	<p>Data: {[...data]} ({data.length})</p>
 </div>
-
-{#if gameActive === true}
+<div id="actions" style="display: none;">
 	{#each actions as action}
-		<button on:click={sendAction(action.id)}>{action.name}</button>
+		<button on:click={() => sendAction(action.id)}>{action.name}</button>
 	{/each}
-{/if}
+</div>
+<table id="result" border="1">
+	<tr>
+		<th>Player1</th>
+		<th>Player2</th>
+		<th>Vinner</th>
+	</tr>
+</table>
+
+<style>
+	#actions {
+		gap: 1rem;
+	}
+</style>
