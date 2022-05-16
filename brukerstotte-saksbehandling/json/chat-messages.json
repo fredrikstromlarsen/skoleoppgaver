@@ -126,13 +126,13 @@
 			"nextIndex": 0
 		},
 		{
-			"message": "Dårlig/Ingen internettilkobling",
+			"message": "Ingen internettilkobling",
 			"sender": "user",
 			"nextStep": 6,
 			"nextIndex": 0
 		},
 		{
-			"message": "Forespørsel om brannmurendring",
+			"message": "Brannmurendring",
 			"sender": "user",
 			"nextStep": 6,
 			"nextIndex": 0

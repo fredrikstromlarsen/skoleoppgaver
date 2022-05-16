@@ -42,12 +42,16 @@ function display_table($conn, $condition)
 
             // Calculate the time between row["registered"] and row["started"]
             $registered = new DateTime($row["registered"]);
-            $started = new DateTime($row["started"]);
-            $responseTime = getApproximateTime($registered, $started);
+            if ($row["started"] != null) {
+                $started = new DateTime($row["started"]);
+                $responseTime = '<abbr title="' . $row["started"] . '">' . getApproximateTime($registered, $started) . '</abbr>';
+            }
 
-            // Calculate the time between row["started"] and row["finished"]
-            $finished = new DateTime($row["finished"]);
-            $timeSpent = getApproximateTime($started, $finished);
+            if ($row["finished"] != null) {
+                // Calculate the time between row["started"] and row["finished"]
+                $finished = new DateTime($row["finished"]);
+                $timeSpent = '<abbr title="' . $row["finished"] . '">' . getApproximateTime($started, $finished) . '</abbr>';
+            }
 
 
 
@@ -64,8 +68,8 @@ function display_table($conn, $condition)
                     <td>' . substr($row["description"], 0, 36) . '...</td>
                     <td>' . substr(str_replace("https://", "", $row["page"]), 0, 32) . '...</td>
                     <td>' . $row["registered"] . '</td>
-                    <td><abbr title="' . $row["started"] . '">' . $responseTime . '</abbr></td>
-                    <td><abbr title="' . $row["finished"] . '">' . $timeSpent . '</abbr></td>';
+                    <td>' . $responseTime . '</td>
+                    <td>' . $timeSpent . '</td>';
 
             if ($manageAction != "") $markup .= '<td><a href="../api/manage.php?action=' . $manageAction[0] . '&id=' . $row["id"] . '">' . $manageAction[1] . '</a></td>';
             $markup .= '<td><a href="../api/manage.php?action=2&id=' . $row["id"] . '">Slett</a></td>
