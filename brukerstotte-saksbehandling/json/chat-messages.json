@@ -26,8 +26,7 @@
 		{
 			"message": "",
 			"sender": "user",
-			"nextStep": 2,
-			"nextIndex": 0
+			"nextStep": 2
 		}
 	],
 	[
@@ -57,8 +56,7 @@
 		{
 			"message": "",
 			"sender": "user",
-			"nextStep": 4,
-			"nextIndex": 0
+			"nextStep": 4
 		}
 	],
 	[
@@ -78,7 +76,7 @@
 			"nextIndex": 0
 		},
 		{
-			"message": "Bytte glemt passord",
+			"message": "Glemt passord",
 			"sender": "user",
 			"nextStep": 6,
 			"nextIndex": 0
@@ -114,7 +112,7 @@
 			"nextIndex": 0
 		},
 		{
-			"message": "Programvarenedlasting",
+			"message": "Programvareinstallasjon",
 			"sender": "user",
 			"nextStep": 6,
 			"nextIndex": 0

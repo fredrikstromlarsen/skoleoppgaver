@@ -1,4 +1,6 @@
 <?php
+error_reporting(-1);
+
 function getApproximateTime($a, $b)
 {
     $ts = $b->diff($a);
@@ -13,11 +15,8 @@ function getApproximateTime($a, $b)
 
 function display_table($conn, $condition)
 {
-    if ($condition != "") {
-        $sql = "SELECT * FROM `cases` WHERE $condition";
-    } else {
-        $sql = "SELECT * FROM `cases`";
-    }
+    if ($condition != "") $sql = "SELECT * FROM `tickets` WHERE $condition";
+    else $sql = "SELECT * FROM `tickets`";
 
     $result = $conn->query($sql);
     $markup = "";
@@ -37,7 +36,12 @@ function display_table($conn, $condition)
                     <th>Marker som</th>
                     <th>Behandle</th>
                 </tr>';
-        while ($row = $result->fetch_assoc()) {
+        // while ($row = $result->fetch_assoc()) {
+        while ($rowB64 = $result->fetch_assoc()) {
+            // Decode values from base64 while keys are the same.
+            $row = array_combine(array_keys($rowB64), array_map('base64_decode', array_values($rowB64)));
+            print_r($row);
+            // die();
             $priority = round(($row["impact"] + $row["urgency"]) / 2, 0);
 
             // Calculate the time between row["registered"] and row["started"]
@@ -52,8 +56,6 @@ function display_table($conn, $condition)
                 $finished = new DateTime($row["finished"]);
                 $timeSpent = '<abbr title="' . $row["finished"] . '">' . getApproximateTime($started, $finished) . '</abbr>';
             }
-
-
 
             $manageAction = [];
 
@@ -122,7 +124,7 @@ $result_finished = display_table($connection, "`status` = 2");
         }
 
         tr.pri-1 {
-            background-color: #f45;
+            background-color: #b22;
             color: #fff;
         }
 

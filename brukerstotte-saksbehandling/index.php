@@ -5,7 +5,9 @@ TODO:
     - setChatInput() to buttons not working
 
  -->
-
+<?php
+error_reporting(-1);
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -19,11 +21,6 @@ TODO:
         const chatMessages = <?= file_get_contents("json/chat-messages.json") ?>;
         const delay = 1000;
         let answers = [];
-
-        /* TODO:
-        - Send object to api/parseAnswers.php 
-        - Admin panel to view/manage cases
-        */
 
         function sendChatMessage(message, sender) {
             var senderClass, markup;
@@ -100,13 +97,17 @@ TODO:
                 sendChatMessage(message, 'user');
             }
             console.log("handleUserInput()", "nextStep: " + nextStep, "nextIndex: " + nextIndex);
-            setChatInput(Number(nextStep), Number(nextIndex));
+            setChatInput(nextStep, nextIndex);
         }
 
         function setChatInput(step, index) {
             console.log("setChatInput()", "step:", step, "index:", index);
             let chat = chatMessages[step];
-            let sender = chat[index]["sender"];
+
+            let sender;
+            if (chat[index]["nextIndex"]) sender = chat[index]["sender"];
+            else sender = chat[0]["sender"];
+
 
             // If sender is user, set the input options according to previous question.
             // Otherwise, send the chat message/question as bot.
@@ -155,7 +156,7 @@ TODO:
                 }
             } else {
                 setTimeout(() => sendChatMessage(chatMessages[step][index]["message"], 'robot'), delay);
-                console.log(chat[step]["nextStep"], chat[step]["nextIndex"], "or", chat[index]["nextStep"], chat[index]["nextIndex"]);
+                // console.log(chat[step]["nextStep"], chat[step]["nextIndex"], "or", chat[index]["nextStep"], chat[index]["nextIndex"]);
                 setChatInput(chat[index]["nextStep"], chat[index]["nextIndex"]);
             }
             console.log("setChatInput()", sender + " finished");
@@ -164,6 +165,14 @@ TODO:
         window.onload = () => {
             sendChatMessage("Hei! Har du spørsmål, funnet en feil, eller trenger hjelp med noe, trykk på et av alternativene under for å starte en samtale.", 'bot');
             addInputListener("btn");
+
+            /* 
+            nextStep = chat[index]["nextStep"]
+
+            if (chat[index]["nextIndex"]) nextIndex = chat[index]["nextIndex"]
+            else nextIndex = prevChat[prevIndex]["nextIndex"]
+            
+             */
         };
     </script>
     <script src="https://kit.fontawesome.com/4a2b7708f8.js" crossorigin="anonymous" async></script>
