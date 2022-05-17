@@ -5,11 +5,11 @@ function getApproximateTime($a, $b)
 {
     $ts = $b->diff($a);
     if ($ts->format("%y") != 0) return $ts->format("%y år");
-    else if ($ts->format("%m") != 0) return $ts->format("%m måneder");
-    else if ($ts->format("%d") != 0) return $ts->format("%d dager");
-    else if ($ts->format("%h") != 0) return $ts->format("%h timer");
-    else if ($ts->format("%i") != 0) return $ts->format("%i minutter");
-    else if ($ts->format("%s") != 0) return $ts->format("%s sekunder");
+    else if ($ts->format("%m") != 0) return $ts->format("%m mnd");
+    else if ($ts->format("%d") != 0) return $ts->format("%d dgr");
+    else if ($ts->format("%h") != 0) return $ts->format("%h t");
+    else if ($ts->format("%i") != 0) return $ts->format("%i min");
+    else if ($ts->format("%s") != 0) return $ts->format("%s s");
     else return "0 sekunder";
 }
 
@@ -36,12 +36,7 @@ function display_table($conn, $condition)
                     <th>Marker som</th>
                     <th>Behandle</th>
                 </tr>';
-        // while ($row = $result->fetch_assoc()) {
-        while ($rowB64 = $result->fetch_assoc()) {
-            // Decode values from base64 while keys are the same.
-            $row = array_combine(array_keys($rowB64), array_map('base64_decode', array_values($rowB64)));
-            print_r($row);
-            // die();
+        while ($row = $result->fetch_assoc()) {
             $priority = round(($row["impact"] + $row["urgency"]) / 2, 0);
 
             // Calculate the time between row["registered"] and row["started"]
@@ -66,9 +61,9 @@ function display_table($conn, $condition)
                 <tr class="pri-' . $priority . '">
                     <td>' . $row["type"] . '</td>
                     <td>' . $priority . ' (' . $row["impact"] . ', ' . $row["urgency"] . ')</td>
-                    <td>' . $row["category"] . '</td>
-                    <td>' . substr($row["description"], 0, 36) . '...</td>
-                    <td>' . substr(str_replace("https://", "", $row["page"]), 0, 32) . '...</td>
+                    <td>' . base64_decode($row["category"]) . '</td>
+                    <td>' . substr(base64_decode($row["description"]), 0, 36) . '...</td>
+                    <td>' . substr(str_replace("https://", "", base64_decode($row["page"])), 0, 32) . '...</td>
                     <td>' . $row["registered"] . '</td>
                     <td>' . $responseTime . '</td>
                     <td>' . $timeSpent . '</td>';

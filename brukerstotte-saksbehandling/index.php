@@ -3,10 +3,12 @@ TODO:
 - FIX: 
     - nextIndex not working
     - setChatInput() to buttons not working
+    - 
 
  -->
 <?php
 error_reporting(-1);
+ini_set('display_errors', 1);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,9 +20,28 @@ error_reporting(-1);
     <title>Bedrift AS</title>
     <link rel="stylesheet" href="css/style.css">
     <script>
+        // List of all [steps][chat alternatives][individual chat data]
         const chatMessages = <?= file_get_contents("json/chat-messages.json") ?>;
-        const delay = 1000;
+        const botAnswerDelay = 1000;
         let answers = [];
+        let previousIndex = 0;
+
+        function exportData() {
+            // Encode answers array to JSON then serialize to Base64 
+
+            encodedAnswers = [];
+            answers.forEach((answer) => {
+                encodedAnswers.push(btoa(answer));
+            });
+            let json = JSON.stringify(encodedAnswers);
+            let base64 = btoa(json);
+
+            // Send Base64 to api/parseAnswers.php via a post request
+            let xhr = new XMLHttpRequest();
+            xhr.open("POST", "api/parseAnswers.php", true);
+            xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            xhr.send("answers=" + base64);
+        }
 
         function sendChatMessage(message, sender) {
             var senderClass, markup;
@@ -31,8 +52,10 @@ error_reporting(-1);
                 ':' +
                 date.getMinutes().toString().padStart(2, 0);
 
-            if (sender === 'user') senderClass = 'sent';
-            else senderClass = 'received';
+            if (sender === 'user') {
+                senderClass = 'sent';
+                answers.push(message);
+            } else senderClass = 'received';
 
             markup =
                 '\
@@ -50,10 +73,6 @@ error_reporting(-1);
         function scrollToBottom(elementQuery) {
             let element = document.querySelector(elementQuery);
             element.scrollTop = element.scrollHeight;
-        }
-
-        function clearInput(input) {
-            input.innerText = '';
         }
 
         function addInputListener(type) {
@@ -83,66 +102,67 @@ error_reporting(-1);
         }
 
         function handleUserInput(input) {
+            // Get attribute values for new chat message
             let message = input.innerText.trim();
+            // Click / Text
             let type = input.getAttribute('data-type');
+            // chatMessages[nextStep]
             let nextStep = input.getAttribute("data-next-step");
+            // chatMessages[nextStep][nextIndex]
             let nextIndex = input.getAttribute("data-next-index");
 
-            console.log("handleUserInput()", "message: " + message, "type: " + type, "nextStep: " + nextStep, "nextIndex: " + nextIndex);
+            // console.log("handleUserInput()", "message: " + message, "type: " + type, "nextStep: " + nextStep, "nextIndex: " + nextIndex);
 
-            if (type == "text") {
-                if (message != '') sendChatMessage(message, 'user');
-                clearInput(input);
-            } else if (type == "click") {
-                sendChatMessage(message, 'user');
-            }
-            console.log("handleUserInput()", "nextStep: " + nextStep, "nextIndex: " + nextIndex);
+            // Send message to bot
+            if (message != '') sendChatMessage(message, 'user');
+            if (type == 1) input.innerText = '';
+
+            // Get bot answer
             setChatInput(nextStep, nextIndex);
         }
 
         function setChatInput(step, index) {
-            console.log("setChatInput()", "step:", step, "index:", index);
-            let chat = chatMessages[step];
+            let currentChat = chatMessages[step][index];
+            const container = document.getElementById('chatActions');
 
+            if (currentChat === undefined) {
+                currentChat = chatMessages[step][0];
+                // console.log("setChatInput():", "chat was undefined. falling back to index 0");
+            }
+
+            // Who let the dogs out?
             let sender;
-            if (chat[index]["nextIndex"]) sender = chat[index]["sender"];
-            else sender = chat[0]["sender"];
+            sender = currentChat["sender"];
 
+            // console.log("setChatInput()", "step:", step, "index:", index, "sender: ", sender);
 
             // If sender is user, set the input options according to previous question.
             // Otherwise, send the chat message/question as bot.
-            console.log("setChatInput()", "sender:", sender);
             if (sender == "user") {
-                // Set the user inputs according to answerType in previous chat message/question.
-
-                const container = document.getElementById('chatActions');
                 let markup = "";
-                let prevChat = chatMessages[step - 1];
-                let answerType = prevChat[index]["answerType"];
 
-                container.innerHTML = "";
+                // Determine what type of input to show based on previous message
+                let previousChat = chatMessages[step - 1][index];
+                let answerType = previousChat["answerType"];
+
+                // console.log("setChatInput()", "answerType:", answerType, "previousChat:", previousChat);
 
                 // answerType: 0 = buttons
-                console.log("setChatInput()", "answerType:", answerType);
                 if (answerType === 0) {
+                    currentStepMessages = chatMessages[step];
                     // Loop over all button alternatives (answers) in chatMessage and add to markup
-                    for (let i = 0; i < chat.length; i++) {
-                        markup += '<button class="chat-alternative" data-type="click" data-next-step="' + chat[i]["nextStep"] + '" data-next-index="' + chat[i]["nextIndex"] + '">' + chat[i]["message"] + '</button>';
+                    for (let i = 0; i < currentStepMessages.length; i++) {
+                        markup += '<button class="chat-alternative" data-type="click" data-next-step="' + currentStepMessages[i]["nextStep"] + '" data-next-index="' + currentStepMessages[i]["nextIndex"] + '">' + currentStepMessages[i]["message"] + '</button>';
                     }
 
                     setTimeout(() => {
                         container.innerHTML = markup;
                         addInputListener("btn", ".chat-alternative");
-                    }, delay);
-                } else if (answerType === 1) {
-                    let pC = prevChat[index];
-                    let C = chat[0];
-
-                    // console.log("setChatInput()", "pC:", pC, "C:", C);
-
+                    }, botAnswerDelay);
+                } else {
                     markup = '\
                         <div id="chatTypingField">\
-                            <div id="textField" contenteditable="true" data-type="text" data-next-step="' + C["nextStep"] + '" data-next-index="' + index + '"></div>\
+                            <div id="textField" contenteditable="true" data-type="text" data-next-step="' + currentChat["nextStep"] + '" data-next-index="' + index + '"></div>\
                             <button id="sendBtn">\
                                 <i class="fa-solid fa-arrow-up"></i>\
                             </button>\
@@ -152,27 +172,24 @@ error_reporting(-1);
                     setTimeout(() => {
                         container.innerHTML = markup;
                         addInputListener("text");
-                    }, delay);
+                    }, botAnswerDelay);
                 }
             } else {
-                setTimeout(() => sendChatMessage(chatMessages[step][index]["message"], 'robot'), delay);
-                // console.log(chat[step]["nextStep"], chat[step]["nextIndex"], "or", chat[index]["nextStep"], chat[index]["nextIndex"]);
-                setChatInput(chat[index]["nextStep"], chat[index]["nextIndex"]);
+                setTimeout(() => sendChatMessage(currentChat["message"], 'bot'), botAnswerDelay);
+
+                // Remove inputs
+                container.innerHTML = "";
+
+                if (currentChat.done) {
+                    exportData();
+                    return;
+                } else setChatInput(currentChat["nextStep"], currentChat["nextIndex"]);
             }
-            console.log("setChatInput()", sender + " finished");
         }
 
         window.onload = () => {
             sendChatMessage("Hei! Har du spørsmål, funnet en feil, eller trenger hjelp med noe, trykk på et av alternativene under for å starte en samtale.", 'bot');
             addInputListener("btn");
-
-            /* 
-            nextStep = chat[index]["nextStep"]
-
-            if (chat[index]["nextIndex"]) nextIndex = chat[index]["nextIndex"]
-            else nextIndex = prevChat[prevIndex]["nextIndex"]
-            
-             */
         };
     </script>
     <script src="https://kit.fontawesome.com/4a2b7708f8.js" crossorigin="anonymous" async></script>

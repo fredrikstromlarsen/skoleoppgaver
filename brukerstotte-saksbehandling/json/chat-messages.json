@@ -24,7 +24,6 @@
 	],
 	[
 		{
-			"message": "",
 			"sender": "user",
 			"nextStep": 2
 		}
@@ -54,7 +53,6 @@
 	],
 	[
 		{
-			"message": "",
 			"sender": "user",
 			"nextStep": 4
 		}
@@ -72,96 +70,84 @@
 		{
 			"message": "Registreringsfeil",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Glemt passord",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Feil passord/brukernavn",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Ingen tilgang",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Programvarefeil",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Manglende utstyr",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Endring av rettigheter",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Programvareinstallasjon",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Skrivefeil/grammatikk",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Ingen internettilkobling",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Brannmurendring",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		},
 		{
 			"message": "Blokkert nettsted",
 			"sender": "user",
-			"nextStep": 6,
-			"nextIndex": 0
+			"nextStep": 6
 		}
 	],
 	[
 		{
-			"message": "Supert! Skriv ned e-postaddressen din for å bli varslet når saken er løst.",
-			"nextStep": 8,
+			"message": "Vi er på saken! Skriv ned e-postaddressen din for å bli varslet når saken er løst.",
+			"nextStep": 7,
 			"nextIndex": 0,
-			"answerType": 1
+			"answerType": 1,
+			"sender": "bot"
 		}
 	],
 	[
 		{
-			"message": "",
 			"sender": "user",
-			"nextStep": 9,
-			"nextIndex": 0
+			"nextStep": 8
 		}
 	],
 	[
 		{
 			"message": "Takk for henvendelsen din. Vi vil kontakte deg straks.",
-			"answerType": 2
+			"sender": "bot",
+			"done": true
 		}
 	]
 ]

@@ -1,7 +1,6 @@
 /* GLOBAL */
 * {
     scroll-behavior: smooth;
-    scrollbar-width: thin; 
     transition: all 0.2s ease-out;
     -webkit-transition: all 0.2s ease-out;
     -moz-transition: all 0.2s ease-out;
@@ -155,6 +154,10 @@ i {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+}
+
+.chat-body-messages::-webkit-scrollbar {
+    display: none;
 }
 
 .spacing-20 {
