@@ -78,7 +78,7 @@ function display_table($conn, $condition)
             if (!isset($finished))
                 $markup .= '<td><a href="../api/manage.php?action=2&id=' . $row["id"] . '">Slett</a></td>';
             else
-                $markup .= '<td><a href=\'mailto:' . urlencode(base64_decode($row["email"])) . '?subject=Henvendelsen%20din%20er%20l%C3%B8st!&amp;body=Hei,%0A%0A' . urlencode($row["registered"]) . '%20la%20du%20inn%20en%20sak%20om%20' . urlencode($row["category"]) . '%20hos%20oss%20med%20denne%20beskrivelsen:%20%0A%3Ci%3E' . urlencode($row["description"]) . '%3C/i%3E%0A%0ASaken%20er%20ble%20startet%20' . urlencode($row["started"]) . '%20og%20ble%20fullf%C3%B8rt%20' . urlencode($row["finished"]) . '.%0A\'>Varsle kunden</a></td>';
+                $markup .= '<td><a href=\'mailto:' . base64_decode($row["email"]) . '?subject=Henvendelsen%20din%20er%20l%C3%B8st!&amp;body=Hei,%0A%0A' . urlencode($row["registered"]) . '%20la%20du%20inn%20en%20sak%20om%20' . urlencode(base64_decode($row["category"])) . '%20hos%20oss%20med%20denne%20beskrivelsen:%20%0A%3Ci%3E' . urlencode(base64_decode($row["description"])) . '%3C/i%3E%0A%0ASaken%20er%20ble%20startet%20' . urlencode($row["started"]) . '%20og%20ble%20fullf%C3%B8rt%20' . urlencode($row["finished"]) . '.%0A\'>Varsle kunden</a></td>';
 
             $markup .= '</tr>';
         }

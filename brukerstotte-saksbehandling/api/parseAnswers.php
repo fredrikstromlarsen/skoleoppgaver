@@ -32,12 +32,9 @@ ini_set('error_reporting', -1);
 // Connect to DB
 require("./connect.php");
 
-// $answers = str_replace(" ", "+", json_decode(base64_decode($_POST["answers"])));
+$answers = str_replace(" ", "+", json_decode(base64_decode($_POST["answers"])));
 
-// file_put_contents("test.txt", $_POST["answers"]);
-// die();
-$test = file_get_contents("test.txt");
-$answers = json_decode(base64_decode($test));
+file_put_contents("test.txt", $_POST["answers"]);
 
 $description = base64_decode($answers[1]);
 $page = base64_decode($answers[2]);
@@ -62,19 +59,14 @@ switch ($description) {
         $urgency = 1;
 }
 
-$types = [
-    "INC" => 0,
-    "CHG" => 0,
-    "SRQ" => 0,
-    "PRB" => 0
-];
+$types = ["INC", "CHG", "SRQ", "PRB"];
 // Type: avhengig av kategori, beskrivelse og om det er en feil/endring/annet
 $typeWeights = [[], [], []];
 $answerWeights = [
     [
-        "Jeg trenger hjelp" => [1, 0, 1, 0],
-        "Jeg vil rapportere en feil" => [1, 1, 0, 1],
-        "Noe annet" => [1, 1, 1, 1]
+        "Jeg trenger hjelp" => [3, 0, 3, 0],
+        "Jeg vil rapportere en feil" => [2, 2, 0, 1],
+        "Noe annet" => [0, 0, 0, 0]
     ],
     [
         "Registreringsfeil" => [2, 0, 3, 1],
@@ -97,19 +89,19 @@ $answerWeights = [
 
 $typeWeights[0] = $answerWeights[0][base64_decode($answers[0])];
 $typeWeights[1] = $answerWeights[1][base64_decode($answers[3])];
-echo "answer = " . $answers[3] . "<br>answerWeights[0][answer] = " . print_r($answerWeights[1][base64_decode($answers[3])], true) . "<br>typeWeights = " . print_r($typeWeights, true);
-// 1+1, 1+0, 1+2, 1+1
-// 2, 1, 3, 2
 
 $typeWeights[2] = [0, 0, 0, 0];
 switch ($description) {
-    case str_contains($description, "endring") || str_contains($description, "endre"):
+    case str_contains($description, "endring"):
+    case str_contains($description, "endre"):
         $typeWeights[2] = [0, 3, 2, 0];
         break;
     case str_contains($description, "bytte"):
         $typeWeights[2] = [0, 2, 3, 0];
         break;
-    case str_contains($description, "hendelse") || str_contains($description, "feil") || str_contains($description, "gal"):
+    case str_contains($description, "hendelse"):
+    case str_contains($description, "feil"):
+    case str_contains($description, "gal"):
         $typeWeights[2] = [3, 0, 2, 1];
         break;
 }
@@ -117,23 +109,15 @@ switch ($description) {
 function sum_multi($arr, $template)
 {
     $sum = $template;
-    for ($i = 0; $i < count($arr); $i++) {
-        for ($j = 0; $j < count($arr[$i]); $j++) {
-            $sum[$i] += $arr[$i][$j];
-        }
-    }
+    $sum = array_map(function ($a, $b, $c) {
+        return $a + $b + $c;
+    }, ...$arr);
     return $sum;
 }
 
 $typeWeightResults = sum_multi($typeWeights, [0, 0, 0, 0]);
-echo "<br><br>";
-print_r($typeWeightResults);
-
-
-die();
-
-
-$type = ["INC", "CHG"][$typeWeight > 0.5];
+$typeIndex = array_search(max($typeWeightResults), $typeWeightResults);
+$type = $types[$typeIndex];
 
 if (
     in_array($category, [
@@ -156,9 +140,11 @@ switch ($category) {
         $urgency = 2;
         $impact = 1;
         break;
-    case "Virus/skadevare" || "Sikkerhetshull":
+    case "Virus/skadevare":
+    case "Sikkerhetshull":
         $urgency = 1;
         $impact = 2;
+        echo "$urgency $impact";
         break;
 }
 
@@ -180,10 +166,11 @@ $page = base64_encode($page);
 $category = base64_encode($category);
 $email = base64_encode($email);
 
-echo "type: $type<br>impact: $impact<br>urgency: $urgency<br>description: $description<br>page: $page<br>category: $category<br>status: 0<br>registered: $registered<br>email: $email";
+echo "type: $type<br>impact: $impact<br>urgency: $urgency<br>description: " . base64_decode($description) . "<br>page: " . base64_decode($page) . "<br>category: " . base64_decode($category) . "<br>status: 0<br>registered: $registered<br>email: " . base64_decode($email);
 
 // Insert into DB
 $sql = "INSERT INTO `tickets` (`type`, `impact`, `urgency`, `description`, `category`, `page`, `status`, `registered`, `started`, `finished`, `email`) VALUES ('$type', $impact, $urgency, '$description', '$category', '$page', 0, '$registered', NULL, NULL, '$email');";
 
 // Execute $sql
 $result = $connection->query($sql);
+$connection->close();
