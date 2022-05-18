@@ -22,12 +22,14 @@
 			"answerType": 1
 		}
 	],
+
 	[
 		{
 			"sender": "user",
 			"nextStep": 2
 		}
 	],
+
 	[
 		{
 			"message": "Mottatt. Hvilken av sidene på nettstedet vårt trenger du hjelp med? Lim inn URLen til siden i tekstfeltet.",
@@ -51,12 +53,14 @@
 			"answerType": 1
 		}
 	],
+
 	[
 		{
 			"sender": "user",
 			"nextStep": 4
 		}
 	],
+
 	[
 		{
 			"message": "Takk. Hvilken av følgende kategorier passer best til beskrivelsen din av denne henvendelsen?",
@@ -66,98 +70,111 @@
 			"answerType": 0
 		}
 	],
+
 	[
 		{
 			"message": "Registreringsfeil",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Glemt passord",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Feil passord/brukernavn",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Ingen tilgang",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Programvarefeil",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Manglende utstyr",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Endring av rettigheter",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Programvareinstallasjon",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Skrivefeil/grammatikk",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Ingen internettilkobling",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Brannmurendring",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Blokkert nettsted",
 			"sender": "user",
-			"nextStep": 6
-		},
-		{
-			"message": "Sikkerhetshull",
-			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Virus/Skadevare",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
 		},
 		{
 			"message": "Feil med utstyr",
 			"sender": "user",
-			"nextStep": 6
+			"nextStep": 7
+		},
+		{
+			"message": "Annet (spesifiser)",
+			"sender": "user",
+			"nextStep": 6,
+			"nextIndex": 0,
+			"answerType": 1
 		}
 	],
+
+	[
+		{
+			"sender": "user",
+			"nextStep": 7
+		}
+	],
+
 	[
 		{
 			"message": "Vi er på saken! Skriv ned e-postaddressen din for å bli varslet når saken er løst.",
-			"nextStep": 7,
+			"nextStep": 8,
 			"nextIndex": 0,
 			"answerType": 1,
 			"sender": "bot"
 		}
 	],
+
 	[
 		{
 			"sender": "user",
-			"nextStep": 8
+			"nextStep": 9
 		}
 	],
+
 	[
 		{
 			"message": "Takk for henvendelsen din. Vi vil kontakte deg straks.",

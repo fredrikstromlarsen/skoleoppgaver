@@ -1,14 +1,4 @@
 <?php
-error_reporting(-1);
-
-if (!isset($_POST["answers"])) die(header("Location: ../"));
-
-// Connect to DB
-require("./connect.php");
-
-$answers = str_replace(" ", "+", json_decode(base64_decode($_POST["answers"])));
-// $test = "WzAsIklmIHRoZXJlIGFyZSBtb3JlIHRoYW4gemVybyByb3dzIHJldHVybmVkLCB0aGVuIHRoZSBxdWVyeSB3YXMgc3VjY2Vzc2Z1bC4iLCJodHRwczovL3d3dy55b3V0dWJlLmNvbS93YXRjaD92PXpXU2h5dzREb2swIiwiRmVpbCBwYXNzb3JkL2JydWtlcm5hdm4iLCJmcmVkcmlzdEB2aWtlbi5ubyJd";
-// $answers = json_decode(base64_decode($test));
 /* 
 Inn:
 [
@@ -34,7 +24,19 @@ Ut:
 }
 */
 
-file_put_contents("test.txt", $_POST["answers"]);
+if (!isset($_POST["answers"])) die(header("Location: ../"));
+
+ini_set('display_errors', 1);
+ini_set('error_reporting', -1);
+
+// Connect to DB
+require("./connect.php");
+
+$answers = str_replace(" ", "+", json_decode(base64_decode($_POST["answers"])));
+
+// $test = file_get_contents("test.txt");
+// $answers = json_decode(base64_decode($test));
+// file_put_contents("test.txt", $_POST["answers"]);
 
 $description = base64_decode($answers[1]);
 $page = base64_decode($answers[2]);
@@ -42,12 +44,15 @@ $category = substr(base64_decode($answers[3]), 0, 31);
 $registered = new DateTime();
 $registered = $registered->format('Y-m-d H:i:s');
 $email = base64_decode($answers[4]);
+$urgency = 3;
+$impact = 3;
 
 // Impact/urgency
 switch ($description) {
     case str_contains($description, "youtu") || str_contains($page, "youtu"):
         $impact = 3;
         $urgency = 3;
+        break;
     case str_contains($description, "localhost") || str_contains($page, "localhost") || str_contains($description, "viken") || str_contains($page, "viken"):
         $impact = 3;
         $urgency = 2;
@@ -60,9 +65,9 @@ switch ($description) {
 // SRQ hvis Endring, og kategori == ...
 $typeWeighing = [
     [
-        "Jeg trenger hjelp" => 0.75,
-        "Jeg vil rapportere en feil" => 0,
-        "Noe annet" => 1
+        "Jeg trenger hjelp" => 0.5,
+        "Jeg vil rapportere en feil" => 0.25,
+        "Noe annet" => 0.75
     ],
     [
         "Registreringsfeil" => 0,
@@ -77,12 +82,14 @@ $typeWeighing = [
         "Ingen internettilkobling" => 0,
         "Brannmurendring" => 1,
         "Blokkert nettsted" => 1,
+        "Virus/skadevare" => 0,
+        "Sikkerhetshull" => 0,
+        "Feil med utstyr" => 0
     ]
 ];
 
 $typeWeighingDescription = 0.5;
 switch ($description) {
-        // endring
     case str_contains($description, "endring") || str_contains($description, "endre") || str_contains($description, "bytte"):
         $typeWeighingDescription = 1;
         break;
@@ -113,6 +120,28 @@ if (
     $impact = 3;
 }
 
+switch ($category) {
+    case "Brannmurendring":
+        $urgency = 2;
+        $impact = 1;
+        break;
+    case "Virus/skadevare" || "Sikkerhetshull":
+        $urgency = 1;
+        $impact = 2;
+        break;
+}
+
+if ($type == "INC") {
+    $urgency = 2;
+    $impact = 3;
+    if (
+        $urgency < 3 &&
+        $impact < 3 &&
+        ($urgency == 1 || $impact == 1)
+    ) {
+        $type = "PRB";
+    }
+}
 
 // Encode user inputted values to base64
 $description = base64_encode($description);

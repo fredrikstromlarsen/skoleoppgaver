@@ -1,5 +1,6 @@
 <?php
 error_reporting(-1);
+ini_set('display_errors', 1);
 
 function getApproximateTime($a, $b)
 {
@@ -37,22 +38,20 @@ function display_table($conn, $condition)
                     <th>Behandle</th>
                 </tr>';
         while ($row = $result->fetch_assoc()) {
-            $priority = round(($row["impact"] + $row["urgency"]) / 2, 0);
+            $priority = round(($row["impact"] + $row["urgency"]) / 2 - 0.1, 0);
 
             // Calculate the time between row["registered"] and row["started"]
             $registered = new DateTime($row["registered"]);
-            if ($row["started"] != null) {
+            if (isset($row["started"])) {
                 $started = new DateTime($row["started"]);
                 $responseTime = '<abbr title="' . $row["started"] . '">' . getApproximateTime($registered, $started) . '</abbr>';
             }
 
-            if ($row["finished"] != null) {
+            if (isset($row["finished"])) {
                 // Calculate the time between row["started"] and row["finished"]
                 $finished = new DateTime($row["finished"]);
                 $timeSpent = '<abbr title="' . $row["finished"] . '">' . getApproximateTime($started, $finished) . '</abbr>';
             }
-
-            $manageAction = [];
 
             if ($row["status"] == 0) $manageAction = [0, "Påbegynt"];
             else if ($row["status"] == 1) $manageAction = [1, "Fullført"];
@@ -64,13 +63,24 @@ function display_table($conn, $condition)
                     <td>' . base64_decode($row["category"]) . '</td>
                     <td>' . substr(base64_decode($row["description"]), 0, 36) . '...</td>
                     <td>' . substr(str_replace("https://", "", base64_decode($row["page"])), 0, 32) . '...</td>
-                    <td>' . $row["registered"] . '</td>
-                    <td>' . $responseTime . '</td>
-                    <td>' . $timeSpent . '</td>';
+                    <td>' . $row["registered"] . '</td>';
+            if (isset($responseTime)) {
+                $markup .= '<td>' . $responseTime . '</td>';
+                if (isset($timeSpent)) $markup .= '<td>' . $timeSpent . '</td>';
+                else $markup .= '<td></td>';
+            } else $markup .= '<td></td><td></td>';
 
-            if ($manageAction != "") $markup .= '<td><a href="../api/manage.php?action=' . $manageAction[0] . '&id=' . $row["id"] . '">' . $manageAction[1] . '</a></td>';
-            $markup .= '<td><a href="../api/manage.php?action=2&id=' . $row["id"] . '">Slett</a></td>
-                </tr>';
+
+            if (isset($manageAction))
+                $markup .= '<td><a href="../api/manage.php?action=' . $manageAction[0] . '&id=' . $row["id"] . '">' . $manageAction[1] . '</a></td>';
+            else
+                $markup .= '<td></td>';
+            if (!isset($finished))
+                $markup .= '<td><a href="../api/manage.php?action=2&id=' . $row["id"] . '">Slett</a></td>';
+            else
+                $markup .= '<td><a href=\'mailto:' . urlencode(base64_decode($row["email"])) . '?subject=Henvendelsen%20din%20er%20l%C3%B8st!&amp;body=Hei,%0A%0A' . urlencode($row["registered"]) . '%20la%20du%20inn%20en%20sak%20om%20' . urlencode($row["category"]) . '%20hos%20oss%20med%20denne%20beskrivelsen:%20%0A%3Ci%3E' . urlencode($row["description"]) . '%3C/i%3E%0A%0ASaken%20er%20ble%20startet%20' . urlencode($row["started"]) . '%20og%20ble%20fullf%C3%B8rt%20' . urlencode($row["finished"]) . '.%0A\'>Varsle kunden</a></td>';
+
+            $markup .= '</tr>';
         }
         $markup .= "</table>";
     }
