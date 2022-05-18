@@ -24,7 +24,7 @@ Ut:
 }
 */
 
-if (!isset($_POST["answers"])) die(header("Location: ../"));
+// if (!isset($_POST["answers"])) die(header("Location: ../"));
 
 ini_set('display_errors', 1);
 ini_set('error_reporting', -1);
@@ -32,11 +32,12 @@ ini_set('error_reporting', -1);
 // Connect to DB
 require("./connect.php");
 
-$answers = str_replace(" ", "+", json_decode(base64_decode($_POST["answers"])));
+// $answers = str_replace(" ", "+", json_decode(base64_decode($_POST["answers"])));
 
-// $test = file_get_contents("test.txt");
-// $answers = json_decode(base64_decode($test));
 // file_put_contents("test.txt", $_POST["answers"]);
+// die();
+$test = file_get_contents("test.txt");
+$answers = json_decode(base64_decode($test));
 
 $description = base64_decode($answers[1]);
 $page = base64_decode($answers[2]);
@@ -60,50 +61,81 @@ switch ($description) {
         $impact = 3;
         $urgency = 1;
 }
+
+$types = [
+    "INC" => 0,
+    "CHG" => 0,
+    "SRQ" => 0,
+    "PRB" => 0
+];
 // Type: avhengig av kategori, beskrivelse og om det er en feil/endring/annet
-// Endring = 1, Feil = 0.
-// SRQ hvis Endring, og kategori == ...
-$typeWeighing = [
+$typeWeights = [[], [], []];
+$answerWeights = [
     [
-        "Jeg trenger hjelp" => 0.5,
-        "Jeg vil rapportere en feil" => 0.25,
-        "Noe annet" => 0.75
+        "Jeg trenger hjelp" => [1, 0, 1, 0],
+        "Jeg vil rapportere en feil" => [1, 1, 0, 1],
+        "Noe annet" => [1, 1, 1, 1]
     ],
     [
-        "Registreringsfeil" => 0,
-        "Glemt passord" => 1,
-        "Feil passord/brukernavn" => 0.5,
-        "Ingen tilgang" => 0.75,
-        "Programvarefeil" => 0.5,
-        "Manglende utstyr" => 1,
-        "Endring av rettigheter" => 1,
-        "Programvareinstallasjon" => 1,
-        "Skrivefeil/grammatikk" => 1,
-        "Ingen internettilkobling" => 0,
-        "Brannmurendring" => 1,
-        "Blokkert nettsted" => 1,
-        "Virus/skadevare" => 0,
-        "Sikkerhetshull" => 0,
-        "Feil med utstyr" => 0
+        "Registreringsfeil" => [2, 0, 3, 1],
+        "Glemt passord" => [0, 0, 3, 0],
+        "Feil passord/brukernavn" => [2, 0, 3, 0],
+        "Ingen tilgang" => [3, 1, 2, 1],
+        "Programvarefeil" => [3, 0, 1, 1],
+        "Manglende utstyr" => [1, 0, 3, 0],
+        "Endring av rettigheter" => [0, 1, 3, 0],
+        "Programvareinstallasjon" => [2, 0, 2, 0],
+        "Skrivefeil/grammatikk" => [0, 3, 0, 0],
+        "Ingen internettilkobling" => [3, 0, 2, 1],
+        "Brannmurendring" => [0, 3, 2, 0],
+        "Blokkert nettsted" => [1, 0, 2, 1],
+        "Virus/skadevare" => [3, 0, 1, 3],
+        "Sikkerhetshull" => [1, 3, 0, 2],
+        "Feil med utstyr" => [0, 1, 3, 0]
     ]
 ];
 
-$typeWeighingDescription = 0.5;
-switch ($description) {
-    case str_contains($description, "endring") || str_contains($description, "endre") || str_contains($description, "bytte"):
-        $typeWeighingDescription = 1;
-        break;
+$typeWeights[0] = $answerWeights[0][base64_decode($answers[0])];
+$typeWeights[1] = $answerWeights[1][base64_decode($answers[3])];
+echo "answer = " . $answers[3] . "<br>answerWeights[0][answer] = " . print_r($answerWeights[1][base64_decode($answers[3])], true) . "<br>typeWeights = " . print_r($typeWeights, true);
+// 1+1, 1+0, 1+2, 1+1
+// 2, 1, 3, 2
 
-    case str_contains($description, "hendelse") || str_contains($description, "feil"):
-        $typeWeighingDescription = 0;
+$typeWeights[2] = [0, 0, 0, 0];
+switch ($description) {
+    case str_contains($description, "endring") || str_contains($description, "endre"):
+        $typeWeights[2] = [0, 3, 2, 0];
+        break;
+    case str_contains($description, "bytte"):
+        $typeWeights[2] = [0, 2, 3, 0];
+        break;
+    case str_contains($description, "hendelse") || str_contains($description, "feil") || str_contains($description, "gal"):
+        $typeWeights[2] = [3, 0, 2, 1];
         break;
 }
 
-$typeWeight = ($typeWeighing[0][base64_decode($answers[0])] + $typeWeighing[1][$category] + $typeWeighingDescription) / 3;
+function sum_multi($arr, $template)
+{
+    $sum = $template;
+    for ($i = 0; $i < count($arr); $i++) {
+        for ($j = 0; $j < count($arr[$i]); $j++) {
+            $sum[$i] += $arr[$i][$j];
+        }
+    }
+    return $sum;
+}
+
+$typeWeightResults = sum_multi($typeWeights, [0, 0, 0, 0]);
+echo "<br><br>";
+print_r($typeWeightResults);
+
+
+die();
+
+
 $type = ["INC", "CHG"][$typeWeight > 0.5];
 
 if (
-    $type == "CHG" &&
     in_array($category, [
         "Registreringsfeil",
         "Glemt passord",
@@ -115,7 +147,6 @@ if (
         "Programvareinstallasjon"
     ])
 ) {
-    $type = "SRQ";
     $urgency = 3;
     $impact = 3;
 }
@@ -156,4 +187,3 @@ $sql = "INSERT INTO `tickets` (`type`, `impact`, `urgency`, `description`, `cate
 
 // Execute $sql
 $result = $connection->query($sql);
-print_r($result);
