@@ -16,8 +16,8 @@ function getApproximateTime($a, $b)
 
 function display_table($conn, $condition)
 {
-    if ($condition != "") $sql = "SELECT * FROM `tickets` WHERE $condition";
-    else $sql = "SELECT * FROM `tickets`";
+    if ($condition != "") $sql = "SELECT * FROM `tickets` WHERE $condition ORDER BY `id` DESC";
+    else $sql = "SELECT * FROM `tickets` ORDER BY `id` DESC";
 
     $result = $conn->query($sql);
     $markup = "";
@@ -38,7 +38,8 @@ function display_table($conn, $condition)
                     <th>Behandle</th>
                 </tr>';
         while ($row = $result->fetch_assoc()) {
-            $priority = round(($row["impact"] + $row["urgency"]) / 2 - 0.1, 0);
+            if (round(($row["impact"] + $row["urgency"]) / 2 - 0.1, 0) == 2) $priority =  round(($row["impact"] + $row["urgency"]) / 2, 0);
+            else $priority = round(($row["impact"] + $row["urgency"]) / 2 - 0.1, 0);
 
             // Calculate the time between row["registered"] and row["started"]
             $registered = new DateTime($row["registered"]);
@@ -53,6 +54,11 @@ function display_table($conn, $condition)
                 $timeSpent = '<abbr title="' . $row["finished"] . '">' . getApproximateTime($started, $finished) . '</abbr>';
             }
 
+            if (strlen(str_replace("https://", "", base64_decode($row["page"]))) > 39) $page = substr(str_replace("https://", "", base64_decode($row["page"])), 0, 36) . "...";
+            else $page = base64_decode($row["page"]);
+            if (strlen(base64_decode($row["description"])) > 39) $description = substr(base64_decode($row["description"]), 0, 36) . "...";
+            else $description = base64_decode($row["description"]);
+
             if ($row["status"] == 0) $manageAction = [0, "Påbegynt"];
             else if ($row["status"] == 1) $manageAction = [1, "Fullført"];
 
@@ -61,8 +67,8 @@ function display_table($conn, $condition)
                     <td>' . $row["type"] . '</td>
                     <td>' . $priority . ' (' . $row["impact"] . ', ' . $row["urgency"] . ')</td>
                     <td>' . base64_decode($row["category"]) . '</td>
-                    <td>' . substr(base64_decode($row["description"]), 0, 36) . '...</td>
-                    <td>' . substr(str_replace("https://", "", base64_decode($row["page"])), 0, 32) . '...</td>
+                    <td>' . $description . '</td>
+                    <td>' . $page . '</td>
                     <td>' . $row["registered"] . '</td>';
             if (isset($responseTime)) {
                 $markup .= '<td>' . $responseTime . '</td>';

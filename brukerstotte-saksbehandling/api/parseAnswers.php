@@ -65,7 +65,7 @@ $typeWeights = [[], [], []];
 $answerWeights = [
     [
         "Jeg trenger hjelp" => [3, 0, 3, 0],
-        "Jeg vil rapportere en feil" => [2, 2, 0, 1],
+        "Jeg vil rapportere en feil" => [2, 1, 2, 1],
         "Noe annet" => [0, 0, 0, 0]
     ],
     [
@@ -82,7 +82,7 @@ $answerWeights = [
         "Brannmurendring" => [0, 3, 2, 0],
         "Blokkert nettsted" => [1, 0, 2, 1],
         "Virus/skadevare" => [3, 0, 1, 3],
-        "Sikkerhetshull" => [1, 3, 0, 2],
+        "Sikkerhetshull" => [3, 1, 0, 2],
         "Feil med utstyr" => [0, 1, 3, 0]
     ]
 ];
@@ -144,19 +144,19 @@ switch ($category) {
     case "Sikkerhetshull":
         $urgency = 1;
         $impact = 2;
-        echo "$urgency $impact";
         break;
 }
 
 if ($type == "INC") {
-    $urgency = 2;
-    $impact = 3;
     if (
         $urgency < 3 &&
         $impact < 3 &&
         ($urgency == 1 || $impact == 1)
     ) {
-        $type = "PRB";
+        $type = "MI";
+    } else {
+        $urgency = 2;
+        $impact = 3;
     }
 }
 
