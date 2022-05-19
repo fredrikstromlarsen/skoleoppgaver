@@ -31,13 +31,14 @@ const config = {
 							// Gather both player actions
 							// Send result && register game in gameHistory
 							// Play again || Join new game
-							console.log(socket.id);
 							if (players.length < 2) {
+								socket.emit('id', socket.id);
 								players.push(socket);
-								// TODO: Join room
+								console.log(`Player${players.length} connected`);
 
 								if (players.length === 2) {
-									socket.emit('status', 'gameStarted', []);
+									console.log('Starting game', players[0].id, players[1].id);
+									io.emit('status', 'gameStarted', [players[0].id, players[1].id]);
 
 									let game = [
 										{ playerid: `${players[0].id}`, action: '' },
@@ -45,7 +46,7 @@ const config = {
 									];
 									let winner;
 
-									socket.on('action', (actionid) => {
+									io.on('action', (actionid) => {
 										let playerindex = game.indexOf({ playerid: socket.id, action: '' });
 										game[playerindex].action = actionid;
 
@@ -55,19 +56,20 @@ const config = {
 
 									if (game[0].action != '' && game[1].action != '') {
 										winner = winMatrix[game[0].action][game[1].action];
-										socket.emit('status', 'gameEnded', [game, winner]);
+										socket.to(players[0].id).emit('status', 'gameEnded', [game, winner]);
+										socket.to(players[1].id).emit('status', 'gameEnded', [game, winner]);
 										gameHistory = [...gameHistory, game];
 									}
-								}
-							}
+								} else socket.emit('status', 'waitingForPlayers', players.length);
+							} else socket.emit('status', 'gameFull', players.length);
+
 							socket.on('disconnect', () => {
 								// Check if socket.id is in the players array
 								// If so, remove it from the game
 								if (players.indexOf(socket) > -1) {
-									console.log("Player removed from game", socket.id);
+									console.log('Player left the game', socket.id);
 									players.splice(players.indexOf(socket), 1);
-								} else
-									console.log("A player left the queue");
+								} else console.log('A player left the queue');
 							});
 						});
 					}
