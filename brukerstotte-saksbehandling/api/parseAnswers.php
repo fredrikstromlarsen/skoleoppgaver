@@ -135,10 +135,13 @@ if (
     $impact = 3;
 }
 
+
 switch ($category) {
     case "Brannmurendring":
         $urgency = 2;
         $impact = 1;
+        if ($type == "SRQ")
+            $type = "CHG";
         break;
     case "Virus/skadevare":
     case "Sikkerhetshull":
