@@ -15,14 +15,10 @@ const config = {
 				{
 					name: 'sveltekit-socket-io',
 					configureServer(server) {
-						const io = new Server(server.httpServer),
-							winMatrix = [
-								[2, 0, 1],
-								[1, 2, 0],
-								[0, 1, 2]
-							];
-						let players = [];
-						let gameHistory = [];
+						const io = new Server(server.httpServer);
+						let players = [],
+							queue = [],
+							gameHistory = [];
 
 						io.on('connection', (socket) => {
 							// Player joined
@@ -31,22 +27,34 @@ const config = {
 							// Gather both player actions
 							// Send result && register game in gameHistory
 							// Play again || Join new game
+
+							socket.on('changeName', (username) => {
+								// Dunno if this works
+								socket.username = username;
+							});
+
 							if (players.length < 2) {
-								socket.emit('id', socket.id);
+								let username = `Player${players.length + 1}`;
+								socket.username = username;
+
 								players.push(socket);
-								console.log(`Player${players.length} connected`);
+								socket.emit('uid', socket);
+
+								console.log(`${socket.username} connected. id: ${socket.id}`);
 
 								if (players.length === 2) {
-									console.log('Starting game', players[0].id, players[1].id);
-									io.emit('status', 'gameStarted', [players[0].id, players[1].id]);
+									io.emit('status', 'gameStarted', players, '');
 
 									let game = [
-										{ playerid: `${players[0].id}`, action: '' },
-										{ playerid: `${players[1].id}`, action: '' }
+										{ playerid: `${players[0]}`, action: '' },
+										{ playerid: `${players[1]}`, action: '' }
 									];
-									let winner;
 
-									io.on('action', (actionid) => {
+									socket.on('action', (actionid) => {
+										console.log(
+											`Received action from Player${players.indexOf(socket.id) + 1}`,
+											actionid
+										);
 										let playerindex = game.indexOf({ playerid: socket.id, action: '' });
 										game[playerindex].action = actionid;
 
@@ -55,20 +63,42 @@ const config = {
 									});
 
 									if (game[0].action != '' && game[1].action != '') {
-										winner = winMatrix[game[0].action][game[1].action];
-										socket.to(players[0].id).emit('status', 'gameEnded', [game, winner]);
-										socket.to(players[1].id).emit('status', 'gameEnded', [game, winner]);
+										io.emit('status', 'gameEnded', players, game);
 										gameHistory = [...gameHistory, game];
 									}
-								} else socket.emit('status', 'waitingForPlayers', players.length);
-							} else socket.emit('status', 'gameFull', players.length);
+								} else socket.emit('status', 'waitingForPlayers', players, '');
+							} else {
+								let username = `Spectator${queue.length + 1}`;
+								socket.username = username;
+
+								queue.push(socket);
+								queue = [...queue];
+
+								socket.emit('uid', socket);
+								socket.emit('status', 'gameFull', players, queue);
+							}
 
 							socket.on('disconnect', () => {
 								// Check if socket.id is in the players array
 								// If so, remove it from the game
-								if (players.indexOf(socket) > -1) {
+								let x = players.indexOf(socket.id);
+								if (x > -1) {
 									console.log('Player left the game', socket.id);
-									players.splice(players.indexOf(socket), 1);
+									players.splice(x, 1);
+
+									// Send status message
+									io.emit('status', 'waitingForPlayers', players, '');
+
+									// Check if there are players in queue. If so, move the first spectator to players array.
+									if (queue.length != 0) {
+										players.push(queue[0]);
+										queue.splice(0, 1);
+
+										players = [...players];
+										queue = [...queue];
+
+										io.emit('status', 'gameStarted', players, '');
+									}
 								} else console.log('A player left the queue');
 							});
 						});
