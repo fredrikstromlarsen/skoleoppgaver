@@ -21,9 +21,6 @@ const config = {
 							gameHistory = [];
 
 						io.on('connection', (socket) => {
-							io.on('x', (y) => {
-								io.emit(y, "pong");
-							});
 							// Player joined
 							// Find room !-> Create room
 							// Start game <- Wait for game
@@ -35,7 +32,7 @@ const config = {
 								game.push({ id: socket.id, action: null });
 								socket.emit('userinfo', socket.id);
 
-								console.log('Game array updated', game);
+								console.log('Game array updated: ', game);
 
 								// If two users are in the game, start it
 								console.log('Game.length === ', game.length);
@@ -57,13 +54,6 @@ const config = {
 										console.log('Game History:<br>', gameHistory);
 									}
 								} else socket.emit('status', 'waitingForgame', game, []);
-							} else {
-								queue.push(socket.id);
-								socket.emit('update', 'queue', queue);
-								console.log('Queue updated', queue);
-
-								socket.emit('userinfo', socket.id, null);
-								socket.emit('status', 'gameFull', []);
 							}
 
 							socket.on('disconnect', () => {

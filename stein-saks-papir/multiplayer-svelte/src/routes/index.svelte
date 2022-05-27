@@ -27,25 +27,8 @@
 
 	let status: string = '',
 		data: any = [],
-		queue: Array<string>,
 		gameHistoryContainer: Element,
-		actionsContainer: Element,
-		queueContainer: Element;
-
-	function showQueue() {
-		let markup: string = '';
-		let i: number = 0;
-
-		queue.forEach((spectator) => {
-			i++;
-			markup += `
-				<div style="display: flex;gap: 1rem;padding: 0.5rem 1rem; border-bottom: 1px solid #0002;">
-					<span>${i}.</span>
-					<span>${spectator}</span>
-				</div>`;
-		});
-		queueContainer.innerHTML = markup;
-	}
+		actionsContainer: Element;
 
 	function result(game: Array<any>) {
 		const playerIndex = game.findIndex((p: any) => p.id === player.id);
@@ -99,24 +82,22 @@
 
 	function initGame(data: Array<any>) {
 		actionsVisibility(true);
-		data = data[0];
-		queueContainer.style.display = 'none';
+
+		let opponentId = data.find((p: any) => p.id !== player.id).id; 
+		
 	}
 
 	onMount(() => {
 		io.on('userinfo', (id: string) => (player.id = id));
 
-		io.on('update', (type, data) => {
-			if (type === 'queue') showQueue(data);
-		});
-
 		io.on('status', (sm: string, d: any) => {
 			status = sm;
 			data = d;
 
+			console.log(data);
+
 			if (sm === 'gameStarted') initGame(d);
 			else if (sm === 'gameEnded') showGameHistory(d);
-			else if (sm === 'gameFull') showQueue();
 			else if (sm === 'waitingForPlayers') return;
 		});
 	});
@@ -131,7 +112,6 @@
 <!-- bind:this istedenfor id="actionsContainer" og document.getElementById("actionsContainer"); -->
 
 <div>
-	<div bind:this={queueContainer} class="queue-container" />
 	<div bind:this={actionsContainer} style="display: none;">
 		{#each actions as action}
 			<button
@@ -157,14 +137,6 @@
 		margin: 0;
 		padding: 0;
 	}
-
-	.queue-container {
-		display: flex;
-		flex-direction: column;
-
-		max-width: 20rem;
-	}
-
 	.game-history {
 		height: calc(100vh - 2rem);
 		padding: 1rem 2rem;
@@ -183,11 +155,6 @@
 	.games-container h2 {
 		font-size: 1.2rem;
 	}
-
-	.games-container .left {
-		text-align: left;
-	}
-
 	.games-container .right {
 		text-align: right;
 	}
