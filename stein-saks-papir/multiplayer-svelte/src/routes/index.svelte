@@ -4,7 +4,7 @@
 	import { Socket } from 'socket.io-client';
 	import { onMount } from 'svelte';
 
-	// Create typescript type: Dictionary
+	// Create new typescript type: Dictionary
 	interface Dictionary<T> {
 		[Key: string]: T;
 	}
@@ -22,54 +22,76 @@
 		];
 
 	const player: Dictionary<any> = {
-			id: '',
-			name: '',
-			index: 0
-		},
-		opponent: Dictionary<any> = {
-			name: '',
-			index: 0
-		};
+		id: ''
+	};
 
 	let status: string = '',
 		data: any = [],
-		gameHistory: Array<any> = [],
-		actionsContainer: any;
+		queue: Array<string>,
+		gameHistoryContainer: Element,
+		actionsContainer: Element,
+		queueContainer: Element;
 
-	function showResult(game: any) {
-		// Get index of player & opponent
-		player.index = game.findIndex((p: any) => p.id === player.id);
-		opponent.index = game.findIndex((p: any) => p.id !== player.id);
+	function showQueue() {
+		let markup: string = '';
+		let i: number = 0;
 
-		// Get player & opponent actions
-		const playerAction = game[player.index].action;
-		const opponentAction = game[opponent.index].action;
-
-		// Get result
-		const result = winMatrix[playerAction][opponentAction];
-
-		return result;
+		queue.forEach((spectator) => {
+			i++;
+			markup += `
+				<div style="display: flex;gap: 1rem;padding: 0.5rem 1rem; border-bottom: 1px solid #0002;">
+					<span>${i}.</span>
+					<span>${spectator}</span>
+				</div>`;
+		});
+		queueContainer.innerHTML = markup;
 	}
 
-	io.on('userinfo', (id: string, un: string) => {
-		player.id = id;
-		player.name = un;
-	});
+	function result(game: Array<any>) {
+		const playerIndex = game.findIndex((p: any) => p.id === player.id);
+		const opponentIndex = game.findIndex((p: any) => p.id !== player.id);
 
-	io.on('status', (sm: string, d: any) => {
-		status = sm;
-		data = d;
+		const playerAction = game[playerIndex].action;
+		const opponentAction = game[opponentIndex].action;
 
-		console.log('status: ', sm, 'data: ', d);
+		return winMatrix[playerAction][opponentAction];
+	}
 
-		player.index = d.findIndex((player: any) => player.id === player.id);
-		opponent.index = d.findIndex((player: any) => player.id !== player.id);
+	function showGameHistory(gameHistory: Array<Array<any>>) {
+		const outcomes = ['Win', 'Loss', 'Tie'];
+		let markup: string = '',
+			outcome: string;
 
-		if (sm === 'gameStarted') initGame(d);
-		else if (sm === 'gameEnded') showResult(d);
-		else if (sm === 'gameFull') return;
-		else if (sm === 'waitingForPlayers') showLobby();
-	});
+		gameHistory.forEach((game) => {
+			// Check if player.id is in the game
+			let x = game.findIndex((p: any) => p.id === player.id);
+			if (x > -1) {
+				outcome = outcomes[result(game)];
+				let playerIndex = x;
+				let playerId = game[playerIndex].id;
+				let playerAction = game[playerIndex].action;
+
+				// Hack: return 1 if playerIndex was 0.
+				let opponentIndex = [1, 0][playerIndex];
+				let opponentId = game[opponentIndex].id;
+				let opponentAction = game[opponentIndex].action;
+
+				markup += `
+				<div>
+					<div class="left">
+						<h2>${outcome.toUpperCase()}</h2>
+						<p>${playerId}</p>
+						<p>${playerAction}</p>
+					</div>
+					<div class="right">
+						<p>${opponentId}</p>
+						<p>${opponentAction}</p>
+					</div>
+				</div>`;
+			}
+		});
+		gameHistoryContainer.innerHTML = markup;
+	}
 
 	function actionsVisibility(show: boolean) {
 		actionsContainer.style.display = show ? 'flex' : 'none';
@@ -77,61 +99,96 @@
 
 	function initGame(data: Array<any>) {
 		actionsVisibility(true);
-		opponent.name = data[opponent.index].name;
+		data = data[0];
+		queueContainer.style.display = 'none';
 	}
 
-	function showLobby() {
-		actionsVisibility(false);
-	}
+	onMount(() => {
+		io.on('userinfo', (id: string) => (player.id = id));
+
+		io.on('update', (type, data) => {
+			if (type === 'queue') showQueue(data);
+		});
+
+		io.on('status', (sm: string, d: any) => {
+			status = sm;
+			data = d;
+
+			if (sm === 'gameStarted') initGame(d);
+			else if (sm === 'gameEnded') showGameHistory(d);
+			else if (sm === 'gameFull') showQueue();
+			else if (sm === 'waitingForPlayers') return;
+		});
+	});
 </script>
 
 <div>
 	<p>Statusmelding: {status}</p>
 	<p>Data: {data.toString()}</p>
-	<p>You: {player.name}</p>
-	<p>Opponent: {opponent.name}</p>
+	<p>You: {player.id}</p>
 </div>
 
 <!-- bind:this istedenfor id="actionsContainer" og document.getElementById("actionsContainer"); -->
-<div bind:this={actionsContainer} style="display: none;">
-	{#each actions as action}
-		<button
-			on:click={() => {
-				io.emit('event', 'action', action.id);
-				actionsVisibility(false);
-			}}>{action.name}</button
-		>
-	{/each}
-</div>
 
-{#if gameHistory.length > 0}
-	<div>
-		<h2>Spillhistorikk</h2>
-		{#each gameHistory as archivedGame}
-			<script lang="ts">
-				let playerIndex: number = archivedGame.findIndex((p: Array<any>) => p.id === player.id),
-					opponentIndex: number = archivedGame.findIndex((p: Array<any>) => p.id !== player.id),
-					x: number =
-						winMatrix[archivedGame[playerIndex].action][archivedGame[opponentIndex].action];
-
-				export let markup: string;
-
-				if (x === 0) {
-					markup = `<span class="winner">${archivedGame[0].action}</span> - <span class="loser">${archivedGame[1].action}</span>`;
-				} else if (x === 1) {
-					markup = `<span class="loser">${archivedGame[0].action}</span> - <span class="winner">${archivedGame[1].action}</span>`;
-				} else if (x === 2) {
-					markup = `<span class="tie">${archivedGame[0].action}</span> - <span class="tie">${archivedGame[1].action}</span>`;
-				}
-			</script>
-			<div>
-				<p>
-					{archivedGame[0].username} - {archivedGame[1].username}
-				</p>
-				<p>
-					{@html markup}
-				</p>
-			</div>
+<div>
+	<div bind:this={queueContainer} class="queue-container" />
+	<div bind:this={actionsContainer} style="display: none;">
+		{#each actions as action}
+			<button
+				on:click={() => {
+					io.emit('action', action.id);
+					actionsVisibility(false);
+				}}>{action.name}</button
+			>
 		{/each}
 	</div>
-{/if}
+</div>
+
+<div class="game-history">
+	<h2>Spillhistorikk</h2>
+	<div bind:this={gameHistoryContainer} class="games-container" />
+</div>
+
+<style>
+	:global(body) {
+		display: grid;
+		grid-template-columns: 1fr 1fr 28rem;
+
+		margin: 0;
+		padding: 0;
+	}
+
+	.queue-container {
+		display: flex;
+		flex-direction: column;
+
+		max-width: 20rem;
+	}
+
+	.game-history {
+		height: calc(100vh - 2rem);
+		padding: 1rem 2rem;
+		border-left: 1px solid #0004;
+	}
+
+	.games-container {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+
+		width: 24rem;
+		overflow-y: auto;
+	}
+
+	.games-container h2 {
+		font-size: 1.2rem;
+	}
+
+	.games-container .left {
+		text-align: left;
+	}
+
+	.games-container .right {
+		text-align: right;
+	}
+</style>

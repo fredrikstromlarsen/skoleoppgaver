@@ -21,6 +21,9 @@ const config = {
 							gameHistory = [];
 
 						io.on('connection', (socket) => {
+							io.on('x', (y) => {
+								io.emit(y, "pong");
+							});
 							// Player joined
 							// Find room !-> Create room
 							// Start game <- Wait for game
@@ -28,39 +31,24 @@ const config = {
 							// Send result && register game in gameHistory
 							// Play again || Join new game
 
-							function changeName(username) {
-								// Change the username for socket.id/player
-								socket.username = username;
-
-								let x = game.findIndex((player) => player.id === socket.id);
-								if (x > -1) game[x].username = username;
-								socket.emit('userinfo', socket.id, socket.username);
-							}
-
-							socket.on('changeName', (un) => changeName(un));
-
 							if (game.length < 2) {
-								// If username is not set, set it to default playerN.
-								if (!socket.username) socket.username = `Player${game.length + 1}`;
-								game.push({ id: socket.id, username: socket.username, action: null });
-								socket.emit('userinfo', socket.id, socket.username);
+								game.push({ id: socket.id, action: null });
+								socket.emit('userinfo', socket.id);
 
-								console.log(`${socket.username} joined`);
 								console.log('Game array updated', game);
 
 								// If two users are in the game, start it
+								console.log('Game.length === ', game.length);
 								if (game.length === 2) {
-									console.log('Game.length === 2');
 									io.emit('status', 'gameStarted', game);
 
-									socket.on('event', (type, actionid) => {
-										console.log('Event', type, actionid);
-										if (type === 'action') {
-											let playerIndex = game.findIndex((player) => player.id === socket.id);
-											game[playerIndex].action = actionid;
+									io.on('action', (actionid) => {
+										console.log('action: ', actionid);
 
-											console.log(`Received action from ${game[playerIndex].username}`, actionid);
-										}
+										let playerIndex = game.findIndex((player) => player.id === socket.id);
+										game[playerIndex].action = actionid;
+
+										console.log(`Received action from ${game[playerIndex].id}: `, actionid);
 									});
 
 									if (game[0].action !== null && game[1].action !== null) {
@@ -71,10 +59,11 @@ const config = {
 								} else socket.emit('status', 'waitingForgame', game, []);
 							} else {
 								queue.push(socket.id);
+								socket.emit('update', 'queue', queue);
 								console.log('Queue updated', queue);
 
 								socket.emit('userinfo', socket.id, null);
-								socket.emit('status', 'gameFull', game, queue);
+								socket.emit('status', 'gameFull', []);
 							}
 
 							socket.on('disconnect', () => {
@@ -82,16 +71,17 @@ const config = {
 								// If so, remove it from the game
 								let x = game.findIndex((player) => player.id === socket.id);
 								if (x > -1) {
-									console.log(`${socket.username} left the game`);
+									console.log(`${socket.id} left the game`);
+
 									game.splice(x, 1);
 
 									// Check if there are game in queue. If so, move the first spectator to game array.
 									if (queue.length != 0) {
-										game.push(queue[0]);
+										game.push({ id: queue[0], action: null });
 										queue.splice(0, 1);
 
-										io.emit('status', 'gameStarted', game, '');
-									} else io.emit('status', 'waitingForGame', game, '');
+										io.emit('status', 'gameStarted', game);
+									} else io.emit('status', 'waitingForGame', game);
 								} else {
 									// Check if socket.id is in the queue array
 									// If so, remove it from the queue
