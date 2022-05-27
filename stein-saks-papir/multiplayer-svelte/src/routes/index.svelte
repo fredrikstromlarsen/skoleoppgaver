@@ -6,8 +6,8 @@
 
 	// Create typescript type: Dictionary
 	interface Dictionary<T> {
-	    [Key: string]: T;
-	}	
+		[Key: string]: T;
+	}
 
 	const actions: Array<any> = [
 			{ actionid: 0, name: 'Stein' },
@@ -22,14 +22,14 @@
 		];
 
 	const player: Dictionary<any> = {
-		id: "",
-		name: "",
-		index: 0
-	},
-	opponent: Dictionary<any> = {
-		name: "",
-		index: 0
-	};
+			id: '',
+			name: '',
+			index: 0
+		},
+		opponent: Dictionary<any> = {
+			name: '',
+			index: 0
+		};
 
 	let status: string = '',
 		data: any = [],
@@ -58,6 +58,7 @@
 
 	io.on('status', (sm: string, d: any) => {
 		status = sm;
+		data = d;
 
 		console.log('status: ', sm, 'data: ', d);
 
@@ -65,7 +66,7 @@
 		opponent.index = d.findIndex((player: any) => player.id !== player.id);
 
 		if (sm === 'gameStarted') initGame(d);
-		else if (sm === 'gameFinished') showResult(d);
+		else if (sm === 'gameEnded') showResult(d);
 		else if (sm === 'gameFull') return;
 		else if (sm === 'waitingForPlayers') showLobby();
 	});
@@ -76,8 +77,7 @@
 
 	function initGame(data: Array<any>) {
 		actionsVisibility(true);
-
-		opponent.name
+		opponent.name = data[opponent.index].name;
 	}
 
 	function showLobby() {
@@ -97,7 +97,7 @@
 	{#each actions as action}
 		<button
 			on:click={() => {
-				io.emit(action.id);
+				io.emit('event', 'action', action.id);
 				actionsVisibility(false);
 			}}>{action.name}</button
 		>
@@ -109,25 +109,27 @@
 		<h2>Spillhistorikk</h2>
 		{#each gameHistory as archivedGame}
 			<script lang="ts">
-				let playerIndex: number = archivedGame.findIndex((p: Array<any>) => p.id === player.id);
-				let opponentIndex: number = archivedGame.findIndex((p: Array<any>) => p.id !== player.id);
-				let x: number = winMatrix[archivedGame[playerIndex].action][archivedGame[opponentIndex].action];
+				let playerIndex: number = archivedGame.findIndex((p: Array<any>) => p.id === player.id),
+					opponentIndex: number = archivedGame.findIndex((p: Array<any>) => p.id !== player.id),
+					x: number =
+						winMatrix[archivedGame[playerIndex].action][archivedGame[opponentIndex].action];
+
+				export let markup: string;
+
+				if (x === 0) {
+					markup = `<span class="winner">${archivedGame[0].action}</span> - <span class="loser">${archivedGame[1].action}</span>`;
+				} else if (x === 1) {
+					markup = `<span class="loser">${archivedGame[0].action}</span> - <span class="winner">${archivedGame[1].action}</span>`;
+				} else if (x === 2) {
+					markup = `<span class="tie">${archivedGame[0].action}</span> - <span class="tie">${archivedGame[1].action}</span>`;
+				}
 			</script>
 			<div>
 				<p>
 					{archivedGame[0].username} - {archivedGame[1].username}
 				</p>
 				<p>
-					{#if x === 0}
-						<span class="winner">{archivedGame[0].action}</span> -
-						<span class="loser">{archivedGame[1].action}</span>
-					{:else if x === 1}
-						<span class="loser">{archivedGame[0].action}</span> -
-						<span class="winner">{archivedGame[1].action}</span>
-					{:else if x === 2}
-						<span class="tie">{archivedGame[0].action}</span> -
-						<span class="tie">{archivedGame[1].action}</span>
-					{/if}
+					{@html markup}
 				</p>
 			</div>
 		{/each}
