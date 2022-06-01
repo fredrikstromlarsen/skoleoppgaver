@@ -1,7 +1,7 @@
 <!-- CLIENT SIDE -->
 <script lang="ts">
+	// import { Socket } from 'socket.io-client';
 	import { io } from '$lib/realtime';
-	import { Socket } from 'socket.io-client';
 	import { onMount } from 'svelte';
 
 	// Create new typescript type: Dictionary
@@ -10,9 +10,9 @@
 	}
 
 	const actions: Array<any> = [
-			{ actionid: 0, name: 'Stein' },
-			{ actionid: 1, name: 'Saks' },
-			{ actionid: 2, name: 'Papir' }
+			{ id: 0, name: 'Stein' },
+			{ id: 1, name: 'Saks' },
+			{ id: 2, name: 'Papir' }
 		],
 		// 2 = tie, 0 = player, 1 = opponent
 		winMatrix: Array<Array<number>> = [
@@ -83,8 +83,7 @@
 	function initGame(data: Array<any>) {
 		actionsVisibility(true);
 
-		let opponentId = data.find((p: any) => p.id !== player.id).id; 
-		
+		let opponentId = data.find((p: any) => p.id !== player.id).id;
 	}
 
 	onMount(() => {
@@ -104,14 +103,7 @@
 </script>
 
 <div>
-	<p>Statusmelding: {status}</p>
-	<p>Data: {data.toString()}</p>
-	<p>You: {player.id}</p>
-</div>
-
-<!-- bind:this istedenfor id="actionsContainer" og document.getElementById("actionsContainer"); -->
-
-<div>
+	<!-- bind:this istedenfor id="actionsContainer" og document.getElementById("actionsContainer"); -->
 	<div bind:this={actionsContainer} style="display: none;">
 		{#each actions as action}
 			<button

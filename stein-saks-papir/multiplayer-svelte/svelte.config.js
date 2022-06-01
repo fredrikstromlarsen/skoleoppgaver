@@ -35,24 +35,22 @@ const config = {
 								console.log('Game array updated: ', game);
 
 								// If two users are in the game, start it
-								console.log('Game.length === ', game.length);
+								console.log('Game.length ===', game.length);
 								if (game.length === 2) {
 									io.emit('status', 'gameStarted', game);
 
-									io.on('action', (actionid) => {
-										console.log('action: ', actionid);
-
+									socket.on('action', (actionid) => {
 										let playerIndex = game.findIndex((player) => player.id === socket.id);
 										game[playerIndex].action = actionid;
 
 										console.log(`Received action from ${game[playerIndex].id}: `, actionid);
-									});
 
-									if (game[0].action !== null && game[1].action !== null) {
-										gameHistory = [...gameHistory, game];
-										io.emit('status', 'gameEnded', gameHistory);
-										console.log('Game History:<br>', gameHistory);
-									}
+										if (game[0].action !== null && game[1].action !== null) {
+											gameHistory = [...gameHistory, game];
+											io.emit('status', 'gameEnded', gameHistory);
+											console.log('Game History:<br>', gameHistory);
+										}
+									});
 								} else socket.emit('status', 'waitingForgame', game, []);
 							}
 
