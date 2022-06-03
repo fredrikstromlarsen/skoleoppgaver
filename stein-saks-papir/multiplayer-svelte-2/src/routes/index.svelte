@@ -25,8 +25,15 @@
 		console.log('Client mounted');
 
 		io.emit('gnopgnip', 'ping');
+		let connectionAttempt = setInterval(
+			() => io.emit('gnopgnip', 'ping'),
+			2000
+		);
+
 		io.on('gnopgnip', (x) => {
 			if (x == 'pingpong') {
+				clearInterval(connectionAttempt);
+
 				title.innerText = 'Connected';
 				id.innerText = `id: ${io.id}`;
 
@@ -62,6 +69,8 @@
         */
 		console.log('joined game');
 		console.log('game is waiting for another player');
+
+		actionsContainer.style.display = 'none';
 	}
 
 	function sendAction(id) {
@@ -80,54 +89,91 @@
 <!-- END OF TEMPORARY -->
 
 <main>
-	<button bind:this={joinBtn} on:click={joinGame} class="ghost">Join</button>
-	<div bind:this={actionsContainer} class="ghost actions-container">
-		{#each actions as action}
-			<button on:click={() => sendAction(action.id)}>
-				{action.name}
-			</button>
+	<div class="user-interactable">
+		<button bind:this={joinBtn} on:click={joinGame} class="ghost"
+			>Join</button
+		>
+		<div bind:this={actionsContainer} class="ghost actions-container">
+			{#each actions as action}
+				<button on:click={() => sendAction(action.id)}>
+					{action.name}
+				</button>
+			{/each}
+		</div>
+	</div>
+	<div class="gamehistory-container">
+		{#each gameHistory as game}
+			<div class="gamehistory-item">
+				<h2>
+					{outcomes[
+						winMatrix[game.actions[game.players.indexOf(io.id)]][
+							game.actions[[1, 0][game.players.indexOf(io.id)]]
+						]
+					]}
+				</h2>
+				<div class="split">
+					<p>Deg</p>
+					<span>-</span>
+					<p>Emil</p>
+				</div>
+				<div class="split">
+					<span>{actions[game.actions[game.players.indexOf(io.id)]].name}</span>
+					<span>-</span>
+					<span>{actions[game.actions[[1, 0][game.players.indexOf(io.id)]]].name}</span>
+				</div>
+			</div>
 		{/each}
 	</div>
 </main>
-<div class="sidebar">
-	{#each gameHistory as game}
-		<div class="gamehistory-item">
-			<h2>
-				{outcomes[
-					winMatrix[game.actions[game.players.indexOf(io.id)]][game.actions[[1, 0][game.players.indexOf(io.id)]]]
-				]}
-			</h2>
-			<div>
-				<p>{game.players[game.players.indexOf(io.id)]}</p>
-				<p>{actions[game.actions[game.players.indexOf(io.id)]].name}</p>
-			</div>
-			<div>
-				<p>{game.players[[1, 0][game.players.indexOf(io.id)]]}</p>
-				<p
-					>{actions[game.actions[[1, 0][game.players.indexOf(io.id)]]]
-						.name}</p
-				>
-			</div>
-		</div>
-	{/each}
-</div>
 
 <style>
+	main {
+		display: grid;
+		grid-template-columns: 1fr 10rem;
+		gap: 1rem;
+	}
+
 	.ghost {
 		display: none;
+	}
+
+	.split {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+	}
+
+
+	.split > *:not(:first-child, :last-child) {
+		text-align: center;
+	}
+
+	.split > *:last-child {
+		text-align: right;
 	}
 
 	.actions-container {
 		gap: 0.5rem;
 	}
 
+	.gamehistory-container {
+		display: flex;
+		flex-direction: column-reverse;
+		width: 100%;
+	}
+
 	.gamehistory-item {
 		display: flex;
 		flex-direction: column;
-		padding: 1rem;
+		padding: 0.5rem 1rem;
+		gap: 0.5rem;
 	}
 
-	.gamehistory-item:not(:last-child) {
+	.gamehistory-item:not(:first-child) {
 		border-bottom: 1px solid #0002;
+	}
+
+	.gamehistory-item * {
+		margin: 0;
+		padding: 0;
 	}
 </style>
