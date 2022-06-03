@@ -24,17 +24,43 @@ const config = {
 							},
 							gameHistory = [];
 
-						function newGame(rid) {
-							gameHistory[gameHistory.length] = {
-								players: room.players,
-								actions: [],
-								room: rid,
-								time: new Date().toLocaleString,
-							};
-							return gameHistory.length - 1;
-						}
-
 						io.on('connection', (socket) => {
+							function newGame(rid) {
+								// Room ID
+								gameHistory[gameHistory.length] = {
+									players: room.players,
+									actions: [],
+									room: rid,
+									time: new Date().toLocaleString,
+								};
+								return gameHistory.length - 1;
+							}
+
+							function startGame(room) {
+								console.log(
+									`game at room ${room.id} is starting`
+								);
+
+								// GID = GameID
+								let gid = newGame(room.id);
+								room.gid = gid;
+
+								console.log('room:', room);
+
+								io.emit('gameStarted');
+							}
+
+							function initialize(r) {
+								if (r.players.length == 2) startGame(r);
+								else {
+									console.log(
+										`room ${r.id} is waiting for another player`
+									);
+									socket.emit('waitingForPlayers');
+								}
+							}
+
+							// Pingpong baklengs -> gnopgnip
 							socket.on('gnopgnip', (x) => {
 								socket.emit('gnopgnip', `${x}pong`);
 							});
@@ -59,24 +85,7 @@ const config = {
 									`${socket.id} joined room ${room.id}`
 								);
 
-								if (room.players.length == 2) {
-									console.log(
-										`game at room ${room.id} is starting`
-									);
-
-									let gid = newGame(room.id);
-									room.gid = gid;
-
-									console.log('room:', room);
-
-									io.emit('gameStarted');
-									// socket.to(room.players[0]).to(room.players[1]).emit('gameStarted');
-								} else {
-									console.log(
-										`room ${room.id} is waiting for another player`
-									);
-									socket.emit('waitingForPlayers');
-								}
+								initialize(room);
 							});
 
 							socket.on('action', (id) => {
@@ -92,7 +101,7 @@ const config = {
 									currentGame.actions[1] != null
 								) {
 									io.emit('gameFinished', currentGame);
-									io.emit('gameStarted');
+									initialize(room);
 								}
 							});
 
