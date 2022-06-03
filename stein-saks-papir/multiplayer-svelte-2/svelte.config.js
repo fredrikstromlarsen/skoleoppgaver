@@ -31,8 +31,9 @@ const config = {
 									players: room.players,
 									actions: [],
 									room: rid,
-									time: new Date().toLocaleString,
+									time: new Date().toLocaleString(),
 								};
+								console.log(gameHistory);
 								return gameHistory.length - 1;
 							}
 

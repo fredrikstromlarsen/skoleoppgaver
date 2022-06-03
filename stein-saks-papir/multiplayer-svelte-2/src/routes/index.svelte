@@ -1,108 +1,133 @@
 <script>
 	// import { Socket } from 'socket.io-client';
-    import { io } from '$lib/realtime';
+	import { io } from '$lib/realtime';
 	import { onMount } from 'svelte';
 
-    let title, id, joinBtn, actionsContainer, gameHistory = [];
+	let title,
+		id,
+		joinBtn,
+		actionsContainer,
+		gameHistory = [];
 
-    const actions = [
-            { id: 0, name: "Stein" },
-            { id: 1, name: "Saks" },
-            { id: 2, name: "Papir" }
-        ],
-        winMatrix = [[2, 0, 1],[1, 2, 0],[0, 1, 2]],
-        outcomes = ["Vinn", "Tap", "Uavgjort"];
-        
+	const actions = [
+			{ id: 0, name: 'Stein' },
+			{ id: 1, name: 'Saks' },
+			{ id: 2, name: 'Papir' },
+		],
+		winMatrix = [
+			[2, 0, 1],
+			[1, 2, 0],
+			[0, 1, 2],
+		],
+		outcomes = ['Vinn', 'Tap', 'Uavgjort'];
 
-    onMount(() => {
-        console.log("Client mounted");
+	onMount(() => {
+		console.log('Client mounted');
 
-        io.emit("gnopgnip", "ping");
-        io.on("gnopgnip", (x) => {
-            if (x == "pingpong") {
-                title.innerText = "Connected";
-                id.innerText = `id: ${io.id}`;
+		io.emit('gnopgnip', 'ping');
+		io.on('gnopgnip', (x) => {
+			if (x == 'pingpong') {
+				title.innerText = 'Connected';
+				id.innerText = `id: ${io.id}`;
 
-                joinBtn.style.display = "block";
-            }
-        });
+				joinBtn.style.display = 'block';
+			}
+		});
 
-        io.on("gameStarted", startGame);
-        io.on("waitingForPlayers", awaitingPlayers);
-        io.on("gameFinished", (g) => gameHistory = [...gameHistory, g]);
-    });
+		io.on('gameStarted', startGame);
+		io.on('waitingForPlayers', awaitingPlayers);
+		io.on('gameFinished', (g) => (gameHistory = [...gameHistory, g]));
+	});
 
-    function joinGame() {
-        console.log("Attempting to join a game");
+	function joinGame() {
+		console.log('Attempting to join a game');
 
-        joinBtn.style.display = "none";
-        io.emit("join");
-    }
+		joinBtn.style.display = 'none';
+		io.emit('join');
+	}
 
-    function startGame() {
-        /* 
+	function startGame() {
+		/* 
         Show action buttons
         */
-        console.log("joined game");
-        console.log("game started");
+		console.log('joined game');
+		console.log('game started');
 
-        actionsContainer.style.display = "flex";
-    }
+		actionsContainer.style.display = 'flex';
+	}
 
-    function awaitingPlayers() {
-        /* 
+	function awaitingPlayers() {
+		/* 
         Show waiting status
         */
-        console.log("joined game");
-        console.log("game is waiting for another player");
-    }
+		console.log('joined game');
+		console.log('game is waiting for another player');
+	}
 
-    function sendAction (id) {
-        console.log(`Sending "${actions[id].name}" to server`);
+	function sendAction(id) {
+		console.log(`Sending "${actions[id].name}" to server`);
 
-        actionsContainer.style.display = "none";
-        io.emit("action", id);
-    }
-    
+		actionsContainer.style.display = 'none';
+		io.emit('action', id);
+	}
 </script>
-
 
 <!-- START OF TEMPORARY -->
 <div>
-    <h1 bind:this={title}>Not connected</h1>
-    <p bind:this={id}></p>
+	<h1 bind:this={title}>Not connected</h1>
+	<p bind:this={id} />
 </div>
 <!-- END OF TEMPORARY -->
 
 <main>
-    <button bind:this={ joinBtn } on:click={ joinGame } class="ghost">Join</button>
-    <div bind:this={ actionsContainer } class="ghost actions-container">
-        {#each actions as action}
-            <button on:click={ () => sendAction(action.id) }>{action.name}</button>
-        {/each}
-    </div>
+	<button bind:this={joinBtn} on:click={joinGame} class="ghost">Join</button>
+	<div bind:this={actionsContainer} class="ghost actions-container">
+		{#each actions as action}
+			<button on:click={() => sendAction(action.id)}>
+				{action.name}
+			</button>
+		{/each}
+	</div>
 </main>
 <div class="sidebar">
-    {#each gameHistory as game}
-        <h2>{outcomes[winMatrix[game.players.indexOf(io.id)][[1,0][game.players.indexOf(io.id)]]]}</h2>
-        <div>
-            <p>{game.players[game.players.indexOf(io.id)]}</p>
-            <p>{game.actions[game.players.indexOf(io.id)]}</p>
-        </div>
-        <div>
-            <p>{game.players[[1, 0][game.players.indexOf(io.id)]]}</p>
-            <p>{game.actions[[1, 0][game.players.indexOf(io.id)]]}</p>
-        </div>
-    {/each}
+	{#each gameHistory as game}
+		<div class="gamehistory-item">
+			<h2>
+				{outcomes[
+					winMatrix[game.actions[game.players.indexOf(io.id)]][game.actions[[1, 0][game.players.indexOf(io.id)]]]
+				]}
+			</h2>
+			<div>
+				<p>{game.players[game.players.indexOf(io.id)]}</p>
+				<p>{actions[game.actions[game.players.indexOf(io.id)]].name}</p>
+			</div>
+			<div>
+				<p>{game.players[[1, 0][game.players.indexOf(io.id)]]}</p>
+				<p
+					>{actions[game.actions[[1, 0][game.players.indexOf(io.id)]]]
+						.name}</p
+				>
+			</div>
+		</div>
+	{/each}
 </div>
 
-    
 <style>
-    .ghost {
-        display: none;
-    }
+	.ghost {
+		display: none;
+	}
 
-    .actions-container {
-        gap: 0.5rem;
-    }
+	.actions-container {
+		gap: 0.5rem;
+	}
+
+	.gamehistory-item {
+		display: flex;
+		flex-direction: column;
+		padding: 1rem;
+	}
+
+	.gamehistory-item:not(:last-child) {
+		border-bottom: 1px solid #0002;
+	}
 </style>
