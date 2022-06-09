@@ -3,7 +3,7 @@
 	import { io } from '$lib/realtime';
 	import { onMount } from 'svelte';
 
-	let title, id, joinBtn, actionsContainer, gameHistory = [], playerScore = 0, opponentScore = 0, status, gameHistoryContainer;
+	let title, id, joinBtn, actionsContainer, gameHistory = [], playerScore, opponentScore, status = "Not connected, please reload", gameHistoryContainer;
 
 	const actions = [ { id: 0, name: 'Stein' }, { id: 1, name: 'Saks' }, { id: 2, name: 'Papir' }, ],
 	winMatrix = [ [2, 0, 1], [1, 2, 0], [0, 1, 2], ],
@@ -22,65 +22,63 @@
 			if (x == 'pingpong') {
 				clearInterval(connectionAttempt);
 				joinBtn.style.display = 'block';
-				status.innerText = "Connected!"
+				status = "Connected!"
+				playerScore = 0;
+				opponentScore = 0;
 			}
 		});
 
 		// Initialize the listeners
 		io.on('gameStarted', startGame);
 		io.on('waitingForPlayers', awaitingPlayers);
-		io.on('gameFinished', (g) => gameEnded);
+		io.on('gameFinished', (g) => gameEnded(g));
 	});
 
 
 	function joinGame() {
 		// Hide join button, and send a join event to the server.
 		joinBtn.style.display = 'none';
-		status.innerText = "Attempting to join a room...";
+		status = "Attempting to join a room...";
 		io.emit('join');
 	}
 
 	function startGame() {
 		// Show action buttons
 		actionsContainer.style.display = 'flex';
-		status.innerText = "Game has started.";
 		gameHistoryContainer.style.display = "flex";
+		setTimeout(() => status= "A new game has started.", 1000);
 	}
 
 	function awaitingPlayers() {
 		// Show waiting status
 		actionsContainer.style.display = 'none';
-		status.innerText = "Waiting for another player to connect...";
+		status= "Waiting for another player to connect...";
 	}
 
 	function sendAction(id) {
 		// Send stein, saks or papir to server
 		actionsContainer.style.display = 'none';
-		status.innerText = `Sending "${actions[id].name}" to the server. Waiting for opponent`;
+		status= `Sending "${actions[id].name}" to the server. Waiting for opponent`;
 		io.emit('action', id);
 	}
 
 	function gameEnded(g) {
 		// Add last played game to game history - svelte style (re-assigning the variable)
 		gameHistory = [...gameHistory, g];
-		let ps = 0, os = 0;
 
 		// Check how many games the player has won/lost
-		for (i = 0; i < gameHistory.length; i++) {
-			let playerIndex = g.players.indexOf(io.id);
-			let opponentIndex = [1, 0][playerIndex];
+		let playerIndex = g.players.indexOf(io.id);
+		let opponentIndex = [1, 0][playerIndex];
 
-			let playerAction = g.actions[playerIndex];
-			let opponentAction = g.actions[opponentIndex];
+		let playerAction = g.actions[playerIndex];
+		let opponentAction = g.actions[opponentIndex];
 
-			let winner = winMatrix[playerAction][opponentAction];
+		let winner = winMatrix[playerAction][opponentAction];
 
-			if (winner === 0) ps++;
-			else if (winner === 1) os++;
-		}
-		playerScore= ps;
-		opponentScore= os;
-		status.innerText = "Game ended. Scores have been updated";
+		if (winner === 0) playerScore++;
+		else if (winner === 1) opponentScore++;
+
+		status = "Game ended. Scores have been updated";
 	}
 </script>
 
@@ -98,13 +96,7 @@
 		</div>
 	</div>
 	<div class="gamehistory-container ghost" bind:this={gameHistoryContainer}>
-		<div class="gamehistory-item">
-			<div class="split">
-				<b>{playerScore}</b>
-				<span>-</span>
-				<b>{opponentScore}</b>
-			</div>
-		</div>
+
 		<!-- Show all previous games in a list. Warning: ugly code ahead -->
 		{#each gameHistory as game}
 			<div class="gamehistory-item">
@@ -121,8 +113,17 @@
 				</div>
 			</div>
 		{/each}
+
+		<!-- Since the list is reversed with 'flex-align: coloumn-reverse' this has to be at the bottom. -->
+		<div class="gamehistory-item">
+			<div class="split">
+				<b>{playerScore}</b>
+				<span>-</span>
+				<b>{opponentScore}</b>
+			</div>
+		</div>
 	</div>
-	<span class="status-message" bind:this={status}>Not connected, please reload</span>
+	<span class="status-message">{status}</span>
 </main>
 
 <style>
@@ -139,8 +140,8 @@
 
 	/* Align children to each side, space in between */
 	.split {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
 	}
 
 
@@ -159,6 +160,7 @@
 	.gamehistory-container {
 		flex-direction: column-reverse;
 		width: 100%;
+		overflow-y: auto;
 	}
 
 	.gamehistory-item {
