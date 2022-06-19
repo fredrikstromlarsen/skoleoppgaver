@@ -26,16 +26,17 @@ Ut:
 
 // if (!isset($_POST["answers"])) die(header("Location: ../"));
 
+// Verbose error logging
 ini_set('display_errors', 1);
 ini_set('error_reporting', -1);
 
 // Connect to DB
 require("./connect.php");
 
+// Sorta secure, but not really.
 $answers = str_replace(" ", "+", json_decode(base64_decode($_POST["answers"])));
 
-file_put_contents("test.txt", $_POST["answers"]);
-
+// Don't look
 $description = base64_decode($answers[1]);
 $page = base64_decode($answers[2]);
 $category = substr(base64_decode($answers[3]), 0, 31);
@@ -46,6 +47,8 @@ $urgency = 3;
 $impact = 3;
 
 // Impact/urgency
+// This project is for a not-so-important task, don't worry.
+// 3 (low), 1 (high)
 switch ($description) {
     case str_contains($description, "youtu") || str_contains($page, "youtu"):
         $impact = 3;
@@ -59,9 +62,13 @@ switch ($description) {
         $urgency = 1;
 }
 
+// Incident, Change, Service Request, Problem
 $types = ["INC", "CHG", "SRQ", "PRB"];
-// Type: avhengig av kategori, beskrivelse og om det er en feil/endring/annet
+
+// Type: dependent on category, description, and whether it's an error, change or other
 $typeWeights = [[], [], []];
+
+// Magic.
 $answerWeights = [
     [
         "Jeg trenger hjelp" => [3, 0, 3, 0],
